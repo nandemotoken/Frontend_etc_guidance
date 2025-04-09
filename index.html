@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フロントエンド周辺技術勉強会</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f6f6f6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #55c500;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .main-content {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        .articles {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .article-card {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .article-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .article-card h2 {
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .article-card h2 a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .article-card h2 a:hover {
+            color: #55c500;
+        }
+        .article-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+        .article-meta .author {
+            margin-right: 15px;
+        }
+        .article-meta .date {
+            margin-right: 15px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .tag {
+            background-color: #f1f8ff;
+            color: #55c500;
+            border: 1px solid #e1e8ff;
+            padding: 2px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        .tag:hover {
+            background-color: #e1f0ff;
+        }
+        .article-summary {
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        .sidebar-section h3 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+        .sidebar-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-list li {
+            margin-bottom: 10px;
+        }
+        .sidebar-list li a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+            transition: color 0.2s;
+        }
+        .sidebar-list li a:hover {
+            color: #55c500;
+        }
+        .popular-ranking {
+            counter-reset: ranking;
+        }
+        .popular-ranking li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+        }
+        .popular-ranking li::before {
+            counter-increment: ranking;
+            content: counter(ranking);
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 22px;
+            height: 22px;
+            background-color: #55c500;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #55c500;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #449900;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 30px 0;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+        .footer-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .footer-links {
+            display: flex;
+        }
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 40px 0 0;
+        }
+        .footer-links ul li {
+            margin-bottom: 8px;
+        }
+        .footer-links ul li a {
+            color: #ccc;
+            text-decoration: none;
+        }
+        .footer-links ul li a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .copyright {
+            color: #999;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">フロントエンド周辺技術の勉強会</div>
+            <nav>
+                <ul>
+                    <li><a href="#">ホーム</a></li>
+                    <li><a href="#">カリキュラム</a></li>
+                    <li><a href="#">Q&A</a></li>
+                    <li><a href="#">コミュニティ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="articles">
+                <div class="article-card">
+                    <h2><a href="week1.html">第1週: フロントエンド仙人の物語 - 世界崩壊とWeb再構築の冒険</a></h2>
+                    <div class="article-meta">
+                        <span class="author">フロントエンド仙人</span>
+                        <span class="date">2023年12月1日</span>
+                        <span class="views">閲覧数 12,345</span>
+                    </div>
+                    <div class="tags">
+                        <a href="#" class="tag">HTML</a>
+                        <a href="#" class="tag">CSS</a>
+                        <a href="#" class="tag">JavaScript</a>
+                        <a href="#" class="tag">フロントエンド開発</a>
+                    </div>
+                    <div class="article-summary">
+                        <p>
+                            フロントエンド開発の極意を求めて山に籠もった主人公が、世界崩壊後のウェブ再構築に挑む冒険物語。
+                            JavaScriptの書き過ぎで渋谷スクランブル交差点がHTMLタグに見えるようになったことがきっかけで修行を始めた仙人は、
+                            北朝鮮のハッカー集団ラザルスがBTC準備金を盗み出した後の世界で、インターネットの再構築に挑みます。
+                            フロントエンド開発の本質を楽しく学べるスライド形式のプレゼンテーションです。
+                        </p>
+                    </div>
+                    <a href="week1.html" class="btn">続きを読む</a>
+                </div>
+
+                <div class="article-card">
+                    <h2><a href="#">第2週: HTMLとCSSの基礎 - 古き良きWebの技術を再発見</a></h2>
+                    <div class="article-meta">
+                        <span class="author">フロントエンド仙人</span>
+                        <span class="date">2023年12月8日</span>
+                        <span class="views">閲覧数 9,876</span>
+                    </div>
+                    <div class="tags">
+                        <a href="#" class="tag">HTML</a>
+                        <a href="#" class="tag">CSS</a>
+                        <a href="#" class="tag">ウェブ設計</a>
+                    </div>
+                    <div class="article-summary">
+                        <p>
+                            HTMLとCSSの基礎に立ち返り、モダンなウェブ開発の土台を再確認します。
+                            フレームワーク依存から脱却し、純粋なマークアップとスタイリングの技術を見直すことで、
+                            より堅牢で持続可能なウェブサイト構築のアプローチを学びます。
+                            セマンティックHTMLの重要性からCSSの新機能まで、幅広くカバーします。
+                        </p>
+                    </div>
+                    <a href="#" class="btn">続きを読む</a>
+                </div>
+
+                <div class="article-card">
+                    <h2><a href="#">第3週: JavaScript本質論 - ブラウザの言葉を理解する</a></h2>
+                    <div class="article-meta">
+                        <span class="author">フロントエンド仙人</span>
+                        <span class="date">2023年12月15日</span>
+                        <span class="views">閲覧数 8,765</span>
+                    </div>
+                    <div class="tags">
+                        <a href="#" class="tag">JavaScript</a>
+                        <a href="#" class="tag">Vanilla JS</a>
+                        <a href="#" class="tag">ES6+</a>
+                    </div>
+                    <div class="article-summary">
+                        <p>
+                            フレームワークの裏側で何が起きているのかを理解するため、JavaScriptの基本に立ち返ります。
+                            プロトタイプ継承、非同期処理、モジュールシステムなど、JavaScriptの核となる概念を
+                            わかりやすく解説。フレームワークに依存せず、純粋なJavaScriptで問題を解決する力を身につけましょう。
+                        </p>
+                    </div>
+                    <a href="#" class="btn">続きを読む</a>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>人気の記事</h3>
+                    <ul class="sidebar-list popular-ranking">
+                        <li><a href="week1.html">フロントエンド仙人の物語 - 世界崩壊とWeb再構築の冒険</a></li>
+                        <li><a href="#">Webパフォーマンス最適化の極意 - ユーザー体験を向上させる技術</a></li>
+                        <li><a href="#">CSSアーキテクチャの設計手法 - メンテナンス性の高いスタイルの書き方</a></li>
+                        <li><a href="#">アクセシビリティの基礎 - 誰もが使えるウェブサイトを目指して</a></li>
+                        <li><a href="#">JavaScriptデバッグ術 - 困ったときの問題解決アプローチ</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>カテゴリー</h3>
+                    <ul class="sidebar-list">
+                        <li><a href="#">HTML/CSS (15)</a></li>
+                        <li><a href="#">JavaScript (23)</a></li>
+                        <li><a href="#">フロントエンドフレームワーク (18)</a></li>
+                        <li><a href="#">パフォーマンス最適化 (10)</a></li>
+                        <li><a href="#">ウェブアクセシビリティ (8)</a></li>
+                        <li><a href="#">デザインシステム (12)</a></li>
+                        <li><a href="#">ウェブセキュリティ (7)</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>タグクラウド</h3>
+                    <div class="tags">
+                        <a href="#" class="tag">HTML</a>
+                        <a href="#" class="tag">CSS</a>
+                        <a href="#" class="tag">JavaScript</a>
+                        <a href="#" class="tag">React</a>
+                        <a href="#" class="tag">Vue</a>
+                        <a href="#" class="tag">Angular</a>
+                        <a href="#" class="tag">TypeScript</a>
+                        <a href="#" class="tag">SCSS</a>
+                        <a href="#" class="tag">WebAPI</a>
+                        <a href="#" class="tag">Node.js</a>
+                        <a href="#" class="tag">Webpack</a>
+                        <a href="#" class="tag">Babel</a>
+                        <a href="#" class="tag">Git</a>
+                        <a href="#" class="tag">GitHub</a>
+                        <a href="#" class="tag">フロントエンド</a>
+                        <a href="#" class="tag">UI/UX</a>
+                        <a href="#" class="tag">アクセシビリティ</a>
+                        <a href="#" class="tag">レスポンシブ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#">ホーム</a></li>
+                    <li><a href="#">Q&A</a></li>
+                </ul>
+                <ul>
+                    <li><a href="#">運営団体</a></li>
+                    <li><a href="#">お問い合わせ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 フロントエンド周辺技術の勉強会 All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html> 
