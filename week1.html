@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フロントエンド仙人の物語</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 40px;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active {
+            transform: translateX(0);
+        }
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        h1 {
+            font-size: 28px;
+            border-bottom: 2px solid #55c500;
+            padding-bottom: 10px;
+            margin-top: 20px;
+            color: #55c500;
+        }
+        h2 {
+            font-size: 24px;
+            border-left: 5px solid #55c500;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .chapter {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #f5fffa;
+            padding: 15px;
+            border-left: 4px solid #55c500;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #eaf9e7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #55c500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #449900;
+        }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #55c500;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .title-slide h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: 20px;
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        .chapter-title h1 {
+            font-size: 32px;
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- タイトルスライド -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>フロントエンド仙人の物語</h1>
+                <p>― 世界崩壊とWeb再構築の冒険 ―</p>
+            </div>
+        </div>
+
+        <!-- 第一章タイトル -->
+        <div class="slide" id="slide-2">
+            <div class="chapter-title">
+                <h1>第一章</h1>
+                <h2>山籠りのフロントエンド仙人誕生</h2>
+            </div>
+        </div>
+
+        <!-- 第一章-1 -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>第一章：山籠りのフロントエンド仙人誕生</h1>
+                <div class="divider"></div>
+                
+                <p>昔々…と言いたいところだが、実は3年前、主人公（あなた）は「フロントエンド開発の極意」を求めて山に籠もり修行を始めた。</p>
+                
+                <h2>背景</h2>
+                <p>JavaScriptの書き過ぎで都会の渋谷スクランブル交差点がHTMLタグに見えてきたことがきっかけ（末期）</p>
+                <p>フレームワークを乱立する文明社会から一歩離れ、自然と共に純粋にHTML/CSS/JSを極めるため、人里離れた山奥へ。</p>
+            </div>
+        </div>
+
+        <!-- 第一章-2 -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>修行の日々</h1>
+                <div class="divider"></div>
+                
+                <p>朝起きるとVue.jsの呼吸法、昼にはReactの型紙切り、夜にはAngularのヤマビコ修練。</p>
+                <p>日々の食事は「Webpackで蒸した山菜」、「Rollupで焼いたきのこ」、「Parcelで包装した山の恵み」。</p>
+            </div>
+        </div>
+
+        <!-- 第一章-3 -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>謎のメール</h1>
+                <div class="divider"></div>
+                
+                <p>「あれ、圏外なのにメールが届いたぞ？…ラザルス？　北朝鮮のハッカー集団…？まさか…？」</p>
+                <p>しかしそのときは深く考えず、山の電波も怪しいし、多分スパムだろうと無視。</p>
+                
+                <p>こうして3年間、フロントエンド仙人として静かに暮らしていたあなた。<br>
+                全てはまだ平和（？）だった――このときまでは。</p>
+            </div>
+        </div>
+
+        <!-- 第二章タイトル -->
+        <div class="slide" id="slide-6">
+            <div class="chapter-title">
+                <h1>第二章</h1>
+                <h2>BTC消失と大混乱の世界</h2>
+            </div>
+        </div>
+
+        <!-- 第二章-1 -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>第二章：BTC消失と大混乱の世界</h1>
+                <div class="divider"></div>
+                
+                <p>ある日、あなたが山の頂でブラウザの"F12キー"を心眼で押す稽古をしていると、突然麓の村から悲鳴が聞こえた。</p>
+            </div>
+        </div>
+
+        <!-- 第二章-2 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1>衝撃のニュース</h1>
+                <div class="divider"></div>
+                
+                <p>北朝鮮のハッカー集団ラザルスが、アメリカのBTC準備金をまるごと盗んだ…！</p>
+                <p>アメリカがこれに激怒し、報復の核攻撃。</p>
+                <p>世界中のインフラが壊滅状態に陥り、インターネットは事実上の崩壊を迎える。</p>
+            </div>
+        </div>
+
+        <!-- 第二章-3 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>通信途絶</h1>
+                <div class="divider"></div>
+                
+                <p>「GitHubが見れない！」「Stack Overflowが消えた！」「npm installができない！」</p>
+                <p>全てのフロントエンド開発者たちが絶望のふちに…。</p>
+            </div>
+        </div>
+
+        <!-- 第二章-4 -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>世紀末フロントエンド</h1>
+                <div class="divider"></div>
+                
+                <p>デプロイ？何それおいしいの？という混乱。</p>
+                <p>人々はSNSも使えず、文明社会はパニック。</p>
+                
+                <p>世界からインターネットが奪われた日、あなたは静かに山を下りることを決意する。<br>
+                「今こそ、3年間の修行の成果を試すときだ…！」</p>
+            </div>
+        </div>
+
+        <!-- 第三章タイトル -->
+        <div class="slide" id="slide-11">
+            <div class="chapter-title">
+                <h1>第三章</h1>
+                <h2>地中からの発掘と再構築</h2>
+            </div>
+        </div>
+
+        <!-- 第三章-1 -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>第三章：地中からの発掘と再構築</h1>
+                <div class="divider"></div>
+                
+                <p>街は瓦礫の山、通信タワーは骨組みしか残っていない。そんな中、フロントエンド仙人となったあなたがまず行ったのは、通信設備の地中発掘だった。</p>
+            </div>
+        </div>
+
+        <!-- 第三章-2 -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>掘れども掘れども</h1>
+                <div class="divider"></div>
+                
+                <p>畑用のスコップを片手にケーブルを探す。</p>
+                <p>「ここに…LANケーブルの根があるはずだ…うわ、イモ虫がいる。」</p>
+                <p>錆びたルーター、粉々のPCケース、古いブラウン管モニターなど、懐かしのガラクタが大豊作。</p>
+            </div>
+        </div>
+
+        <!-- 第三章-3 -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>ブラウザの復活</h1>
+                <div class="divider"></div>
+                
+                <p>奇跡的に動いたPCに古いブラウザが入っていた！</p>
+                <p>しかしIE6（！）だった。</p>
+                <p>「せっかくだからレトロ環境でローカルサーバを立ち上げるか…」</p>
+            </div>
+        </div>
+
+        <!-- 第三章-4 -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>HTML5？ 新手の陰陽術？</h1>
+                <div class="divider"></div>
+                
+                <p>HTML5？ 何それ新手の陰陽術？</p>
+                <p>仕方なくポリフィル？ Polyfill？どうやって持ってくる？</p>
+                <p>開発者たちの悲鳴がむなしくこだまする。</p>
+            </div>
+        </div>
+
+        <!-- 第三章-5 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>TCP/IPの復元</h1>
+                <div class="divider"></div>
+                
+                <p>「IPアドレスとは何か…そう、それはノリと勢いじゃない。数値だ。」</p>
+                <p>バイナリ手入力で各ノードを繋ぎ直す。</p>
+                <p>「ここが192.168.0.1で、ここが255.255.255.0で…ああもう頭が！」</p>
+                <p>脳内pingコマンドを放つが"Timeout"続出。</p>
+            </div>
+        </div>
+
+        <!-- 第三章-6 -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1>DNSサーバを地中から救出</h1>
+                <div class="divider"></div>
+                
+                <p>DNSルートサーバっぽい装置を発掘。「これはAルートか！？…違う、ただの炊飯器だ。」</p>
+                <p>結局、寄せ集めパーツでDNSサーバを自作。</p>
+                <p>誰もが「hostsファイルと友情出演」が当たり前の世界。</p>
+            </div>
+        </div>
+
+        <!-- 第四章タイトル -->
+        <div class="slide" id="slide-18">
+            <div class="chapter-title">
+                <h1>第四章</h1>
+                <h2>フロントエンド仙人の冒険（そして再びウェブへ）</h2>
+            </div>
+        </div>
+
+        <!-- 第四章-1 -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>第四章：フロントエンド仙人の冒険</h1>
+                <div class="divider"></div>
+                
+                <p>通信機器を発掘し、なんとかブラウザを動かし、TCP/IPとDNSを（ほぼ手打ちで）復元したあなた。</p>
+                <p>しかしここからが本番だ。人々にページを届けるために、さらなる試練が待ち受けていた！</p>
+            </div>
+        </div>
+
+        <!-- 第四章-2 -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>"Hello World"の奇跡</h1>
+                <div class="divider"></div>
+                
+                <p>久しぶりにブラウザに打ち込んだconsole.log("Hello World")</p>
+                <p>画面にエラー…。しかしそれでもエラー文が表示されるだけで感動の嵐！</p>
+                <p>生まれてはじめて「エラー」に泣くデベロッパー続出。</p>
+            </div>
+        </div>
+
+        <!-- 第四章-3 -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>フレームワーク難民</h1>
+                <div class="divider"></div>
+                
+                <p>ReactもVueもCDNが壊滅でダウンロード不可。</p>
+                <p>「ならば自分たちでReactを作ろう」と意気込むも、3日後にはみんな灰のように消耗…。</p>
+                <p>フロントエンド仙人がぽつりと一言：「HTMLとVanilla JSに、帰っておいで…」</p>
+                <p>みんな「つらい」けど、なんだか妙に清々しい。</p>
+            </div>
+        </div>
+
+        <!-- 第四章-4 -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>伝説のREST API探索</h1>
+                <div class="divider"></div>
+                
+                <p>バックエンドのサーバも瀕死。</p>
+                <p>「REST APIを発掘せよ！」と各地を巡る冒険が始まる。</p>
+                <p>使えそうなサーバを見つけたら、中身はエラーログだらけ。でもかろうじて/api/v1/hogeは生きていた！</p>
+                <p>「ここが俺たちの新たなインフラだ！」と涙を流しながらfetchを試す。</p>
+            </div>
+        </div>
+
+        <!-- 第四章-5 -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>新世界へ</h1>
+                <div class="divider"></div>
+                
+                <p>こうしてなんとか最低限のウェブ環境が甦った。</p>
+                <p>あなたは「いつでも404を許容する心の余裕」を説き、「サービスワーカーを地道に再構築しよう」と提案。</p>
+                <p>HTML/CSS/JSのみのシンプルなフロントエンドを掲げ、世界を再び繋げようとする。</p>
+                <p>「The show must go on」とつぶやきながら、一歩ずつ前進する姿に人々は希望を見出す。</p>
+            </div>
+        </div>
+
+        <!-- 第五章タイトル -->
+        <div class="slide" id="slide-24">
+            <div class="chapter-title">
+                <h1>第五章</h1>
+                <h2>混沌と笑いのエピローグ</h2>
+            </div>
+        </div>
+
+        <!-- 第五章-1 -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>第五章：混沌と笑いのエピローグ</h1>
+                <div class="divider"></div>
+                
+                <p>フロントエンド仙人としてのあなたの名声は、一夜にして世界中に知れ渡る（世界中といっても、まだ通信エリアはごく一部だけど）。</p>
+            </div>
+        </div>
+
+        <!-- 第五章-2 -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>新しい世界の日常</h1>
+                <div class="divider"></div>
+                
+                <p>「Gitの代わりに足でディフを取りに行くチーム」</p>
+                <p>「コンフリクトはペンで修正！？」</p>
+                <p>といった奇妙な光景に、昔の文明を思い出しては笑う毎日。</p>
+            </div>
+        </div>
+
+        <!-- 第五章-3 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>本質への回帰</h1>
+                <div class="divider"></div>
+                
+                <p>そんな中、あなたはふと3年前、山に籠もった時の自分に思いを馳せる。</p>
+                <p>「結局、フロントエンドってのは人と人をつなぐためのもの。インターネットが無くたって、繋ぐ意思さえあれば何でもできるのかもしれない…」</p>
+                <p>そして再び山頂へ戻っていく――そう、また3年間くらい新たな修行をするために。</p>
+            </div>
+        </div>
+
+        <!-- 第五章-4 -->
+        <div class="slide" id="slide-28">
+            <div class="chapter">
+                <div class="highlight">
+                    <p>――完――</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- エピローグ -->
+        <div class="slide" id="slide-29">
+            <div class="chapter-title">
+                <h1>勉強会の始まり</h1>
+                <h2>フロントエンドの本質を探る旅へ</h2>
+            </div>
+        </div>
+
+        <!-- 勉強会 -->
+        <div class="slide" id="slide-30">
+            <div class="teaching">
+                <h1>さあ、ここからが本当の勉強会のはじまりだ！</h1>
+                <p>人類がインターネットを再構築するプロセスの中で、フロントエンドの基礎・歴史・仕組みを学び、
+                さらにHTML/CSS/JSの本質を再確認する、笑いあり涙あり（？）の壮大な旅へ出かけよう！</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-1 -->
+        <div class="slide" id="slide-31">
+            <div class="teaching">
+                <h2>フロントエンド仙人の教え：</h2>
+                <p><strong>基本に立ち戻れ：</strong></p>
+                <p>UIはシンプルに、Vanilla JSで動かしてみる。</p>
+                <p>難しいフレームワークも、基本は同じHTML/CSS/JSの上に成り立っている。</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-2 -->
+        <div class="slide" id="slide-32">
+            <div class="teaching">
+                <h2>フロントエンド仙人の教え：</h2>
+                <p><strong>インフラを敬え：</strong></p>
+                <p>TCP/IPやDNSがあってこそ、ウェブは成り立つ。</p>
+                <p>便利な世界の裏側で動いている技術への感謝を忘れずに。</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-3 -->
+        <div class="slide" id="slide-33">
+            <div class="teaching">
+                <h2>フロントエンド仙人の教え：</h2>
+                <p><strong>技術は人のため：</strong></p>
+                <p>最終的には、人を笑顔にするのがフロントエンド開発。</p>
+                <p>アクセシビリティやユーザビリティを忘れずに。</p>
+            </div>
+        </div>
+
+        <!-- 最終スライド -->
+        <div class="slide" id="slide-34">
+            <div class="teaching">
+                <div class="footer">
+                    <h1>フロントエンド仙人の物語</h1>
+                    <p>© 2025 フロントエンドクラブ</p>
+                    <p>本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 34</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 34;
+        
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+        
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(slideNumber) {
+            // 全スライドを非表示にする
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            
+            // 現在のスライドをアクティブにする
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            currentSlideElem.classList.add('active');
+            
+            // 前のスライドには前クラスを付ける（左側に表示）
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                prevSlideElem.classList.add('prev');
+            }
+            
+            // カウンターとボタン状態を更新
+            updateSlideCounter();
+            updateButtonState();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // キーボードナビゲーション
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+        
+        // 初期表示
+        updateSlideCounter();
+        updateButtonState();
+    </script>
+</body>
+</html> 
