@@ -26,7 +26,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            padding: 40px;
+            padding: 2vh 4vw;
             box-sizing: border-box;
             transform: translateX(100%);
             transition: transform 0.5s ease;
@@ -40,22 +40,22 @@
             transform: translateX(-100%);
         }
         h1 {
-            font-size: 28px;
+            font-size: min(4vh, 28px);
             border-bottom: 2px solid #55c500;
-            padding-bottom: 10px;
-            margin-top: 20px;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
             color: #55c500;
         }
         h2 {
-            font-size: 24px;
+            font-size: min(3.5vh, 24px);
             border-left: 5px solid #55c500;
-            padding-left: 10px;
-            margin-top: 30px;
+            padding-left: 2vw;
+            margin-top: 3vh;
         }
         .chapter {
-            max-width: 800px;
+            max-width: 92vw;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2vh 2vw;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -83,19 +83,19 @@
         }
         .nav-buttons {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 2vh;
+            right: 2vw;
             z-index: 100;
         }
         .nav-buttons button {
             background-color: #55c500;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 1vh 2vw;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 10px;
-            font-size: 16px;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: background-color 0.3s;
         }
@@ -108,17 +108,17 @@
         }
         .slide-number {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
             color: #777;
             z-index: 100;
         }
         .fullscreen-icon {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
             color: #55c500;
             cursor: pointer;
             z-index: 100;
@@ -130,14 +130,15 @@
             justify-content: center;
             align-items: center;
             height: 100%;
+            padding: 0 4vw;
         }
         .title-slide h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
             border-bottom: none;
         }
         .title-slide p {
-            font-size: 20px;
+            font-size: min(3vh, 20px);
             color: #666;
         }
         .chapter-title {
@@ -151,6 +152,10 @@
         .chapter-title h1 {
             font-size: 32px;
             border-bottom: none;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
         }
     </style>
 </head>
