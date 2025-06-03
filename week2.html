@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電源、気合で何とかなるはずがない</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active {
+            transform: translateX(0);
+        }
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #ff6b35;
+        }
+        h2 {
+            font-size: min(3.5vh, 24px);
+            border-left: 5px solid #ff6b35;
+            padding-left: 2vw;
+            margin-top: 3vh;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #fff5f0;
+            padding: 15px;
+            border-left: 4px solid #ff6b35;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #ffeee5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #ff6b35;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #e55a2d;
+        }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #ff6b35;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+        }
+        .title-slide h1 {
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: min(3vh, 20px);
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        .chapter-title h1 {
+            font-size: 32px;
+            border-bottom: none;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
+        }
+        .calculation-box {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            border: 2px solid #ff6b35;
+        }
+        .shock {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .realization {
+            background-color: #ffffcc;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ffa500;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- タイトルスライド -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第2回:電源、気合で何とかなるはずがない</h1>
+                <p>― 孤高の電力サバイバル ―</p>
+            </div>
+        </div>
+
+        <!-- 講師紹介スライド -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>講師紹介</h1>
+                <div class="divider"></div>
+                <h2>なんでもトークン</h2>
+                <p>ITインフラの先生。前回に引き続き、今回もAI駆使でスライド制作中</p>
+                <p>本業はブロックチェーンという謎技術を使った広告会社のCTO</p>
+                <h2>masaki_kitahara</h2>
+                <p>実力派フロントエンドエンジニア</p>
+                <p>今回は電源トラブルの際、きっと冷静に対処してくれそうな頼もしい存在</p>
+            </div>
+        </div>
+
+        <!-- 前回のあらすじ -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>前回のあらすじ</h1>
+                <div class="divider"></div>
+                <p>フロントエンド仙人となった俺は、核戦争で崩壊した世界でインターネットを再構築した。</p>
+                <p>山奥でLANケーブルを這わせ、WiFiアクセスポイントを設置し、</p>
+                <p>ついに人類の生き残りが俺のWebサイトにアクセス成功！</p>
+                <p>アクセスログに感動の涙を流した、あの日から数日後...</p>
+            </div>
+        </div>
+
+        <!-- 第一章タイトル -->
+        <div class="slide" id="slide-4">
+            <div class="chapter-title">
+                <h1>第一章</h1>
+                <h2>夢落ちからの現実重い</h2>
+            </div>
+        </div>
+
+        <!-- 第一章-1 -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>第一章：夢落ちからの現実重い</h1>
+                <div class="divider"></div>
+                
+                <p>目を開けたら…なんと昨日までの電気復旧は全部夢だった。</p>
+                <p>俺「え...まじで...？ゴッドハンドで電気が湧いて出てくるわけないよな...」</p>
+                <p>現実は非情。目の前には停電した廃墟と、動かないサーバの山。</p>
+                <p class="shock">「電気もコードも自分で作らなきゃ……現実重いッ！」</p>
+            </div>
+        </div>
+
+        <!-- 第二章タイトル -->
+        <div class="slide" id="slide-6">
+            <div class="chapter-title">
+                <h1>第二章</h1>
+                <h2>"ワット"の壁にぼっち絶叫</h2>
+            </div>
+        </div>
+
+        <!-- 第二章-1 -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>第二章："ワット"の壁にぼっち絶叫</h1>
+                <div class="divider"></div>
+                
+                <p>廃ラックサーバの電源ラベルを読んで愕然。</p>
+                <div class="calculation-box">
+                    400W × 10台 = 4,000W = 4kW
+                </div>
+                <p class="shock">「4キロワット!? 気合4,000W分あるか俺!?」</p>
+                <p>とセルフ突っ込み。数字は容赦ない。</p>
+            </div>
+        </div>
+
+        <!-- 第三章タイトル -->
+        <div class="slide" id="slide-8">
+            <div class="chapter-title">
+                <h1>第三章</h1>
+                <h2>孤独な無茶発電チャレンジ</h2>
+            </div>
+        </div>
+
+        <!-- 第三章-1 握力ダイナモ -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>握力ダイナモ大作戦</h1>
+                <div class="divider"></div>
+                
+                <p>廃品の中からハンドダイナモ発電機を発見！</p>
+                <p>「よし、これで電力問題解決だ！」</p>
+                <p>5分後...</p>
+                <p class="shock">「うぐぅぅ！腕が...腕がぁぁ！」</p>
+                <p>LEDすら光らず、物理の厳しさを思い知る。</p>
+                <div class="realization">
+                    <p><strong>悟り：</strong>「物理は非情」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三章-2 ハムスター車輪 -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>人力ハムスター車輪大作戦</h1>
+                <div class="divider"></div>
+                
+                <p>「握力がダメなら脚力だ！」</p>
+                <p>自転車のホイールでダイナモ発電機を作製。</p>
+                <p>必死にペダルを漕ぐ俺...</p>
+                <p>10分後...</p>
+                <p class="shock">「目が...目が回る...うぇぇ」</p>
+                <div class="realization">
+                    <p><strong>悟り：</strong>「回転運動は持続不能」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三章-3 雷呼び -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>雷呼び雄叫び大作戦</h1>
+                <div class="divider"></div>
+                
+                <p>「そうだ！自然の力を借りよう！」</p>
+                <p>空に向かって絶叫する俺。</p>
+                <p>「雷よ！俺にお前の電力をくれぇぇぇ！」</p>
+                <p>結果：落ちてきたのはカラスのフン。</p>
+                <div class="realization">
+                    <p><strong>悟り：</strong>「落雷より落フンの方が早い」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三章-4 計算による絶望 -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>電卓が告げる絶望の現実</h1>
+                <div class="divider"></div>
+                
+                <p>電卓を叩きながら深刻な独り言...</p>
+                <div class="calculation-box">
+                    成人男性の持続出力: 200W<br>
+                    24時間×200W = 4,800Wh = 4.8kWh<br>
+                    サーバ4kW → 約1.2時間で力尽きる
+                </div>
+                <p class="shock">「サーバ10分も保たねぇ！」</p>
+                <p>「人力はワット計算で即絶望、数字は嘘つかねぇ！」</p>
+            </div>
+        </div>
+
+        <!-- 第四章タイトル -->
+        <div class="slide" id="slide-13">
+            <div class="chapter-title">
+                <h1>第四章</h1>
+                <h2>廃工場ディーゼル発電所をワンオペ再起動</h2>
+            </div>
+        </div>
+
+        <!-- 第四章-1 -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>第四章：廃工場ディーゼル発電所発見</h1>
+                <div class="divider"></div>
+                
+                <p>人力に絶望し、荒野をさまよっていると...</p>
+                <p>「あれは...工場跡？」</p>
+                <p>油まみれのジェネレータを発見！</p>
+                <p>タンクには謎の黒い"非常用燃料"が残っている。</p>
+                <p>「これだ...これしかない！」</p>
+            </div>
+        </div>
+
+        <!-- 第四章-2 三相交流の覚醒 -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>クランキング成功！三相の力よ！</h1>
+                <div class="divider"></div>
+                
+                <p>エンジンが回り始めた！三相200V/50Hzが発生！</p>
+                <p>壁にチョークで三相波形を描き、セルフ講義開始。</p>
+                <div class="highlight">
+                    <p>「120°ずれの3本波！これが送電ハイパワーの正体...わかったか俺！」</p>
+                </div>
+                <p>「三相は3本線で大電力を効率よく送れる！」</p>
+                <p>「でも家庭用コンセントは結局単相なんだよな...」</p>
+            </div>
+        </div>
+
+        <!-- 第四章-3 変圧器実況 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>Δ-Y変圧器で電圧変換だ！</h1>
+                <div class="divider"></div>
+                
+                <p>ケーブルを差し替えながら実況解説...</p>
+                <div class="highlight">
+                    <p>「三相200VをΔ-Y変圧器で100Vに落とせば単相が取れる！」</p>
+                    <p>「効率の三相と汎用の単相の使い分けなんだッ！」</p>
+                </div>
+                <p>変圧器から煙が出始める...</p>
+                <p>「あ、あれ？煙が...これは仕様？」</p>
+            </div>
+        </div>
+
+        <!-- 第五章タイトル -->
+        <div class="slide" id="slide-17">
+            <div class="chapter-title">
+                <h1>第五章</h1>
+                <h2>ひとりサブステーション建設</h2>
+            </div>
+        </div>
+
+        <!-- 第五章-1 -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>第五章：コンテナ制御室建設</h1>
+                <div class="divider"></div>
+                
+                <p>廃コンテナを制御室に改造開始！</p>
+                <p>変圧器を必死で動かし...「腰が...腰がぁぁ」</p>
+                <p>ATSと遮断器を並べて試運転。</p>
+                <p>スイッチオン！</p>
+                <p class="shock">バチバチバチ！火花祭り開催！</p>
+            </div>
+        </div>
+
+        <!-- 第五章-2 ショート祭り -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>即ショート祭り！防火シート装備</h1>
+                <div class="divider"></div>
+                
+                <p>「エフェクト最高！でもブレーカー仕事して!!」</p>
+                <p>防火シート姿で絶叫しながら解説...</p>
+                <div class="highlight">
+                    <p>「許容電流を超えたら細い線はトースター！」</p>
+                    <p>「2mm²で20Aが目安、ここに50A流したらそりゃ発火するわ俺バカか!!」</p>
+                </div>
+                <p>火花を浴びつつケーブルを握りしめる俺...</p>
+            </div>
+        </div>
+
+        <!-- 第六章タイトル -->
+        <div class="slide" id="slide-20">
+            <div class="chapter-title">
+                <h1>第六章</h1>
+                <h2>AC→DC"大行列"電気すごろく</h2>
+            </div>
+        </div>
+
+        <!-- 第六章-1 -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>第六章：電力変換の長い道のり</h1>
+                <div class="divider"></div>
+                
+                <p>発電機から最終的にサーバまでの電力変換ルート：</p>
+                <div class="calculation-box">
+                    発電機（三相200V）<br>
+                    ↓<br>
+                    トランス（三相100V）<br>
+                    ↓<br>
+                    整流ブリッジ<br>
+                    ↓<br>
+                    12Vバス<br>
+                    ↓<br>
+                    DC-DC<br>
+                    ↓<br>
+                    5Vレール
+                </div>
+            </div>
+        </div>
+
+        <!-- 第六章-2 -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>電力変換の本質を悟る</h1>
+                <div class="divider"></div>
+                
+                <p>ケーブルを引き回しながら実況...</p>
+                <div class="highlight">
+                    <p>「発電 → 変圧 → 整流 → 安定化 → 分配 → デバイス」</p>
+                    <p>「たった一行で要約するとこうだ！」</p>
+                </div>
+                <p>「ノイズも味だ」と目視でリプルを誤魔化す。</p>
+                <p>オシロスコープなんて贅沢品は無い。目と勘が頼り。</p>
+            </div>
+        </div>
+
+        <!-- 第七章タイトル -->
+        <div class="slide" id="slide-23">
+            <div class="chapter-title">
+                <h1>第七章</h1>
+                <h2>12V／5Vレールの怪</h2>
+            </div>
+        </div>
+
+        <!-- 第七章-1 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>第七章：電圧の役割分担を理解</h1>
+                <div class="divider"></div>
+                
+                <p>LEDテスターで確認しながら独り言...</p>
+                <div class="realization">
+                    <p>「そうか、コンピュータ内部はみんな直流。」</p>
+                    <p>「12Vはファンやモーターで"力仕事"」</p>
+                    <p>「5VはCPUやメモリの"頭脳労働"」</p>
+                    <p>「この二刀流で0と1が躍り狂うんだ！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第七章-2 -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>荒野のイルミネーション</h1>
+                <div class="divider"></div>
+                
+                <p>5V USBハブでLED祭り開催！</p>
+                <p>荒野に一人、美しいイルミネーションを眺める俺。</p>
+                <p>「これが...電気の力...」</p>
+                <p>LEDの光に心を癒やされる、孤独な電気技師の姿。</p>
+                <p>ついに安定した直流電源が完成した。</p>
+            </div>
+        </div>
+
+        <!-- 第八章タイトル -->
+        <div class="slide" id="slide-26">
+            <div class="chapter-title">
+                <h1>第八章</h1>
+                <h2>孤独のデータセンター起動式</h2>
+            </div>
+        </div>
+
+        <!-- 第八章-1 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>第八章：ついに起動の時</h1>
+                <div class="divider"></div>
+                
+                <p>プレハブ小屋にサーバを設置完了。</p>
+                <p>ケーブルをつなぎ、発電機を回して...</p>
+                <p>「行くぞ...電源オン！」</p>
+                <p>ポチッ。</p>
+                <p>ピッ...ピーッ...ピピピ...</p>
+                <p class="shock">「ブートしたァァァ！」</p>
+                <p>BIOSビープ音にテンション爆上げ、ガッツポーズ！</p>
+            </div>
+        </div>
+
+        <!-- 第八章-2 -->
+        <div class="slide" id="slide-28">
+            <div class="chapter">
+                <h1>感動の起動画面</h1>
+                <div class="divider"></div>
+                
+                <p>モニターに映る起動画面...</p>
+                <p>POST完了、OSローディング...</p>
+                <p>「やった...やったぞ俺！」</p>
+                <p>一人データセンターが遂に稼働開始。</p>
+                <p>荒野に響く冷却ファンの音が、まるで子守唄のように聞こえる。</p>
+            </div>
+        </div>
+
+        <!-- 第九章タイトル -->
+        <div class="slide" id="slide-29">
+            <div class="chapter-title">
+                <h1>第九章</h1>
+                <h2>燃料リミットの孤高エンド</h2>
+            </div>
+        </div>
+
+        <!-- 第九章-1 -->
+        <div class="slide" id="slide-30">
+            <div class="chapter">
+                <h1>第九章：現実はそう甘くない</h1>
+                <div class="divider"></div>
+                
+                <p>サーバが動いて喜んでいると...</p>
+                <p>燃料メーターを見て蒼白。</p>
+                <div class="calculation-box">
+                    残り燃料: 96リットル<br>
+                    消費量: 2L/h<br>
+                    稼働可能時間: 48時間
+                </div>
+                <p class="shock">「48時間で燃料切れ...」</p>
+            </div>
+        </div>
+
+        <!-- 第九章-2 -->
+        <div class="slide" id="slide-31">
+            <div class="chapter">
+                <h1>夕陽に向かう独白</h1>
+                <div class="divider"></div>
+                
+                <p>夕陽を背に、俺は独り言を呟く...</p>
+                <div class="highlight">
+                    <p>「ここから先はネットワークだ。」</p>
+                    <p>「俺たちはネットワークに支えられている――」</p>
+                </div>
+                <p>地面に棒切れで大書きする次章タイトル。</p>
+                <p style="font-size: 24px; text-align: center; color: #ff6b35; font-weight: bold;">
+                    第三章「俺たちはネットワークに支えられている」
+                </p>
+            </div>
+        </div>
+
+        <!-- エピローグ -->
+        <div class="slide" id="slide-32">
+            <div class="chapter-title">
+                <h1>次章予告</h1>
+                <h2>荒野に点在する機器を結び、<br>パケットの息吹を取り戻す<br>"孤独ネットワーク再建計画"が始まる──</h2>
+            </div>
+        </div>
+
+        <!-- 勉強会 -->
+        <div class="slide" id="slide-33">
+            <div class="teaching">
+                <h1>さあ、ここからが本当の勉強会のはじまりだ！</h1>
+                <p>電源からネットワークまで、ITインフラの基礎を<br>
+                ギャグマンガ調で楽しく学んでいこう！</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-1 -->
+        <div class="slide" id="slide-34">
+            <div class="teaching">
+                <h2>電力仙人の教え：</h2>
+                <p><strong>電力を侮るなかれ：</strong></p>
+                <p>どんなにスマートなコードを書いても、電気が無ければただの箱。</p>
+                <p>三相交流、単相交流、直流の違いを理解せよ。</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-2 -->
+        <div class="slide" id="slide-35">
+            <div class="teaching">
+                <h2>電力仙人の教え：</h2>
+                <p><strong>ワット計算は基本中の基本：</strong></p>
+                <p>消費電力を知らずしてシステム設計はできない。</p>
+                <p>電力容量計画は、性能設計と同じくらい重要だ。</p>
+            </div>
+        </div>
+
+        <!-- 仙人の教え-3 -->
+        <div class="slide" id="slide-36">
+            <div class="teaching">
+                <h2>電力仙人の教え：</h2>
+                <p><strong>冗長性を忘れるな：</strong></p>
+                <p>UPSは神、発電機は仏。</p>
+                <p>停電対策は、データ損失防止の最後の砦である。</p>
+            </div>
+        </div>
+
+        <!-- 最終スライド -->
+        <div class="slide" id="slide-37">
+            <div class="teaching">
+                <div class="footer">
+                    <h1>電源、気合で何とかなるはずがない</h1>
+                    <p>© 2025 フロントエンドクラブ</p>
+                    <p>次回：「俺たちはネットワークに支えられている」</p>
+                    <p>本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 37</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 37;
+        
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+        
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(slideNumber) {
+            // 全スライドを非表示にする
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            
+            // 現在のスライドをアクティブにする
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            currentSlideElem.classList.add('active');
+            
+            // 前のスライドには前クラスを付ける（左側に表示）
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                prevSlideElem.classList.add('prev');
+            }
+            
+            // カウンターとボタン状態を更新
+            updateSlideCounter();
+            updateButtonState();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // キーボードナビゲーション
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+        
+        // 初期表示
+        updateSlideCounter();
+        updateButtonState();
+    </script>
+</body>
+</html>
