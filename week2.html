@@ -584,8 +584,25 @@
             </div>
         </div>
 
-        <!-- 第九章-2 -->
+        <!-- 都合よく石油が出てくるスライド -->
         <div class="slide" id="slide-31">
+            <div class="chapter">
+                <h1>都合の良すぎる展開</h1>
+                <div class="divider"></div>
+                <p>絶望して地面を蹴飛ばしたその時...</p>
+                <p class="shock">「ん？なんか黒い液体が染み出てきたぞ...？」</p>
+                <p>試しに火を近づけてみると...</p>
+                <p style="font-family: monospace; font-size: 1.5em; text-align: center;">ゴゴゴゴゴ...</p>
+                <p>「こ、これは...原油だ！しかも良質な！」</p>
+                <p>どうやらこの土地は、都合よく油田だったらしい。</p>
+                <div class="realization">
+                    <p><strong>悟り：</strong>「主人公補正は物理法則を超える」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第九章-2 -->
+        <div class="slide" id="slide-32">
             <div class="chapter">
                 <h1>夕陽に向かう独白</h1>
                 <div class="divider"></div>
@@ -603,7 +620,7 @@
         </div>
 
         <!-- エピローグ -->
-        <div class="slide" id="slide-32">
+        <div class="slide" id="slide-33">
             <div class="chapter-title">
                 <h1>次章予告</h1>
                 <h2>荒野に点在する機器を結び、<br>パケットの息吹を取り戻す<br>"孤独ネットワーク再建計画"が始まる──</h2>
@@ -611,7 +628,7 @@
         </div>
 
         <!-- 勉強会 -->
-        <div class="slide" id="slide-33">
+        <div class="slide" id="slide-34">
             <div class="teaching">
                 <h1>さあ、ここからが本当の勉強会のはじまりだ！</h1>
                 <p>電源からネットワークまで、ITインフラの基礎を<br>
@@ -620,9 +637,9 @@
         </div>
 
         <!-- 仙人の教え-1 -->
-        <div class="slide" id="slide-34">
+        <div class="slide" id="slide-35">
             <div class="teaching">
-                <h2>電力仙人の教え：</h2>
+                <h2>フロントエンド仙人、電源の教え：</h2>
                 <p><strong>電力を侮るなかれ：</strong></p>
                 <p>どんなにスマートなコードを書いても、電気が無ければただの箱。</p>
                 <p>三相交流、単相交流、直流の違いを理解せよ。</p>
@@ -630,9 +647,9 @@
         </div>
 
         <!-- 仙人の教え-2 -->
-        <div class="slide" id="slide-35">
+        <div class="slide" id="slide-36">
             <div class="teaching">
-                <h2>電力仙人の教え：</h2>
+                <h2>フロントエンド仙人、電源の教え：</h2>
                 <p><strong>ワット計算は基本中の基本：</strong></p>
                 <p>消費電力を知らずしてシステム設計はできない。</p>
                 <p>電力容量計画は、性能設計と同じくらい重要だ。</p>
@@ -640,9 +657,9 @@
         </div>
 
         <!-- 仙人の教え-3 -->
-        <div class="slide" id="slide-36">
+        <div class="slide" id="slide-37">
             <div class="teaching">
-                <h2>電力仙人の教え：</h2>
+                <h2>フロントエンド仙人、電源の教え：</h2>
                 <p><strong>冗長性を忘れるな：</strong></p>
                 <p>UPSは神、発電機は仏。</p>
                 <p>停電対策は、データ損失防止の最後の砦である。</p>
@@ -650,7 +667,7 @@
         </div>
 
         <!-- 最終スライド -->
-        <div class="slide" id="slide-37">
+        <div class="slide" id="slide-38">
             <div class="teaching">
                 <div class="footer">
                     <h1>電源、気合で何とかなるはずがない</h1>
@@ -663,7 +680,7 @@
     </div>
 
     <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
-    <div class="slide-number" id="slide-counter">1 / 37</div>
+    <div class="slide-number" id="slide-counter">1 / 38</div>
     <div class="nav-buttons">
         <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
         <button id="next-btn" onclick="nextSlide()">次へ</button>
@@ -671,7 +688,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 37;
+        const totalSlides = 38;
         
         function updateSlideCounter() {
             document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
