@@ -414,6 +414,31 @@
                 <div class="divider"></div>
                 <p>「3-way handshake！　SYN → SYN-ACK → ACK！　俺とサーバが握手する瞬間だ！」とパケットキャプチャを眺めて興奮。</p>
                 <p>Wiresharkで解析しながら絶叫解説――「シーケンス番号！　ACK番号！　ウィンドウサイズ！　TCPは信頼性の塊、俺のデータは絶対届く！」</p>
+                
+                <h2>Wiresharkでパケット観察！</h2>
+                <p>「パケットの中身を見るぞ！」と廃墟から発掘したWiresharkを起動。画面に流れるパケットに興奮。</p>
+                <div class="code-block">
+                    No. Time        Source      Destination Protocol Length Info
+                    1   0.000000    192.168.1.1 192.168.1.2 TCP      66     80 > 12345 [SYN] Seq=0 Win=65535
+                    2   0.000512    192.168.1.2 192.168.1.1 TCP      66     12345 > 80 [SYN, ACK] Seq=0 Ack=1 Win=65535
+                    3   0.001024    192.168.1.1 192.168.1.2 TCP      54     80 > 12345 [ACK] Seq=1 Ack=1 Win=65535
+                </div>
+                <p>「フレーム詳細を見ろ！　Ethernet Header → IP Header → TCP Header → Data！　美しい階層構造だ！」</p>
+                <div class="code-block">
+                    Frame 1: 66 bytes on wire
+                    Ethernet II, Src: 00:1a:2b:3c:4d:5e, Dst: 00:6f:7e:8d:9c:0a
+                    Internet Protocol Version 4, Src: 192.168.1.1, Dst: 192.168.1.2
+                    Transmission Control Protocol, Src Port: 80, Dst Port: 12345
+                        Source Port: 80
+                        Destination Port: 12345
+                        Sequence Number: 0
+                        Acknowledgment Number: 0
+                        Flags: 0x02 (SYN)
+                        Window Size: 65535
+                        Checksum: 0xabcd
+                </div>
+                <p>「これぞプロトコル解析の醍醐味！　俺はWiresharkマスターだ！」とパケットを眺めながら感動。</p>
+                
                 <div class="network-diagram">
                     <h3>TCP 3-way Handshake</h3>
                     <p>クライアント → サーバ: SYN</p>
