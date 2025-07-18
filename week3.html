@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3回:俺たちはネットワークに支えられている</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active {
+            transform: translateX(0);
+        }
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #0066cc;
+        }
+        h2 {
+            font-size: min(3.5vh, 24px);
+            border-left: 5px solid #0066cc;
+            padding-left: 2vw;
+            margin-top: 3vh;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #e6f3ff;
+            padding: 15px;
+            border-left: 4px solid #0066cc;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #e6f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #0052a3;
+        }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #0066cc;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+        }
+        .title-slide h1 {
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: min(3vh, 20px);
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        .chapter-title h1 {
+            font-size: 32px;
+            border-bottom: none;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .network-diagram {
+            background-color: #f0f8ff;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .protocol-stack {
+            background-color: #fff8dc;
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- タイトルスライド -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第3回:俺たちはネットワークに支えられている</h1>
+                <p>― 孤独ネットワーク再建計画 ―</p>
+            </div>
+        </div>
+
+        <!-- 講師紹介 -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>講師紹介</h1>
+                <div class="divider"></div>
+                <h2>なんでもトークン</h2>
+                <p>ITインフラの先生。今回のスライド大部分をAIで作りました</p>
+                <p>本業はブロックチェーンという謎技術を使った広告会社のCTO</p>
+                <h2>masaki_kitahara</h2>
+                <p>実力派フロントエンドエンジニア</p>
+                <p>今回は「フロントエンド周辺技術」勉強会のサポートとして生徒会長的な動きで盛り上げてくれます</p>
+            </div>
+        </div>
+
+        <!-- 前回のあらすじ -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>前回のあらすじ</h1>
+                <div class="divider"></div>
+                <p>発電機が沈黙。俺「電気は確保した、でも孤立したサーバに何の意味が！？　ネットワークなくして世界復活などありえない！」と絶叫。</p>
+                <div class="highlight">
+                    <p>今回はネットワークの回です。一人でOSI参照モデル7層を全て構築する男の物語をお楽しみください。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン1: 物理層の絶望 -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1: 物理層の絶望的現実</h1>
+                <div class="divider"></div>
+                <p>廃墟に転がるケーブルを見つめ愕然。「LANケーブル100 m制限!?　隣の建物まで300 m…延長の物理法則は俺にも勝てない！」とセルフ突っ込み。</p>
+                <p>光ファイバーを発見して狂喜乱舞。「光は減衰しない！　でも接続にはファイバー融着機が…」現実の壁に膝を突く。</p>
+                <div class="teaching">
+                    <h2>物理層の現実</h2>
+                    <p>• LANケーブル(UTP)は100mが限界</p>
+                    <p>• 光ファイバーは数十キロメートルまで可能</p>
+                    <p>• でも接続には専用機器が必要</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン2: 銅線ガチャガチャ -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>シーン2: 銅線ガチャガチャ大作戦</h1>
+                <div class="divider"></div>
+                <p>廃工場から銅線を回収し、手作りイーサネット。「1と0は電圧の高低！　でも電圧ノイズで化けるんだ…」とペンチで格闘。</p>
+                <p>ケーブルテスターで導通確認しながら絶叫解説――「ストレート、クロス、ツイストペア！　8本の銅線が送受信を分担、2本ずつがペアでノイズをキャンセル。物理は正直、配線間違えれば即パケットロス！」</p>
+                <div class="code-block">
+                    イーサネットケーブル構造:
+                    1-2番線: 送信用ペア
+                    3-6番線: 受信用ペア
+                    4-5,7-8番線: 予備（ギガビット時使用）
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン3: MACアドレス祭り -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>シーン3: MACアドレスひとり祭り</h1>
+                <div class="divider"></div>
+                <p>手書きでMACアドレス一覧を作成。「48 bitの世界唯一ID！　俺の機器は俺が管理、衝突もダブりも俺次第！」とマジックで機器にMAC番号を直書き。</p>
+                <p>スイッチングハブを発見して興奮。「MACアドレステーブル！　ブロードキャストドメイン！　レイヤ2の神がここに宿る！」</p>
+                <div class="code-block">
+                    MACアドレス例:
+                    00:1A:2B:3C:4D:5E
+                    ├─ OUI(24bit): ベンダー識別子
+                    └─ NIC(24bit): 機器固有番号
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン4: IP帝国建国 -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>シーン4: IPアドレス"俺帝国"建国</h1>
+                <div class="divider"></div>
+                <p>地図に自分だけのネットワーク構成図を描く。「192.168.1.0/24は俺の王国！　サブネットマスクで領土を区切り、デフォルトゲートウェイで外界への扉を開く！」</p>
+                <p>電卓でサブネット計算しながら実況――「/24なら256台、/25なら128台！　2のn乗でホスト数が決まる、俺は数学で帝国を治める皇帝だ！」</p>
+                <div class="network-diagram">
+                    <h3>俺帝国ネットワーク構成</h3>
+                    <p>192.168.1.0/24</p>
+                    <p>├─ 192.168.1.1 (ゲートウェイ)</p>
+                    <p>├─ 192.168.1.2 (Webサーバ)</p>
+                    <p>└─ 192.168.1.3-254 (クライアント)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン5: RFC聖典発見 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1>シーン5: RFC聖典発見と絶叫解読</h1>
+                <div class="divider"></div>
+                <p>廃墟の図書館でRFC文書を発見。「RFC 791！　Internet Protocol仕様書！　これが俺たちの聖典だ！」と埃まみれの文書を抱きしめる。</p>
+                <p>「Request for Comments...コメント求む!?　でも俺一人！　コメントは心の声だ！」と一人でRFCにツッコミを入れながら熟読。</p>
+                <p>「RFC 793のTCP仕様、RFC 2616のHTTP/1.1！　全世界のエンジニアが従う標準化文書！　俺もこの伝統に従う！」と興奮。</p>
+                <div class="highlight">
+                    <h3>重要なRFC文書</h3>
+                    <p>• RFC 791: Internet Protocol (IP)</p>
+                    <p>• RFC 793: Transmission Control Protocol (TCP)</p>
+                    <p>• RFC 2616: HTTP/1.1</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン6: プロトコル階層 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>シーン6: プロトコル階層"俺様解釈"</h1>
+                <div class="divider"></div>
+                <p>壁に巨大なプロトコルスタック図を描く。「TCP/IP！　でも実は4層じゃない！　OSI7層の上にアプリケーション層が乗っかって、実際は無限階層だ！」</p>
+                <p>「HTTP over TCP over IP over Ethernet over 物理層！　プロトコルは入れ子構造！　俺のパケットは何重にも包まれた玉ねぎだ！」と実況。</p>
+                <div class="protocol-stack">
+                    <h3>プロトコルスタック</h3>
+                    <p>[ HTTP Header ] [ HTML Data ]</p>
+                    <p>[ TCP Header ] [ HTTP Header ] [ HTML Data ]</p>
+                    <p>[ IP Header ] [ TCP Header ] [ HTTP Header ] [ HTML Data ]</p>
+                    <p>[ Ethernet Header ] [ IP Header ] [ TCP Header ] [ HTTP Header ] [ HTML Data ]</p>
+                </div>
+                <p>各層のヘッダーを手書きしながら絶叫――「送信時は上から下へヘッダー追加、受信時は下から上へヘッダー剥がし！　カプセル化とデカプセル化、俺が全部やる！」</p>
+            </div>
+        </div>
+
+        <!-- シーン7: 俺様プロトコル -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>シーン7: プロトコル"俺様実装"</h1>
+                <div class="divider"></div>
+                <p>「俺がプロトコルを作る！　俺俺プロトコル(OOP: Ore-Ore Protocol)！」と独自プロトコルを設計。</p>
+                <p>「俺俺ヘッダー：[俺ID][俺タイムスタンプ][俺データ長][俺チェックサム]！　俺のパケットは俺が決める！」</p>
+                <p>でも既存プロトコルとの互換性がないことに気づき「...やっぱり標準に従おう」と標準プロトコルの偉大さを実感。</p>
+                <div class="teaching">
+                    <h2>標準プロトコルの重要性</h2>
+                    <p>• 互換性の確保</p>
+                    <p>• 世界中のエンジニアが共通理解</p>
+                    <p>• 独自プロトコルは管理コストが高い</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン8: ルーティング -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>シーン8: ルーティングテーブル手書き地獄</h1>
+                <div class="divider"></div>
+                <p>「パケットはどこへ行く？　宛先IPを見て、ルーティングテーブルで経路決定！」と壁に巨大なルーティングテーブルを描く。</p>
+                <p>静的ルーティングを手動設定しながら絶叫――「Next Hop！　Metric！　最適経路を俺が決める！　動的ルーティングなどない、俺がプロトコルだ！」</p>
+                <div class="code-block">
+                    ルーティングテーブル例:
+                    宛先ネットワーク    | Next Hop     | Metric
+                    192.168.1.0/24    | 直接接続      | 0
+                    192.168.2.0/24    | 192.168.1.1  | 1
+                    0.0.0.0/0         | 192.168.1.1  | 1
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン9: DHCP -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>シーン9: DHCPサーバ"俺様仕様"</h1>
+                <div class="divider"></div>
+                <p>「IPアドレスの自動配布！　俺がDHCPサーバだ！」と手作りDHCPサーバを構築。</p>
+                <p>設定ファイルを書きながら独り言――「リース期間24時間、俺の機器は俺が管理！　DHCP Discover → Offer → Request → Acknowledge、4-way handshakeで完璧だ！」</p>
+                <div class="network-diagram">
+                    <h3>DHCPシーケンス</h3>
+                    <p>1. DHCP Discover (クライアント→ブロードキャスト)</p>
+                    <p>2. DHCP Offer (サーバ→クライアント)</p>
+                    <p>3. DHCP Request (クライアント→サーバ)</p>
+                    <p>4. DHCP Acknowledge (サーバ→クライアント)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン10: DNS -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>シーン10: DNSサーバ"俺専用"</h1>
+                <div class="divider"></div>
+                <p>「名前解決は俺の仕事！　www.俺.com = 192.168.1.1！」と手作りDNSサーバを立ち上げ。</p>
+                <p>hostsファイルを手書きしながら実況――「ドメイン名とIPアドレスの対応表！　俺が神の電話帳を作る！　正引き、逆引き、俺が全部やる！」</p>
+                <div class="code-block">
+                    /etc/hosts
+                    192.168.1.1    www.俺.com
+                    192.168.1.2    server.俺.com
+                    192.168.1.3    client.俺.com
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン11: ping -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>シーン11: pingの孤独な対話</h1>
+                <div class="divider"></div>
+                <p>「ping 192.168.1.2」でパケットを送信。「ICMP Echo Request！　返事来い！」と画面を見つめ、Reply受信で歓喜。</p>
+                <p>「TTL 64、時間 1ms！　俺のパケットは生きている！　これが通信の証明だ！」とガッツポーズ。</p>
+                <div class="code-block">
+                    $ ping 192.168.1.2
+                    PING 192.168.1.2 (192.168.1.2): 56 data bytes
+                    64 bytes from 192.168.1.2: icmp_seq=0 ttl=64 time=1.023 ms
+                    64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.892 ms
+                    
+                    --- 192.168.1.2 ping statistics ---
+                    2 packets transmitted, 2 packets received, 0.0% packet loss
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン12: TCP -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>シーン12: TCPコネクション"俺との握手"</h1>
+                <div class="divider"></div>
+                <p>「3-way handshake！　SYN → SYN-ACK → ACK！　俺とサーバが握手する瞬間だ！」とパケットキャプチャを眺めて興奮。</p>
+                <p>Wiresharkで解析しながら絶叫解説――「シーケンス番号！　ACK番号！　ウィンドウサイズ！　TCPは信頼性の塊、俺のデータは絶対届く！」</p>
+                <div class="network-diagram">
+                    <h3>TCP 3-way Handshake</h3>
+                    <p>クライアント → サーバ: SYN</p>
+                    <p>サーバ → クライアント: SYN-ACK</p>
+                    <p>クライアント → サーバ: ACK</p>
+                    <p>⇒ コネクション確立！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン13: HTTP -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>シーン13: HTTP"俺様Web"公開</h1>
+                <div class="divider"></div>
+                <p>「GET / HTTP/1.1」でWebページを表示。「200 OK！　俺のHTTPサーバが応答した！」と自作Webページを眺めて感動。</p>
+                <p>「HTML、CSS、JavaScript！　俺の世界がブラウザに表示される！　これがWorld Wide Web、俺の世界だ！」</p>
+                <div class="code-block">
+                    GET / HTTP/1.1
+                    Host: 192.168.1.2
+                    User-Agent: Mozilla/5.0 (俺のブラウザ)
+                    
+                    HTTP/1.1 200 OK
+                    Content-Type: text/html
+                    Content-Length: 1234
+                    
+                    &lt;html&gt;&lt;head&gt;&lt;title&gt;俺の世界&lt;/title&gt;&lt;/head&gt;...
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン14: ファイアウォール -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1>シーン14: 孤独のファイアウォール</h1>
+                <div class="divider"></div>
+                <p>「俺の王国を守るのは俺！　iptablesで全ポートを制御！」とファイアウォールルールを手書き。</p>
+                <p>「ACCEPT、DROP、REJECT！　俺が決めるパケットの運命！　80番ポートは開放、22番は俺だけ！」</p>
+                <div class="code-block">
+                    iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+                    iptables -A INPUT -p tcp --dport 22 -s 192.168.1.100 -j ACCEPT
+                    iptables -A INPUT -p tcp --dport 22 -j DROP
+                    iptables -A INPUT -j DROP
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン15: 完成式 -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>シーン15: ネットワーク帝国完成式</h1>
+                <div class="divider"></div>
+                <p>全機器のLEDが点滅する様子を眺めながら感動。「OSI参照モデル7層、俺が全部構築した！　物理層から応用層まで、俺の王国は完成だ！」</p>
+                <p>「でも…」と空を見上げる。「この王国に住民は俺だけ。通信相手がいない王国に意味はあるのか？」</p>
+                <div class="protocol-stack">
+                    <h3>完成したOSI 7層</h3>
+                    <p>7. アプリケーション層: HTTP, DNS, DHCP</p>
+                    <p>6. プレゼンテーション層: HTML, CSS</p>
+                    <p>5. セッション層: TCP接続管理</p>
+                    <p>4. トランスポート層: TCP, UDP</p>
+                    <p>3. ネットワーク層: IP, ICMP</p>
+                    <p>2. データリンク層: Ethernet</p>
+                    <p>1. 物理層: ケーブル, 電気信号</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン16: 希望へ -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>シーン16: 孤独エンドから希望へ</h1>
+                <div class="divider"></div>
+                <p>夕陽に向かい独白。「ネットワークは繋がりだ。俺一人では意味がない。でも俺が作ったこのインフラは、いつか誰かと繋がるための準備だ」</p>
+                <p>地面に棒切れで大書きした次章タイトルをズーム。</p>
+                <div class="highlight">
+                    <h2>次章予告</h2>
+                    <p>第四章「俺たちはプログラムに支えられている」</p>
+                    <p>ネットワークは繋がった。次はソフトウェアの魂を吹き込む時だ――。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 勉強会の始まり -->
+        <div class="slide" id="slide-20">
+            <div class="chapter-title">
+                <h1>勉強会の始まり</h1>
+                <h2>ネットワークの本質を探る旅へ</h2>
+            </div>
+        </div>
+
+        <!-- 学習ポイント1 -->
+        <div class="slide" id="slide-21">
+            <div class="teaching">
+                <h1>今日の学習ポイント</h1>
+                <h2>1. OSI参照モデル7層</h2>
+                <p>各層には明確な役割があり、下位層が上位層を支えている</p>
+                <p>物理層から応用層まで、全てが連携してネットワーク通信を実現</p>
+                <h2>2. プロトコルの重要性</h2>
+                <p>標準化されたプロトコルにより、世界中の機器が通信可能</p>
+                <p>RFCという形で仕様が公開され、透明性が保たれている</p>
+            </div>
+        </div>
+
+        <!-- 学習ポイント2 -->
+        <div class="slide" id="slide-22">
+            <div class="teaching">
+                <h2>3. TCP/IPの階層構造</h2>
+                <p>カプセル化により、各層は独立して動作可能</p>
+                <p>データは送信時にヘッダーが追加され、受信時に剥がされる</p>
+                <h2>4. 名前解決とアドレス管理</h2>
+                <p>DNSにより人間が覚えやすい名前をIPアドレスに変換</p>
+                <p>DHCPにより機器に自動的にIPアドレスを割り当て</p>
+            </div>
+        </div>
+
+        <!-- 実世界への応用 -->
+        <div class="slide" id="slide-23">
+            <div class="teaching">
+                <h1>実世界への応用</h1>
+                <h2>フロントエンド開発でのネットワーク知識</h2>
+                <p>• HTTP/HTTPSの仕組み理解</p>
+                <p>• DNS設定とドメイン管理</p>
+                <p>• CDNとキャッシュ戦略</p>
+                <p>• WebSocketsとリアルタイム通信</p>
+                <p>• セキュリティとCORS対策</p>
+                <div class="highlight">
+                    <p>ネットワークの基礎を理解することで、より良いWebアプリケーションを開発できる</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最終スライド -->
+        <div class="slide" id="slide-24">
+            <div class="teaching">
+                <div class="footer">
+                    <h1>第3回: 俺たちはネットワークに支えられている</h1>
+                    <p>© 2025 フロントエンドクラブ</p>
+                    <p>次回は「俺たちはプログラムに支えられている」</p>
+                    <p>本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 24</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 24;
+        
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+        
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            currentSlideElem.classList.add('active');
+            
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                prevSlideElem.classList.add('prev');
+            }
+            
+            updateSlideCounter();
+            updateButtonState();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+        
+        updateSlideCounter();
+        updateButtonState();
+    </script>
+</body>
+</html>
