@@ -210,8 +210,23 @@
             </div>
         </div>
 
-        <!-- 前回のあらすじ -->
+        <!-- 俺の夢 -->
         <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>俺の夢</h1>
+                <div class="divider"></div>
+                <p>俺は夢を見ていた。申し込みをするだけでインターネットに接続できる装置が家に届いて、ケーブルを差すだけでネットができる夢を。</p>
+                <p>光回線工事のお兄さんが来て、モデムやルーターを設置してくれる。プロバイダが全て管理してくれる。そんな便利な世界の夢を...</p>
+                <div class="highlight">
+                    <p>でも今、世界は滅びていて、そんなことはない。</p>
+                    <p>自分で作るしかないのだ。</p>
+                    <p>Wi-Fi…。あのころはそんな一言で、難しいことを考えなくてもインターネット接続できるような時代だったんだ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 前回のあらすじ -->
+        <div class="slide" id="slide-4">
             <div class="chapter">
                 <h1>前回のあらすじ</h1>
                 <div class="divider"></div>
@@ -223,9 +238,9 @@
         </div>
 
         <!-- シーン1: 物理層の絶望 -->
-        <div class="slide" id="slide-4">
+        <div class="slide" id="slide-5">
             <div class="chapter">
-                <h1>シーン1: 物理層の絶望的現実</h1>
+                <h1>シーン1: ケーブルもないんだ</h1>
                 <div class="divider"></div>
                 <p>廃墟に転がるケーブルを見つめ愕然。「LANケーブル100 m制限!?　隣の建物まで300 m…延長の物理法則は俺にも勝てない！」とセルフ突っ込み。</p>
                 <p>光ファイバーを発見して狂喜乱舞。「光は減衰しない！　でも接続にはファイバー融着機が…」現実の壁に膝を突く。</p>
@@ -239,9 +254,9 @@
         </div>
 
         <!-- シーン2: 銅線ガチャガチャ -->
-        <div class="slide" id="slide-5">
+        <div class="slide" id="slide-6">
             <div class="chapter">
-                <h1>シーン2: 銅線ガチャガチャ大作戦</h1>
+                <h1>シーン2: 配線は銅 or ガラスで作る</h1>
                 <div class="divider"></div>
                 <p>廃工場から銅線を回収し、手作りイーサネット。「1と0は電圧の高低！　でも電圧ノイズで化けるんだ…」とペンチで格闘。</p>
                 <p>ケーブルテスターで導通確認しながら絶叫解説――「ストレート、クロス、ツイストペア！　8本の銅線が送受信を分担、2本ずつがペアでノイズをキャンセル。物理は正直、配線間違えれば即パケットロス！」</p>
@@ -249,16 +264,21 @@
                     イーサネットケーブル構造:
                     1-2番線: 送信用ペア
                     3-6番線: 受信用ペア
-                    4-5,7-8番線: 予備（ギガビット時使用）
+                    4-5,7-8番線: 予備（ギガビット時使用。カテゴリ5eから使用）
                 </div>
             </div>
         </div>
 
         <!-- シーン3: MACアドレス祭り -->
-        <div class="slide" id="slide-6">
+        <div class="slide" id="slide-7">
             <div class="chapter">
-                <h1>シーン3: MACアドレスひとり祭り</h1>
+                <h1>シーン3: ケーブルの接続口に番号があるんだ</h1>
                 <div class="divider"></div>
+                <p>MACアドレス。あまり知られていない。当たり前すぎるんだ</p>
+                <p>それは、俺のPCやスマホのようなデバイスがインターネットに接続するために必要な情報の一つ。</p>
+                <p>その番号は、あなたのデバイスを一意に識別するためのもの。</p>
+                <p>……いや、理屈はいいだろう。俺がMACアドレスをやるだけだ。</p>
+                <p>地味にこれがないと通信ができないんだよ。がんばれ俺。</p>
                 <p>手書きでMACアドレス一覧を作成。「48 bitの世界唯一ID！　俺の機器は俺が管理、衝突もダブりも俺次第！」とマジックで機器にMAC番号を直書き。</p>
                 <p>スイッチングハブを発見して興奮。「MACアドレステーブル！　ブロードキャストドメイン！　レイヤ2の神がここに宿る！」</p>
                 <div class="code-block">
@@ -271,9 +291,9 @@
         </div>
 
         <!-- シーン4: IP帝国建国 -->
-        <div class="slide" id="slide-7">
+        <div class="slide" id="slide-8">
             <div class="chapter">
-                <h1>シーン4: IPアドレス"俺帝国"建国</h1>
+                <h1>シーン4: IPアドレスのせってい/h1>
                 <div class="divider"></div>
                 <p>地図に自分だけのネットワーク構成図を描く。「192.168.1.0/24は俺の王国！　サブネットマスクで領土を区切り、デフォルトゲートウェイで外界への扉を開く！」</p>
                 <p>電卓でサブネット計算しながら実況――「/24なら256台、/25なら128台！　2のn乗でホスト数が決まる、俺は数学で帝国を治める皇帝だ！」</p>
@@ -288,9 +308,9 @@
         </div>
 
         <!-- シーン5: RFC聖典発見 -->
-        <div class="slide" id="slide-8">
+        <div class="slide" id="slide-9">
             <div class="chapter">
-                <h1>シーン5: RFC聖典発見と絶叫解読</h1>
+                <h1>シーン5: RFCに書かれたプロトコル、世界標準だったんだ</h1>
                 <div class="divider"></div>
                 <p>廃墟の図書館でRFC文書を発見。「RFC 791！　Internet Protocol仕様書！　これが俺たちの聖典だ！」と埃まみれの文書を抱きしめる。</p>
                 <p>「Request for Comments...コメント求む!?　でも俺一人！　コメントは心の声だ！」と一人でRFCにツッコミを入れながら熟読。</p>
@@ -301,16 +321,20 @@
                     <p>• RFC 793: Transmission Control Protocol (TCP)</p>
                     <p>• RFC 2616: HTTP/1.1</p>
                 </div>
+                <p>RFC…世界平和の象徴だったのかもな。</p>
+                <p>俺はそう呟くと作業に戻った。</p>
             </div>
         </div>
 
         <!-- シーン6: プロトコル階層 -->
-        <div class="slide" id="slide-9">
+        <div class="slide" id="slide-10">
             <div class="chapter">
-                <h1>シーン6: プロトコル階層"俺様解釈"</h1>
+                <h1>シーン6: プロトコルたちの組み合わせ</h1>
                 <div class="divider"></div>
-                <p>壁に巨大なプロトコルスタック図を描く。「TCP/IP！　でも実は4層じゃない！　OSI7層の上にアプリケーション層が乗っかって、実際は無限階層だ！」</p>
-                <p>「HTTP over TCP over IP over Ethernet over 物理層！　プロトコルは入れ子構造！　俺のパケットは何重にも包まれた玉ねぎだ！」と実況。</p>
+                <p>プロトコルスタック。水平分業の象徴だ。</p>
+                <p>俺が生きていた世界は、Ethernet(MAC)、IP、TCP、HTTPの4層だった。</p>
+                <p>学者さんはOSI参照モデルで7層とか言っていたな。</p>
+                <p>それぞれの層は、それぞれの責務を持っている。</p>
                 <div class="protocol-stack">
                     <h3>プロトコルスタック</h3>
                     <p>[ HTTP Header ] [ HTML Data ]</p>
@@ -318,12 +342,13 @@
                     <p>[ IP Header ] [ TCP Header ] [ HTTP Header ] [ HTML Data ]</p>
                     <p>[ Ethernet Header ] [ IP Header ] [ TCP Header ] [ HTTP Header ] [ HTML Data ]</p>
                 </div>
-                <p>各層のヘッダーを手書きしながら絶叫――「送信時は上から下へヘッダー追加、受信時は下から上へヘッダー剥がし！　カプセル化とデカプセル化、俺が全部やる！」</p>
+                <p>OSI参照モデルは、OSIプロトコルが名前だけ生き残ったものだ</p>
+                <p>この世界は俺ぐらいしか生き残っていないかもしれないが…</p>
             </div>
         </div>
 
         <!-- シーン7: 俺様プロトコル -->
-        <div class="slide" id="slide-10">
+        <div class="slide" id="slide-11">
             <div class="chapter">
                 <h1>シーン7: プロトコル"俺様実装"</h1>
                 <div class="divider"></div>
@@ -340,7 +365,7 @@
         </div>
 
         <!-- シーン8: ルーティング -->
-        <div class="slide" id="slide-11">
+        <div class="slide" id="slide-12">
             <div class="chapter">
                 <h1>シーン8: ルーティングテーブル手書き地獄</h1>
                 <div class="divider"></div>
@@ -357,7 +382,7 @@
         </div>
 
         <!-- シーン9: DHCP -->
-        <div class="slide" id="slide-12">
+        <div class="slide" id="slide-13">
             <div class="chapter">
                 <h1>シーン9: DHCPサーバ"俺様仕様"</h1>
                 <div class="divider"></div>
@@ -374,7 +399,7 @@
         </div>
 
         <!-- シーン10: DNS -->
-        <div class="slide" id="slide-13">
+        <div class="slide" id="slide-14">
             <div class="chapter">
                 <h1>シーン10: DNSサーバ"俺専用"</h1>
                 <div class="divider"></div>
@@ -390,7 +415,7 @@
         </div>
 
         <!-- シーン11: ping -->
-        <div class="slide" id="slide-14">
+        <div class="slide" id="slide-15">
             <div class="chapter">
                 <h1>シーン11: pingの孤独な対話</h1>
                 <div class="divider"></div>
@@ -409,7 +434,7 @@
         </div>
 
         <!-- シーン12: TCP -->
-        <div class="slide" id="slide-15">
+        <div class="slide" id="slide-16">
             <div class="chapter">
                 <h1>シーン12: TCPコネクション"俺との握手"</h1>
                 <div class="divider"></div>
@@ -451,7 +476,7 @@
         </div>
 
         <!-- シーン13: HTTP -->
-        <div class="slide" id="slide-16">
+        <div class="slide" id="slide-17">
             <div class="chapter">
                 <h1>シーン13: HTTP"俺様Web"公開</h1>
                 <div class="divider"></div>
@@ -472,7 +497,7 @@
         </div>
 
         <!-- シーン14: ファイアウォール -->
-        <div class="slide" id="slide-17">
+        <div class="slide" id="slide-18">
             <div class="chapter">
                 <h1>シーン14: 孤独のファイアウォール</h1>
                 <div class="divider"></div>
@@ -488,7 +513,7 @@
         </div>
 
         <!-- シーン15: 完成式 -->
-        <div class="slide" id="slide-18">
+        <div class="slide" id="slide-19">
             <div class="chapter">
                 <h1>シーン15: ネットワーク帝国完成式</h1>
                 <div class="divider"></div>
@@ -508,7 +533,7 @@
         </div>
 
         <!-- シーン16: 希望へ -->
-        <div class="slide" id="slide-19">
+        <div class="slide" id="slide-20">
             <div class="chapter">
                 <h1>シーン16: 孤独エンドから希望へ</h1>
                 <div class="divider"></div>
@@ -523,7 +548,7 @@
         </div>
 
         <!-- 勉強会の始まり -->
-        <div class="slide" id="slide-20">
+        <div class="slide" id="slide-21">
             <div class="chapter-title">
                 <h1>勉強会の始まり</h1>
                 <h2>ネットワークの本質を探る旅へ</h2>
@@ -531,7 +556,7 @@
         </div>
 
         <!-- 学習ポイント1 -->
-        <div class="slide" id="slide-21">
+        <div class="slide" id="slide-22">
             <div class="teaching">
                 <h1>今日の学習ポイント</h1>
                 <h2>1. OSI参照モデル7層</h2>
@@ -544,7 +569,7 @@
         </div>
 
         <!-- 学習ポイント2 -->
-        <div class="slide" id="slide-22">
+        <div class="slide" id="slide-23">
             <div class="teaching">
                 <h2>3. TCP/IPの階層構造</h2>
                 <p>カプセル化により、各層は独立して動作可能</p>
@@ -556,7 +581,7 @@
         </div>
 
         <!-- 実世界への応用 -->
-        <div class="slide" id="slide-23">
+        <div class="slide" id="slide-24">
             <div class="teaching">
                 <h1>実世界への応用</h1>
                 <h2>フロントエンド開発でのネットワーク知識</h2>
@@ -572,7 +597,7 @@
         </div>
 
         <!-- 最終スライド -->
-        <div class="slide" id="slide-24">
+        <div class="slide" id="slide-25">
             <div class="teaching">
                 <div class="footer">
                     <h1>第3回: 俺たちはネットワークに支えられている</h1>
@@ -585,7 +610,7 @@
     </div>
 
     <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
-    <div class="slide-number" id="slide-counter">1 / 24</div>
+    <div class="slide-number" id="slide-counter">1 / 25</div>
     <div class="nav-buttons">
         <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
         <button id="next-btn" onclick="nextSlide()">次へ</button>
@@ -593,7 +618,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 24;
+        const totalSlides = 25;
         
         function updateSlideCounter() {
             document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
