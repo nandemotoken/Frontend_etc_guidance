@@ -550,10 +550,37 @@
             </div>
         </div>
 
-        <!-- シーン16: 希望へ -->
+        <!-- これでネットワークマスターだ -->
         <div class="slide" id="slide-20">
             <div class="chapter">
-                <h1>シーン16: 孤独エンドから希望へ</h1>
+                <h1>シーン16: これでネットワークマスターだ！</h1>
+                <div class="divider"></div>
+                <p>俺は、この短期間でネットワークをマスターしてしまった。</p>
+                <p>さすがだ俺。全知全能である。</p>
+                <p>ネットワーク。これ以上知るべきことはないだろう。</p>
+            </div>
+        </div>
+
+        <!-- そんなわけはない -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>シーン17: そんなわけはない</h1>
+                <div class="divider"></div>
+                <p>そのとき、俺の頭を雷が直撃した</p>
+                <p>「うぎゃー！」</p>
+                <p>天から声が響く。</p>
+                <p>「次のキーワードを全く知らない状態で、ネットワークをマスターしたなんて、言うのではない…！」</p>
+                <div class="highlight">
+                    <h2>天の声</h2>
+                    <p>ICMP、ARP、SSL、RIP、OSPF、BGP、MPLS、NAT…</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン16: 希望へ -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>シーン18: 孤独エンドから希望へ</h1>
                 <div class="divider"></div>
                 <p>夕陽に向かい独白。「ネットワークは繋がりだ。俺一人では意味がない。でも俺が作ったこのインフラは、いつか誰かと繋がるための準備だ」</p>
                 <p>地面に棒切れで大書きした次章タイトルをズーム。</p>
@@ -566,7 +593,7 @@
         </div>
 
         <!-- 勉強会の始まり -->
-        <div class="slide" id="slide-21">
+        <div class="slide" id="slide-23">
             <div class="chapter-title">
                 <h1>勉強会の始まり</h1>
                 <h2>ネットワークの本質を探る旅へ</h2>
@@ -574,7 +601,7 @@
         </div>
 
         <!-- 学習ポイント1 -->
-        <div class="slide" id="slide-22">
+        <div class="slide" id="slide-24">
             <div class="teaching">
                 <h1>今日の学習ポイント</h1>
                 <h2>1. OSI参照モデル7層</h2>
@@ -587,7 +614,7 @@
         </div>
 
         <!-- 学習ポイント2 -->
-        <div class="slide" id="slide-23">
+        <div class="slide" id="slide-25">
             <div class="teaching">
                 <h2>3. TCP/IPの階層構造</h2>
                 <p>カプセル化により、各層は独立して動作可能</p>
@@ -599,7 +626,7 @@
         </div>
 
         <!-- 実世界への応用 -->
-        <div class="slide" id="slide-24">
+        <div class="slide" id="slide-26">
             <div class="teaching">
                 <h1>実世界への応用</h1>
                 <h2>フロントエンド開発でのネットワーク知識</h2>
@@ -615,7 +642,7 @@
         </div>
 
         <!-- 最終スライド -->
-        <div class="slide" id="slide-25">
+        <div class="slide" id="slide-27">
             <div class="teaching">
                 <div class="footer">
                     <h1>第3回: 俺たちはネットワークに支えられている</h1>
@@ -628,7 +655,7 @@
     </div>
 
     <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
-    <div class="slide-number" id="slide-counter">1 / 25</div>
+    <div class="slide-number" id="slide-counter">1 / 27</div>
     <div class="nav-buttons">
         <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
         <button id="next-btn" onclick="nextSlide()">次へ</button>
@@ -636,7 +663,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 25;
+        const totalSlides = 27;
         
         function updateSlideCounter() {
             document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
