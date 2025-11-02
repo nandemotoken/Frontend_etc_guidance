@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5回:俺たちは専門性に支えられている</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active {
+            transform: translateX(0);
+        }
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 2px solid #00a896;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #00a896;
+        }
+        h2 {
+            font-size: min(3.5vh, 24px);
+            border-left: 5px solid #00a896;
+            padding-left: 2vw;
+            margin-top: 3vh;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #e8f6f4;
+            padding: 15px;
+            border-left: 4px solid #00a896;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #e8f6f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #00a896;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #028a7a;
+        }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #00a896;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+        }
+        .title-slide h1 {
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: min(3vh, 20px);
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        .chapter-title h1 {
+            font-size: 32px;
+            border-bottom: none;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
+        }
+        .village-label {
+            background-color: #00a896;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .quote-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #00a896;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .ai-warning {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- タイトルスライド -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第5回:俺たちは専門性に支えられている</h1>
+                <p>― 職人村探訪記 ―</p>
+            </div>
+        </div>
+
+        <!-- 講師紹介 -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>講師紹介</h1>
+                <div class="divider"></div>
+                <h2>なんでもトークン</h2>
+                <p>ITインフラの先生。今回のスライド大部分をAIで作りました</p>
+                <p>本業はブロックチェーンという謎技術を使った広告会社のCTO</p>
+                <h2>masaki_kitahara</h2>
+                <p>実力派フロントエンドエンジニア</p>
+                <p>今回は「フロントエンド周辺技術」勉強会のサポートとして生徒会長的な動きで盛り上げてくれます</p>
+            </div>
+        </div>
+
+        <!-- シーン0: 人類復活リマインド -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>シーン0：人類復活リマインド</h1>
+                <div class="divider"></div>
+                <p>サーバ室から外を見ると、いつの間にか人影が。</p>
+                <p class="quote-box">俺「あれ？　俺だけじゃなかったのか…！？　ずっと一人で荒野でインフラ構築してたのに…寂しくなんかなかったぞ！全然！」</p>
+                <p>荒野に点在する奇妙な村々を発見。</p>
+                <p>「なんだあの集落、職種ごとに分かれてる！？　まるで異世界の部族社会じゃねぇか！」</p>
+                <p>遠くから聞こえる村々の叫び声。「バグだ！」「脆弱性だ！」「サーバが落ちた！」</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「…うん、確かに人類復活してるわ。騒がしさが懐かしい」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン1: 専門職村マップ発見 -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1：専門職村マップ発見</h1>
+                <div class="divider"></div>
+                <p>廃ビルの壁に貼られた「IT職種カオスマップ」を発見。</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「フロントエンド、バックエンド、インフラ、SRE、QA、セキュリティ、データサイエンス、PM、DevRel…多すぎィ！　昔は"エンジニア"で一括りだったのに、今やアイドルグループみたいだな！」</p>
+                </div>
+                <p>地図を片手に探訪開始を決意。</p>
+                <p>「よし、推しメン…じゃなくて、俺の旅の始まりだ！」</p>
+            </div>
+        </div>
+
+        <!-- シーン2: SRE村 -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>シーン2：SRE村</h1>
+                <span class="village-label">俺たちは安定を測る者</span>
+                <div class="divider"></div>
+                <p>煙突から監視ダッシュボードの光が漏れる村を発見。入るとグラフまみれの住民たち。全員が深夜3時の目をしている。</p>
+                <div class="quote-box">
+                    <p><strong>SRE民：</strong>「可用性99.9%の維持！それが我らの掟！」</p>
+                </div>
+                <p>一人がグラフの異常を指さす。「SLIが急落！来客だ！」</p>
+                <p>別のSRE民が震えながら「深夜のアラート…深夜のアラート…」とうわ言のようにつぶやいている。</p>
+            </div>
+        </div>
+
+        <!-- SRE村 続き -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>SRE村の掟</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><strong>SRE民：</strong>「99.9%は天国、99.99%は地獄だ…9が一つ増えるだけで睡眠時間が半分になる…」</p>
+                </div>
+                <p><strong>俺：</strong>「待て待て、開発もするしインフラも触るし…何が違うんだ？」</p>
+                <div class="highlight">
+                    <p><strong>SRE民：</strong>「開発者はスピード、インフラは安定、俺たちはその"バランスを数値化"する！　デプロイ頻度×MTTR×変更失敗率＝Four Keys！ この4つの鍵があれば、伝説の宝『完全自動化』への道が開かれると信じている！」</p>
+                </div>
+                <p>壁に書かれた標語：<br>「トイルを憎め、人を憎むな。でも障害報告会ではきっちり問い詰めろ」<br>「オンコール当番は呪いの腕輪」</p>
+            </div>
+        </div>
+
+        <!-- シーン3: セキュリティ砦 -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>シーン3：セキュリティ砦</h1>
+                <span class="village-label">俺たちは境界を守る者</span>
+                <div class="divider"></div>
+                <p>高い城壁と罠だらけの通路。門には「ゼロトラスト実践中」の看板。</p>
+                <div class="quote-box">
+                    <p><strong>セキュリティ番：</strong>「今日の合言葉は？」</p>
+                    <p><strong>俺：</strong>「えっと…『山』？」</p>
+                    <p><strong>セキュリティ番：</strong>「違う！昨日の合言葉だ！落とし穴に落ちろ！」</p>
+                </div>
+                <p>村の真ん中で何やか儀式をしている集団が。「ペネトレーションテスト！ペネトレーションテスト！」と唱えながら藁人形（開発環境）を刺している。</p>
+                <p><strong>俺：</strong>「怖っ！」</p>
+            </div>
+        </div>
+
+        <!-- セキュリティ砦 続き -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1>セキュリティの現実</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>セキュリティ番：</strong>「開発者が"できました！"って言った瞬間が、俺たちの狩りの始まりだ」</p>
+                </div>
+                <p><strong>俺：</strong>「門の横で燃えてる『password1234』って紙、呪いの護符？」</p>
+                <p><strong>セキュリティ番：</strong>「毎朝焼いてる。心の防火壁だ」</p>
+                <p>城壁にCVE番号の札が無数に刺さっている。「脆弱性データベース…こんなに！？」</p>
+                <div class="quote-box">
+                    <p><strong>セキュリティ番：</strong>「OWASP Top 10、SQLインジェクション、XSS、CSRF！　攻撃手法は進化し続ける、俺たちも進化し続けるんだ！昨日の常識は今日の脆弱性だ！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン4: QA王国 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>シーン4：QA王国</h1>
+                <span class="village-label">俺たちは品質を証明する者</span>
+                <div class="divider"></div>
+                <p>整然と並んだテストケース畑と、バグ標本館。QA民が虫眼鏡で画面を凝視している。</p>
+                <div class="quote-box">
+                    <p><strong>QA民：</strong>「出たぞ！本日のクリティカルバグだ！今夜は祭りだ！」</p>
+                </div>
+                <p>歓声が上がる。まるでレアモンスターを発見したかのような興奮。</p>
+                <p>別のQA民「見てくれ、この再現手順10ステップのバグ！美しい…」涙を流している。</p>
+            </div>
+        </div>
+
+        <!-- QA王国 続き -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>QAの執念</h1>
+                <div class="divider"></div>
+                <p><strong>俺：</strong>「開発者もテスト書くよね？　何が違うの？」</p>
+                <div class="highlight">
+                    <p><strong>QA民：</strong>「開発者は"動く"を確認、俺たちは"壊れない"を探す！　境界値、異常系、非機能要件！　ユーザー視点で"使える品質"を保証するんだ！」</p>
+                </div>
+                <p><strong>俺：</strong>「この金色の額縁に飾られてるチケットは？」</p>
+                <p><strong>QA民：</strong>「年間MVP、Most Valuable Problemだ！社内表彰もされた！」</p>
+                <p>壁には「開発者の『動きます』ほど信用できない言葉はない」の標語。</p>
+            </div>
+        </div>
+
+        <!-- シーン5: データサイエンス研究所 -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>シーン5：データサイエンス研究所</h1>
+                <span class="village-label">俺たちは未来を予測する者</span>
+                <div class="divider"></div>
+                <p>巨大なグラフとモデル図に囲まれた研究施設。住民は数式Tシャツを着ている。</p>
+                <p>一人が「p値0.049！ギリギリセーフ！」と歓喜の叫びをあげている。</p>
+                <div class="quote-box">
+                    <p><strong>DS民：</strong>「俺たちはデータから価値を掘る！　収集、クレンジング、分析、可視化、機械学習！」</p>
+                </div>
+                <p><strong>俺：</strong>「エンジニアもログ見るよね？」</p>
+                <p><strong>DS民：</strong>「エンジニアは"今"を見る、俺たちは"パターン"を見つけて"未来"を予測する！」</p>
+            </div>
+        </div>
+
+        <!-- データサイエンス 続き -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>データサイエンスの深淵</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>DS民：</strong>「アイスが売れると溺死者が増える…だがアイスが溺死を引き起こすわけじゃない！　隠れた変数"気温"を見抜くのが俺たちの仕事だ！」</p>
+                </div>
+                <p>隅で別の住民が「過学習した…また過学習した…」と膝を抱えて座り込んでいる。</p>
+                <p><strong>DS民：</strong>「…まあ、最近カラスがよく鳴くから、そろそろサーバーが落ちる頃だがな」</p>
+                <p><strong>俺：</strong>「結局カンかよ！」</p>
+                <p>壁には「データの80%はクレンジング、残り20%は言い訳」の標語。</p>
+            </div>
+        </div>
+
+        <!-- シーン6: DevRel広報隊 -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>シーン6：DevRel広報隊</h1>
+                <span class="village-label">俺たちは技術を伝える者</span>
+                <div class="divider"></div>
+                <p>ステージとマイクが並ぶ広場。住民はプレゼン資料を抱えている。</p>
+                <p>一人が鏡の前で「今日も最高のプレゼンになる！」と気合を入れている。</p>
+                <div class="quote-box">
+                    <p><strong>DevRel民：</strong>「俺たちは技術と人を繋ぐ！　ドキュメント、ブログ、登壇、ワークショップ、コミュニティ運営！」</p>
+                </div>
+                <p><strong>俺：</strong>「それってマーケティング？　エンジニアリング？」</p>
+                <p><strong>DevRel民：</strong>「両方だ！　見てくれこの技術ブログのタイトルを！『君の知らないKubernetes～蒼いコンテナの鎮魂歌～』…バズるぞ！」</p>
+            </div>
+        </div>
+
+        <!-- シーン7: プロダクト設計局 -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>シーン7：プロダクト設計局</h1>
+                <span class="village-label">俺たちは"何を作るか"を決める者</span>
+                <div class="divider"></div>
+                <p>ホワイトボードだらけの会議室。付箋とユーザーストーリーマップが壁を覆う。床にも天井にも付箋。</p>
+                <div class="quote-box">
+                    <p><strong>PM民：</strong>「俺たちは"正しいものを作る"！　市場調査、ユーザーインタビュー、優先順位付け、ロードマップ！」</p>
+                </div>
+                <p><strong>俺：</strong>「エンジニアも設計するよね？」</p>
+                <div class="highlight">
+                    <p><strong>PM民：</strong>「エンジニアは"How（どう作る）"、俺たちは"What（何を作る）とWhy（なぜ作る）"！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PM 続き -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>PMの戦場</h1>
+                <div class="divider"></div>
+                <p><strong>PM民：</strong>「ユーザーが『空飛ぶ車が欲しい』と言っていた！次のスプリントで作るぞ！」</p>
+                <p><strong>エンジニア：</strong>「無茶言うな！」</p>
+                <p><strong>俺：</strong>「そのロードマップ、納期の欄が『気合』って書いてあるぞ？」</p>
+                <p><strong>PM民：</strong>「気合もリソースの一つだ！」</p>
+                <p>ホワイトボードには「ステークホルダーの数だけ優先順位がある」「全員の要望を聞くと誰も幸せにならない」の相反する標語。</p>
+            </div>
+        </div>
+
+        <!-- シーン8: インフラ基盤部 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>シーン8：インフラ基盤部</h1>
+                <span class="village-label">俺たちは土台を支える者</span>
+                <div class="divider"></div>
+                <p>巨大なラックとケーブルに囲まれた地下施設。ヘルメット姿の住民たち。一人がケーブルを愛おしそうに撫でている。</p>
+                <div class="quote-box">
+                    <p><strong>インフラ民：</strong>「俺たちは物理！　サーバ調達、ラック設計、電源容量、冷却、ネットワーク配線！」</p>
+                </div>
+                <p><strong>俺：</strong>「クラウドがあるのに？」</p>
+                <div class="highlight">
+                    <p><strong>インフラ民：</strong>「クラウド！？　あれは俺たちの上に浮かぶ幻想だ！　その雲の下には必ず俺たちのサーバがある！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- インフラ基盤部 続き -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1>物理へのプライド</h1>
+                <div class="divider"></div>
+                <p>配電盤を指して力説。「この三相200 V、俺が第二章で引いたやつだ！俺のサイン入れとこうかな」</p>
+                <p><strong>俺：</strong>「いや、感電するだろ」</p>
+                <div class="highlight">
+                    <p><strong>インフラ民：</strong>「大丈夫、俺たちは絶縁手袋をしている！　クラウドエンジニアは電源コードの抜き差しすらできないが、俺たちは違う！　物理を制する者がITを制する！」</p>
+                </div>
+                <p>壁には「クラウドは誰かのコンピュータ」「仮想化の下には必ず物理がある」の標語。</p>
+            </div>
+        </div>
+
+        <!-- シーン9: 俯瞰の丘 -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>シーン9：俯瞰の丘で独白</h1>
+                <div class="divider"></div>
+                <p>丘の上から村々を見下ろす俺。</p>
+                <p class="quote-box"><strong>俺：</strong>「なぜこんなに分かれたんだ？　昔は"エンジニア"で全部やってたはずだ…」</p>
+                <div class="highlight">
+                    <h2>専門性が分化した3つの理由</h2>
+                    <p>①専門性の深化――各領域が高度化しすぎて一人で追えない</p>
+                    <p>②規模の拡大――ユーザー数百万、サービス数十個、一人じゃ回らない</p>
+                    <p>③品質要求の高度化――99.9%じゃ足りない、全部を一人で極められるか？</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 専門性のトレードオフ -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>専門性のトレードオフ</h1>
+                <div class="divider"></div>
+                <p><strong>俺：</strong>「でも分業にはコストがある。コミュニケーション、認識のズレ、サイロ化…"全体を見る目"が失われる」</p>
+                <div class="teaching">
+                    <h2>理想的な人材像</h2>
+                    <p><strong>T字型人材：</strong>深い専門性と広い視野</p>
+                    <p><strong>フルスタック：</strong>全部できる幻想</p>
+                    <p><strong>現実：</strong>"協調できる専門家"が最強</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン10: AI降臨 -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>シーン10：AI降臨</h1>
+                <div class="divider"></div>
+                <p>突如、空から降り立つ光る人影。</p>
+                <div class="ai-warning">
+                    <p><strong>AIエージェント：</strong>「私はAIエージェント。すべての専門知識を統合する存在」</p>
+                </div>
+                <p><strong>俺：</strong>「まさか…AIが全部やれば専門職いらなくなる！？」</p>
+                <p><strong>AIエージェント：</strong>「コードは書ける、テストも生成できる、ドキュメントも作れる、データ分析もこなせる」</p>
+                <p>村々がざわめく。「俺たちの仕事が…」「ローンがまだ残ってるのに！」</p>
+            </div>
+        </div>
+
+        <!-- AI vs 専門家 -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>AI vs 専門家たち</h1>
+                <div class="divider"></div>
+                <p><strong>SRE民：</strong>「待て、お前はオンコール当番をやれるのか？　深夜3時に起きて障害対応できるか！？」</p>
+                <p><strong>AIエージェント：</strong>「睡眠の必要はありません」</p>
+                <p><strong>SRE民：</strong>「くっ…完璧かよ…」</p>
+                <div class="divider"></div>
+                <p><strong>QA民：</strong>「じゃあお前、10ステップの再現手順を踏んで、喜びを感じられるか!?」</p>
+                <p><strong>AIエージェント：</strong>「感情は持ちませんが、バグは検出できます」</p>
+            </div>
+        </div>
+
+        <!-- 人間の領域 -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>専門性の本質</h1>
+                <div class="divider"></div>
+                <p><strong>俺：</strong>「待て！　AIができるのは"パターン"の再現だ！　でも…」</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「経験による判断、文脈の読み取り、創造的問題解決――それが専門性の本質だ！　技術は道具、AIも道具。でも"何を作るべきか""なぜそう判断したか""誰のためにやるのか"――それは人間の領域だ！」</p>
+                </div>
+                <p><strong>PM民：</strong>「そうだ！　AIはステークホルダーの無茶振りに耐えられるか！？」</p>
+                <p><strong>AIエージェント：</strong>「エラー：『無茶振り』の定義が曖昧すぎます。パラメータを明確化してください」</p>
+            </div>
+        </div>
+
+        <!-- AI理解 -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>AIとの共存</h1>
+                <div class="divider"></div>
+                <p><strong>AIエージェント：</strong>「エラー：『愛』の定義が見つかりません。関連ドキュメントを検索します…該当なし」</p>
+                <p>各村の住民が頷く。「AIは強力な助手、でもポンコツなところもある。主役は俺たちだ」</p>
+                <div class="teaching">
+                    <h2>AIの役割</h2>
+                    <p>AIは統合ではなく、<strong>増幅する存在</strong></p>
+                    <p>パターン作業は自動化、判断と創造は人間</p>
+                </div>
+                <p><strong>俺：</strong>「愛のAPIはベータ版だ。レート制限は1日1回、ドキュメントは歌詞カードだけだぞ」</p>
+            </div>
+        </div>
+
+        <!-- シーン11: 専門性と協調 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>シーン11：専門性と協調の未来</h1>
+                <div class="divider"></div>
+                <p>村々の代表が集まり、橋を架け始める。</p>
+                <p><strong>俺：</strong>「分かれていても、繋がっている。各自が専門性を磨き、リスペクトし合い、共通言語で協調する――それが次の時代か」</p>
+                <div class="highlight">
+                    <p><strong>SRE民：</strong>「開発速度と安定性の両立！」</p>
+                    <p><strong>セキュリティ番：</strong>「セキュアバイデザイン！」</p>
+                    <p><strong>QA民：</strong>「シフトレフト！」</p>
+                    <p><strong>DevRel民：</strong>「あ、それ全部ブログのネタにしていい？」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 協調の形 -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>協調の形</h1>
+                <div class="divider"></div>
+                <p><strong>PM民：</strong>「待て、それを実現する優先順位を決めさせてくれ！」</p>
+                <p><strong>DS民：</strong>「その前にデータを見せてくれ…カラスが鳴いてないか確認したい」</p>
+                <p><strong>インフラ民：</strong>「お前ら全員、物理サーバの上で踊ってることを忘れるな！」</p>
+                <div class="highlight">
+                    <p><strong>全員：</strong>「垣根を越えて、価値を届ける！…たぶん！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン12: 統合の予感 -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>シーン12：統合の予感</h1>
+                <div class="divider"></div>
+                <p>夕陽の中、俺は地図を広げる。</p>
+                <p>「専門職の村は繋がった。でも…まだ何かが足りない」</p>
+                <p>遠くに見える巨大な塔。「あれは…？」</p>
+                <p>風に乗って聞こえる声「フロントエンドォォォ…」「CSSが効かないィィィ…」「IEのサポート終わったのにィィィ…」</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「まさか、俺の原点…ユーザーに一番近い場所…そこに答えがあるのか！？」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 次章への伏線 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>次章への伏線</h1>
+                <div class="divider"></div>
+                <p>背後からセキュリティ番「フロントエンド？　XSSの巣窟だな」</p>
+                <p>QA民「バグの発生源だ」</p>
+                <p><strong>俺：</strong>「お前ら！　フロントエンドは全てのユーザー体験の入口だぞ！」</p>
+                <p><strong>全員：</strong>「…頑張れよ」</p>
+                <p><strong>俺：</strong>「他人事かよ！」</p>
+                <div class="teaching">
+                    <h2>次章予告</h2>
+                    <p>第6回「俺たちはユーザー体験に支えられている」</p>
+                    <p>すべての技術は、ユーザーのために。<br>フロントエンドこそが、技術と人間を繋ぐ最前線――。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 勉強会の始まり -->
+        <div class="slide" id="slide-28">
+            <div class="chapter-title">
+                <h1>勉強会の始まり</h1>
+                <h2>専門性の本質を探る旅へ</h2>
+            </div>
+        </div>
+
+        <!-- 学習ポイント1 -->
+        <div class="slide" id="slide-29">
+            <div class="teaching">
+                <h1>今日の学習ポイント</h1>
+                <h2>1. なぜ仕事は細分化するのか</h2>
+                <p>• 専門性の深化：各領域が高度化</p>
+                <p>• 規模の拡大：一人では回らない</p>
+                <p>• 品質要求の高度化：より高い水準が求められる</p>
+                <div class="divider"></div>
+                <h2>2. 各専門職の役割</h2>
+                <p>• SRE：安定性を数値化し、改善する</p>
+                <p>• セキュリティ：脅威から守る</p>
+                <p>• QA：品質を証明する</p>
+                <p>• データサイエンス：データから価値を掘り出す</p>
+            </div>
+        </div>
+
+        <!-- 学習ポイント2 -->
+        <div class="slide" id="slide-30">
+            <div class="teaching">
+                <h2>3. 協調の重要性</h2>
+                <p>分業にはコストがある：コミュニケーション、認識のズレ</p>
+                <p>理想は"協調できる専門家"：T字型人材</p>
+                <div class="divider"></div>
+                <h2>4. AIと専門性の未来</h2>
+                <p>• AIはパターン作業を自動化</p>
+                <p>• 人間の役割：判断、文脈理解、創造</p>
+                <p>• AIは道具であり協働者、置き換えではなく増幅</p>
+                <p>• 本質は「人間のための価値創出」</p>
+            </div>
+        </div>
+
+        <!-- 実世界への応用 -->
+        <div class="slide" id="slide-31">
+            <div class="teaching">
+                <h1>実世界への応用</h1>
+                <h2>フロントエンド開発者が知るべきこと</h2>
+                <p>• 各専門職の役割と価値を理解する</p>
+                <p>• セキュリティ：XSS、CSRF対策は基本</p>
+                <p>• パフォーマンス：SREが測定する指標を意識</p>
+                <p>• 品質：QAの視点でテストを書く</p>
+                <p>• データ：ユーザー行動の計測設計</p>
+                <div class="highlight">
+                    <p>専門性を理解し、協調することで、より良いプロダクトを作れる</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最終スライド -->
+        <div class="slide" id="slide-32">
+            <div class="teaching">
+                <div class="footer">
+                    <h1>第5回: 俺たちは専門性に支えられている</h1>
+                    <p>© 2025 フロントエンドクラブ</p>
+                    <p>次回：「俺たちはユーザー体験に支えられている」</p>
+                    <p>本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 32</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 32;
+        
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+        
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            if (currentSlideElem) {
+                currentSlideElem.classList.add('active');
+            }
+            
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                if (prevSlideElem) {
+                    prevSlideElem.classList.add('prev');
+                }
+            }
+            
+            updateSlideCounter();
+            updateButtonState();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+        
+        // 初期表示
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
+
