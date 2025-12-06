@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第6回:フロントエンドの壊れかた―― 全員が犯人、誰も悪くない（？）</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active {
+            transform: translateX(0);
+        }
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #e74c3c;
+        }
+        h2 {
+            font-size: min(3.5vh, 24px);
+            border-left: 5px solid #e74c3c;
+            padding-left: 2vw;
+            margin-top: 3vh;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #ffe8e6;
+            padding: 15px;
+            border-left: 4px solid #e74c3c;
+            margin: 15px 0;
+        }
+        .alert-box {
+            background-color: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .success-box {
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #ffe8e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #c0392b;
+        }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #e74c3c;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+        }
+        .title-slide h1 {
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: min(3vh, 20px);
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        .chapter-title h1 {
+            font-size: 32px;
+            border-bottom: none;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
+        }
+        .role-label {
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .role-sre { background-color: #3498db; }
+        .role-security { background-color: #27ae60; }
+        .role-backend { background-color: #9b59b6; }
+        .role-dba { background-color: #e67e22; }
+        .role-cloud { background-color: #1abc9c; }
+        .role-qa { background-color: #f39c12; }
+        .role-pm { background-color: #e74c3c; }
+        .role-frontend { background-color: #e91e63; }
+        .role-design { background-color: #8e44ad; }
+        .role-marketing { background-color: #ff5252; }
+        .role-devrel { background-color: #00bcd4; }
+        .role-mobile { background-color: #2196f3; }
+        .quote-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .incident-box {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .lesson-box {
+            background-color: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .motto {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 20px 0;
+            padding: 15px;
+            border: 3px solid #e74c3c;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- タイトルスライド -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第6回:フロントエンドの壊れかた</h1>
+                <p>― 全員が犯人、誰も悪くない（？）―</p>
+                <div style="margin-top: 30px; font-size: 0.9em; color: #999;">
+                    <p>専門性が生んだ悲劇であり、喜劇</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 要約スライド -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>今日の物語</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p>鳴り物入りでリリースされた新フロントエンド「The・World」。</p>
+                    <p>しかし、その直後、画面は真っ白に。</p>
+                    <p>原因不明の障害に、各分野の専門家たちが集められた。</p>
+                </div>
+                <p>バックエンド、DBA、セキュリティ、SRE…全員が「俺の仕事は完璧だ」と主張する中、主人公「俺」は複雑に絡み合った障害の糸を解き明かしていく。</p>
+                <div class="teaching">
+                    <p><strong>これは、専門性が生んだ悲劇であり、喜劇である。</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン0：祝福と呪いのリリース -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>シーン0：祝福と呪いのリリース</h1>
+                <div class="divider"></div>
+                <p>巨大モニターに映し出された新フロントエンド「The・World」。華々しいUI、滑らかなアニメーション。</p>
+                <div class="quote-box">
+                    <p><strong>PM民：</strong>「皆さん、やりました！『The・World』本日、無事リリースです！これも各分野のプロフェッショナルが集い、最高の仕事をした結果です！」</p>
+                </div>
+                <p>拍手喝采。各村の代表たちが誇らしげに胸を張る。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-sre">SRE</span>「SLO？余裕で達成。Four Keysもオールグリーンだ」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「XSSもCSRFも脆弱性はゼロ。鉄壁だ」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「APIレスポンスは50msを切った。俺の芸術的なコードのおかげだ」</p>
+                </div>
+                <p><strong>俺：</strong>「（…なんか、フラグが乱立してる気がする…）」</p>
+            </div>
+        </div>
+
+        <!-- シーン1：世界、沈黙 -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1：世界、沈黙</h1>
+                <div class="divider"></div>
+                <p>その瞬間、モニターが「ﾌﾟﾂﾝ」という音と共に真っ白になる。</p>
+                <div class="alert-box">
+                    🚨 画面真っ白 🚨
+                </div>
+                <p>全社員のスマホからも「The・World」が消える。静まり返るリリース会場。誰かのシャンパングラスが床に落ちて割れる音が響く。</p>
+                <div class="quote-box">
+                    <p><strong>PM民：</strong>「…え？だ、誰だ！？誰がやった！？」</p>
+                </div>
+                <p>アラートが一斉に鳴り響き、SRE民の顔が青ざめる。</p>
+                <div class="alert-box">
+                    「SLIが崖から飛び降りていく！総員、第一種戦闘配置！」
+                </div>
+                <p><strong>俺：</strong>「（だから言わんこっちゃない…）」</p>
+            </div>
+        </div>
+
+        <!-- シーン2：犯人は誰だ？ -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>シーン2：犯人は誰だ？（全員容疑者）</h1>
+                <div class="divider"></div>
+                <p>緊急対策会議室。巨大テーブルを囲む各村の代表たち。全員が疑心暗鬼。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-pm">PM</span>「まず、最後にデプロイしたのは誰だ！SRE！」</p>
+                    <p><span class="role-label role-sre">SRE</span>「待ってくれ！今回のデプロイはBlue/Greenだ。旧環境は無傷のはず。しかも切り替えは完璧だった！これはインフラかバックエンドの問題だ！」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「はあ！？俺のAPIは全テスト通過済みだ！Postmanのコレクションを見ろ！完璧なJSONを返してる！」</p>
+                    <p><span class="role-label role-dba">DBA</span>「そうだそうだ！DBのクエリも爆速だぞ！EXPLAINの結果、ALL Extraだ！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン2続き -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>容疑者たちの主張</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><span class="role-label role-security">セキュリティ</span>「待て。リリース直前に怪しい海外IPからのアクセスが急増していた。俺が導入した新しいWAFルールが何か検知したのかもしれん。だが、それはお前らのコードに脆弱性があったからだろ？」</p>
+                    <p><span class="role-label role-cloud">クラウド</span>「コスト最適化のために昨日、CDNのキャッシュ設定を少し弄ったが…まさかな。影響範囲は軽微なはず…」</p>
+                    <p><span class="role-label role-qa">QA</span>「我々の自動テストは1万ケース、全てパスしています！これは、テストケースにない『何か』が起きたとしか…つまり、仕様外の何か、そう、PMのせ…」</p>
+                    <p><span class="role-label role-pm">PM</span>「俺のせいだと！？ユーザーの要望に応えるのが俺の仕事だ！」</p>
+                </div>
+                <p><strong>俺：</strong>「（…ダメだこりゃ。全員、自分が正しいと信じて疑ってない。典型的なサイロ化障害だ…）」</p>
+            </div>
+        </div>
+
+        <!-- シーン3：俺のターン！ログはすべてを語る -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>シーン3：俺のターン！ログはすべてを語る</h1>
+                <div class="divider"></div>
+                <p>俺はノートPCを開き、各システムのログを鬼のような速さで突き合わせ始める。</p>
+                <div class="code-block">
+// フロントエンドのエラーログ
+TypeError: undefined is not a function
+  at UserProfile.render (main.js:1234)
+                </div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「まず、フロントエンドのエラーログ。『undefined is not a function』…想定外のデータ構造か」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「ありえない！API仕様書通りだ！」</p>
+                    <p><strong>俺：</strong>「…いや、違うな。お前、パフォーマンス改善のためにネスト構造を一段浅くしてないか？『user.profile.name』が『user.name』になってるぞ」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「あ…良かれと思って…。事前に『効率化した』ってSlackには書いたぞ！」</p>
+                    <p><strong>俺：</strong>「誰も見てない分報チャンネルで言うな！」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DBAの犯行 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1>DBAの「最適化」</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「次、一部のユーザーから『データが途中で切れてる』という報告。DBA、お前だな？」</p>
+                    <p><span class="role-label role-dba">DBA</span>「まさか！俺はむしろDBを高速化したが？」</p>
+                    <p><strong>俺：</strong>「プロフィール紹介文、以前はTEXT型だったのをVARCHAR(255)に変えただろ。自己紹介が長いユーザーのデータが見事にちぎれてる。結果、JSONが壊れてフロントが死んだ一因だ」</p>
+                    <p><span class="role-label role-dba">DBA</span>「ぐっ…ストレージと速度のために…。まさか255文字以上書くやつがいるとは…」</p>
+                </div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因その2：</strong></p>
+                    <p>VARCHAR(255)への変更により、長文プロフィールがトランケート</p>
+                    <p>→ 不完全なJSONレスポンス → パースエラー</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- セキュリティの過剰防衛 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>セキュリティの「念には念を」</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「そしてセキュリティ番、お前のWAFルール。『SQLインジェクションの疑い』でブロックログが大量に出てる。ブロックされたリクエストを見てみろ。…ユーザー名に『SELECT』って単語が入ってるだけじゃないか！」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「うっ…念には念を…まさか『DJ SELECT』なんて名前のユーザーがいるとは…性善説は脆弱性だとあれほど…」</p>
+                </div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因その3：</strong></p>
+                    <p>過度に厳格なWAFルール</p>
+                    <p>→ 正当なユーザー名（「SELECT」を含む）をブロック</p>
+                    <p>→ ログインできないユーザーが多数発生</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SREのキャッシュ問題 -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>SREの「完璧な」デプロイ</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「SRE、お前のBlue/Greenデプロイ。完璧だと言ったな。だが、旧バージョンのJSをキャッシュしてるユーザーが新APIを叩くとどうなるか考えたか？DNSの切り替えとキャッシュのTTL（Time To Live）が喧嘩してるぞ」</p>
+                    <p><span class="role-label role-sre">SRE</span>「そ、それは…エッジケースだ！ユーザーにスーパーリロードさせれば…」</p>
+                    <p><strong>俺：</strong>「できるか！画面真っ白なんだぞ！」</p>
+                </div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因その4：</strong></p>
+                    <p>キャッシュされた旧JSが新APIを呼び出し</p>
+                    <p>→ データ構造の不一致</p>
+                    <p>→ 真っ白画面</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- クラウドの経費削減 -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>クラウド担当の「コスト最適化」</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「クラウド担当、お前のCDN設定変更。これで一部リージョンからのアセット読み込みがS3直アクセスになって、表示が致命的に遅延。タイムアウトで死んでるユーザーが多発してる」</p>
+                    <p><span class="role-label role-cloud">クラウド</span>「月末の請求額が怖くて…経費削減は正義…」</p>
+                </div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因その5：</strong></p>
+                    <p>CDN設定の変更により一部リージョンでS3直アクセス</p>
+                    <p>→ レイテンシ増加</p>
+                    <p>→ タイムアウト多発</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PMの最後のひと押し -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>PMの「リリース3時間前の変更」</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「とどめだ、PM！お前、リリース3時間前に『やっぱりユーザーアイコンは丸じゃなくて四角で！角丸は多めで！』って言っただろ！」</p>
+                    <p><span class="role-label role-pm">PM</span>「ユーザー調査の結果、四角の方がエンゲージメントが高いと…」</p>
+                    <p><strong>俺：</strong>「そのせいで俺が書いたCSSの最終調整が吹っ飛んで、レイアウトが全部崩れてるんだよ！色々重なって、もうブラウザがレンダリングを諦めてる状態だ！」</p>
+                </div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因その6：</strong></p>
+                    <p>直前のデザイン変更</p>
+                    <p>→ CSSレイアウト崩壊</p>
+                    <p>→ すべてが重なり合い、カオスへ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン4：そして誰も悪くなくなった -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>シーン4：そして誰も悪くなくなった</h1>
+                <div class="divider"></div>
+                <p>会議室は沈黙に包まれる。全員が犯人。しかし、全員が自分の職務に忠実だっただけ。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-backend">バックエンド</span>「俺は…速度を上げたかった…」</p>
+                    <p><span class="role-label role-dba">DBA</span>「俺は…DBを守りたかった…」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「俺は…会社を守りたかった…」</p>
+                    <p><span class="role-label role-sre">SRE</span>「俺は…安定稼働を…」</p>
+                </div>
+                <p>全員がうなだれる。</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「そうさ。誰も悪くない。…強いて言うなら、コミュニケーションを取らなかった俺たち全員が悪いんだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- シーン5：夜明けのデプロイ -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>シーン5：夜明けのデプロイ</h1>
+                <div class="divider"></div>
+                <p>そこからが本当のチームだった。</p>
+                <div class="teaching">
+                    <p>✓ 俺がフロントエンドのコードを修正し、各APIの変更に対応させる</p>
+                    <p>✓ バックエンド民がAPIを旧仕様に一時的に戻しつつ、バージョン管理を導入する</p>
+                    <p>✓ DBA民がVARCHARの長さを広げ、データ復旧に走る</p>
+                    <p>✓ セキュリティ番がWAFの誤検知ルールを修正</p>
+                    <p>✓ SRE民がキャッシュ対策を施した上で、再デプロイの計画を立てる</p>
+                    <p>✓ PM民がコーヒーを淹れ、謝罪して回る</p>
+                </div>
+                <p>夜が明け始めた頃、SRE民が告げる。</p>
+                <div class="success-box">
+                    「…再デプロイ、完了。SLI、回復しました」
+                </div>
+                <p>モニターに、再び「The・World」が映し出される。今度は、完璧な姿で。</p>
+            </div>
+        </div>
+
+        <!-- シーン6：俺たちの学び -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>シーン6：俺たちの学び</h1>
+                <div class="divider"></div>
+                <p>後日、社内で行われた大規模なポストモーテム（障害報告会）。</p>
+                <p>壁には、今回の障害タイムラインと、各担当の「良かれと思ってやったこと」がマッピングされている。</p>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「専門性は武器だ。でも、隣の村と話さなければ、その武器は自分たちに向くこともある」</p>
+                    <p><span class="role-label role-pm">PM</span>「もう『気合』で乗り切るのはやめます。これからは『対話』をリソースにします」</p>
+                </div>
+                <div class="motto">
+                    壁に新しい標語が貼られる
+                </div>
+                <div class="teaching">
+                    <p>「隣の村のAPI仕様書を読め」</p>
+                    <p>「デプロイ前には叫べ」</p>
+                    <p>「『良かれと思って』はだいたい事故る」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 俺の独白 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>フロントエンドエンジニアの役割</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺（独白）：</strong></p>
+                    <p>「フロントエンドは、ただの画面じゃない。たくさんの専門分野の仕事、その最終的な『出口』なんだ。</p>
+                    <p>だからこそ、俺たちフロントエンドエンジニアは、誰よりも『翻訳者』でなきゃいけないのかもしれないな」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 外伝タイトル -->
+        <div class="slide" id="slide-17">
+            <div class="chapter-title">
+                <h1>外伝：The・World村</h1>
+                <h2>十の事件簿</h2>
+                <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                    ― 毎週どこかが壊れるけど、だいたい皆で笑って帰る ―
+                </p>
+            </div>
+        </div>
+
+        <!-- 外伝イントロ -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>外伝について</h1>
+                <div class="divider"></div>
+                <p>第六章の大障害から数週間。</p>
+                <p>The・World村では、なぜか「毎週なにかが壊れる」という奇妙な風習（？）が生まれていた。</p>
+                <div class="highlight">
+                    <p>しかしそのたびに、俺たちは切り分けと特定を通じて、ちょっとずつ強くなっていく――。</p>
+                </div>
+                <p style="text-align: center; margin-top: 30px; font-size: 1.2em;">
+                    これから、その10の事件を振り返る。
+                </p>
+            </div>
+        </div>
+
+        <!-- 第1話：状況編 -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>第1話「ログインボタンが押せない夜」</h1>
+                <div class="divider"></div>
+                <p>リリース当日、ユーザーからの悲鳴。「ログインボタンが押せません！」</p>
+                <div class="highlight">
+                    <p><span class="role-label role-frontend">フロント</span>「俺のReactボタンは完璧だ！onClickもちゃんと生えてる！」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「ログインAPIは200を返し続けている。呼ばれてさえいない！」</p>
+                    <p><span class="role-label role-design">デザイン</span>「ボタンは映えてる。UI的には世界を救えるレベル」</p>
+                </div>
+                <p><strong>俺：</strong>「じゃあ、ブラウザのDevToolsでイベントを確認するか…」</p>
+                <div class="quote-box">
+                    <p><strong>俺：</strong>「…おいデザイン村。お前の『おしゃれな半透明ヘッダーバナー』、z-index9999で全画面にかぶさってるぞ。ボタンの上に透明な壁を置くな」</p>
+                    <p><span class="role-label role-design">デザイン</span>「えっ、だって『ヒーローセクションを画面いっぱいに』ってPMが…」</p>
+                    <p><span class="role-label role-pm">PM</span>「（目をそらす）」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第1話：原因解析編 -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>第1話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>透明なオーバーレイ要素（z-index: 9999）がボタンを物理的にふさいでいた</p>
+                    <p><strong>💥 結果：</strong>ログインボタンが一切クリックできず、ユーザーが村の門前で立ち尽くす</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ イベントが発火しているかをDevToolsで確認</p>
+                    <p>✓ 要素の上に何か重なっていないかをElements検証</p>
+                    <p>✓ z-indexの値を全要素で確認</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「見えないものが見えているものを壊す」- z-index事故は、透明な要素が原因のことが多い。「クリックできない」と言われたら、まず重なりを疑え。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第2話：状況編 -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>第2話「消えた昨日の注文」</h1>
+                <div class="divider"></div>
+                <p>ある朝、サポート村から叫び声。「昨日の注文履歴だけ、全部消えてるんですけど！？」</p>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA</span>「DELETEなんてしてない！誓って！」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「日付で検索してるだけだぞ？ <code>WHERE created_at >= 今日</code> …あっ」</p>
+                </div>
+                <p><strong>俺：</strong>「…それ、サーバーのタイムゾーンUTCで動いてるから、日本時間の『昨日』がごっそりフィルタされてるやつだな」</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE</span>「ログ見ると、0時を境に件数がピタッと0になってる。典型的TZ事故だ」</p>
+                    <p><span class="role-label role-pm">PM</span>「昨日のキャンペーン成果が…レポートが真っ白…」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第2話：原因解析編 -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>第2話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>タイムゾーンを考慮しない日付フィルタ（UTCとローカル時間のすれ違い）</p>
+                    <p><strong>💥 結果：</strong>実データは生きてるのに、UI上は「昨日だけ注文ゼロ」に見える怪現象</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ DBの生データを直接SQLで確認（件数は本当にゼロ？）</p>
+                    <p>✓ アプリケーション側の時刻変換ロジックを確認</p>
+                    <p>✓ サーバーのタイムゾーン設定を確認（UTC? JST?）</p>
+                    <p>✓ 日付境界付近でのデータ取得をテスト</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「時間は世界共通ではない」- 日時を扱う時は常にタイムゾーンを意識せよ。DBはUTC、ユーザーはローカル時間で考える。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第3話：状況編 -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>第3話「キャッシュに閉じ込められたバナー」</h1>
+                <div class="divider"></div>
+                <p>新キャンペーン開始。しかしユーザー画面には、なぜか2週間前に終わったセールバナーがドヤ顔で居座っている。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-marketing">マーケ</span>「新バナーに切り替えたのに！ABテストも仕込んだのに！」</p>
+                    <p><span class="role-label role-cloud">クラウド</span>「CDNのキャッシュ？まぁ…TTLは1週間にしてたけど…」</p>
+                    <p><span class="role-label role-sre">SRE</span>「しかもバージョン付きURLつけてないから、全世界のエッジに古いやつが死ぬほど残ってるな」</p>
+                </div>
+                <p><strong>俺：</strong>「フロント村でアセットに <code>?v=2</code> を付ける。CDN側でパスごとのキャッシュ削除を走らせよう」</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-cloud">クラウド</span>「…ごめん、経費削減のために『キャッシュは長ければ長いほど偉い』って思ってた」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第3話：原因解析編 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>第3話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>強烈すぎるCDNキャッシュ＋バージョニングなし</p>
+                    <p><strong>💥 結果：</strong>終わったはずのセールが画面上だけ延長営業。ユーザーが混乱</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ HTTPレスポンスヘッダ（Cache-Control, Expires）を確認</p>
+                    <p>✓ CDNのキャッシュヒット/ミス状態を確認</p>
+                    <p>✓ オリジンサーバーで正しいコンテンツが返っているか確認</p>
+                    <p>✓ 異なるリージョンから確認（地理的なキャッシュ差分）</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「更新したはずなのに反映されない」はキャッシュを疑え。静的アセットには必ずバージョン番号やハッシュ値をつけ、キャッシュバスティングを実装せよ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4話：状況編 -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>第4話「フィーチャーフラグ・ロシアンルーレット」</h1>
+                <div class="divider"></div>
+                <p>新機能「ダークモード」を限定ロールだけ有効にするはずだった日。一部ユーザーだけ、謎の真っ黒画面に。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-pm">PM</span>「フィーチャーフラグのロール設定は完璧だ。『社員だけ有効』にした」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「そのロール情報、クライアント側のLocalStorageを信じてるのか…？」</p>
+                    <p><strong>俺：</strong>「さらに悪いニュースだ。フロント村、環境変数名を <code>FEATURE_DARKMODE</code> と <code>FEATURE_DARK_MODE</code> で2種類やってる。片方だけ真に…」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE</span>「つまり、社員ロールでもないごく一部のユーザーが、バグったダークモードを踏んでるわけか」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4話：原因解析編 -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>第4話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>フラグの読み取りミス（環境変数の綴り違い）＋権限情報をフロントだけで判断</p>
+                    <p><strong>💥 結果：</strong>特定ユーザーだけ謎の実験台にされる地獄</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ 誰にどの条件でフラグが有効になるかをドキュメント化</p>
+                    <p>✓ 環境変数名の一貫性を確認（typo、ケース違いに注意）</p>
+                    <p>✓ フラグ判定のログを詳細に取得</p>
+                    <p>✓ フロント・バックエンド両方でロール判定</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「フィーチャーフラグは予測可能であれ」- 誰がどの機能を見られるか、明確な仕様とログで追跡可能にせよ。環境変数の命名規則は統一せよ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第5話：状況編 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>第5話「翻訳キーのささやき」</h1>
+                <div class="divider"></div>
+                <p>多言語対応リリースの日。スペイン語ユーザーだけ、画面の半分が <code>i18n.key.not.found</code> で埋め尽くされる。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-qa">QA</span>「テスト環境では全部英語で通したので…」</p>
+                    <p><span class="role-label role-devrel">DevRel</span>「コミュニティ翻訳を取り込んだけど、キーの一覧？そんなの見ずにノリで訳しました！」</p>
+                    <p><strong>俺：</strong>「本番だけ <code>es-ES</code> を有効化してるから、ステージングでは誰も気付かなかったパターンだな」</p>
+                </div>
+                <div class="quote-box">
+                    <p><strong>俺：</strong>「ログ見ると、<code>missing translation</code> が大量に。Fallbackも効いてない。翻訳キーのカバレッジをCIでチェックする仕組み、入れよう」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第5話：原因解析編 -->
+        <div class="slide" id="slide-28">
+            <div class="chapter">
+                <h1>第5話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>本番だけ有効なロケールで、翻訳キーが半分足りていなかった</p>
+                    <p><strong>💥 結果：</strong>画面がシステム語と謎キーの羅列でホラー小説化</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ 本番と同じロケール設定でステージング環境をテスト</p>
+                    <p>✓ 翻訳キーの網羅性を静的解析でチェック（CI導入）</p>
+                    <p>✓ 翻訳ファイルとコード内のキー使用箇所を突合</p>
+                    <p>✓ Fallback言語が正しく動作するか確認</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「多言語対応は全言語でテストせよ」- 翻訳キーの抜け漏れは静的解析で事前検出。本番だけ有効な設定は危険信号。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第6話：状況編 -->
+        <div class="slide" id="slide-29">
+            <div class="chapter">
+                <h1>第6話「モバイルだけ落ちる呪い」</h1>
+                <div class="divider"></div>
+                <p>リリース後、古いAndroidユーザーからだけ悲鳴。「アプリが開いた瞬間に落ちる！」</p>
+                <div class="highlight">
+                    <p><span class="role-label role-frontend">フロント</span>「ブラウザでは動いてる！PCのChromeだと完璧！」</p>
+                    <p><span class="role-label role-mobile">モバイル</span>「いや、Chrome 50 は <code>optional chaining</code> なんて知らないんだよ…」</p>
+                    <p><strong>俺：</strong>「…ポリフィルとトランスパイルのターゲット設定、ちゃんと見直そうな」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE</span>「モバイルだけエラー率が跳ね上がっていたが、監視ダッシュボードは『全体平均』しか見てなかったから気付くの遅れたな」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第6話：原因解析編 -->
+        <div class="slide" id="slide-30">
+            <div class="chapter">
+                <h1>第6話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>古いモバイルブラウザ非対応のモダン構文を、そのまま本番に出した</p>
+                    <p><strong>💥 結果：</strong>一部ユーザーだけ地獄。レビュー欄が火の海</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ ユーザーセグメント別（OS、ブラウザ、バージョン）にエラー率を確認</p>
+                    <p>✓ ビルドターゲット設定（.browserslistrc, tsconfig.json）を確認</p>
+                    <p>✓ トランスパイル後のコードに古いブラウザで使えない構文がないか確認</p>
+                    <p>✓ 実機またはBrowserStackで古いデバイスでテスト</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「開発環境で動く ≠ 全ユーザーで動く」- サポートブラウザを明文化し、ビルド設定とポリフィルで互換性を担保せよ。監視は全体平均ではなくセグメント別に。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第7話：状況編 -->
+        <div class="slide" id="slide-31">
+            <div class="chapter">
+                <h1>第7話「サードパーティ神の気まぐれ」</h1>
+                <div class="divider"></div>
+                <p>ある金曜の夜、決済画面だけが突然真っ白に。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-backend">バックエンド</span>「うちのサーバーは正常！ログがそもそも来てない！」</p>
+                    <p><span class="role-label role-sre">SRE</span>「外形監視も200を返してるが…」</p>
+                    <p><strong>俺：</strong>「決済ボタン押した瞬間、謎の外部JSを読みに行って、そこで止まってるな」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「決済プロバイダのステータスページ見た？世界的障害って書いてあるぞ」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-pm">PM</span>「なんでウチの障害レポートに『他社のメンテ』が混ざるんだ…」</p>
+                    <p><strong>俺：</strong>「依存してるんだから、そこも含めてシステムだよ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第7話：原因解析編 -->
+        <div class="slide" id="slide-32">
+            <div class="chapter">
+                <h1>第7話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>サードパーティ決済SDKの大規模障害</p>
+                    <p><strong>💥 結果：</strong>決済フローが全国的に停止。The・World村も巻き添え</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ 自前のサーバー・APIは正常か</p>
+                    <p>✓ 外部サービスのステータスページを確認</p>
+                    <p>✓ ネットワークタイムラインで外部リクエストの状態を確認</p>
+                    <p>✓ 外部JSのロードエラー・タイムアウトをチェック</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「外部依存は自分の責任範囲」- サードパーティサービスの障害も自システムの障害。ステータスページを監視し、タイムアウト処理とフォールバックを実装せよ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第8話：状況編 -->
+        <div class="slide" id="slide-33">
+            <div class="chapter">
+                <h1>第8話「レートリミットの逆襲」</h1>
+                <div class="divider"></div>
+                <p>新機能「まとめ通知」を出した翌日。一部ヘビーユーザーだけ、通知画面が「エラー祭り」に。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-backend">バックエンド</span>「APIはちゃんと返してる…いや、ステータス429が増えてるな」</p>
+                    <p><span class="role-label role-sre">SRE</span>「ゲートウェイで『1分間に10リクエストまで』って制限かけたの、誰？」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「ブルートフォース対策としては正しいと思ったんだが…」</p>
+                    <p><strong>俺：</strong>「フロント側でNリクエスト並列に飛ばしてるから、1画面開くだけで一瞬で制限超えてる。バッチ化しよう」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第8話：原因解析編 -->
+        <div class="slide" id="slide-34">
+            <div class="chapter">
+                <h1>第8話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>APIゲートウェイのレートリミット設定と、フロントの雑な多重リクエスト設計の合わせ技</p>
+                    <p><strong>💥 結果：</strong>ヘビーユーザーだけが理不尽に締め出される</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ HTTPステータス429（Too Many Requests）を確認</p>
+                    <p>✓ APIゲートウェイのレートリミット設定値を確認</p>
+                    <p>✓ フロント側で1画面あたり何リクエスト飛ばしているか計測</p>
+                    <p>✓ バッチAPI化、リクエスト集約の可能性を検討</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「制限値は実使用パターンと一緒に設計せよ」- レートリミットは必要だが、正常な使い方まで制限してはいけない。フロント側のリクエスト数を把握し、適切なバッチ化を。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第9話：状況編 -->
+        <div class="slide" id="slide-35">
+            <div class="chapter">
+                <h1>第9話「CSSの一行で世界が崩れた日」</h1>
+                <div class="divider"></div>
+                <p>デザイン改善の小さなPR。変更内容はたった1行。</p>
+                <div class="code-block">
+* { box-sizing: border-box; }
+→
+body * { box-sizing: border-box; }
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-design">デザイン</span>「グローバル指定は良くないって聞いたから、スコープを絞っただけ…のはずだった」</p>
+                    <p><strong>俺：</strong>「その瞬間、モーダルの位置がずれて、SP版だけスクロール不能になったな」</p>
+                    <p><span class="role-label role-qa">QA</span>「PCだけ見て『OKです！』って言いました！」</p>
+                </div>
+                <div class="quote-box">
+                    <p><strong>俺：</strong>「スタイルの差分をfeatureブランチで環境ごとに比較しよう。Visual Regression Testも入れたい」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第9話：原因解析編 -->
+        <div class="slide" id="slide-36">
+            <div class="chapter">
+                <h1>第9話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>一見小さなCSS変更が、特定レイアウトと組み合わさって大崩壊</p>
+                    <p><strong>💥 結果：</strong>スマホユーザーがモーダルから出られなくなり、永遠にアンケート地獄</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ CSS変更の影響範囲を複数の画面サイズで確認</p>
+                    <p>✓ モーダル、ドロップダウンなど状態変化する要素で確認</p>
+                    <p>✓ Visual Regression Testでスクリーンショット差分検出</p>
+                    <p>✓ CSSセレクタの詳細度と継承を理解する</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「CSSは予想外に伝播する」- グローバルなスタイル変更は全画面・全状態でテストせよ。Visual Regression Testで自動検出を。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第10話：状況編 -->
+        <div class="slide" id="slide-37">
+            <div class="chapter">
+                <h1>第10話「移行スクリプトと失われたアイコン」</h1>
+                <div class="divider"></div>
+                <p>新システムへのユーザーデータ移行の日。移行後、半数以上のユーザーアイコンが、なぜか「謎の影絵」になっていた。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA</span>「スクリプトは正常終了！エラー0件！」</p>
+                    <p><span class="role-label role-backend">バックエンド</span>「古いストレージのパスを、新しいCDNのURLに置換しただけだぞ？」</p>
+                    <p><span class="role-label role-cloud">クラウド</span>「でも、そのバケットもう削除予約に入ってるんだよなぁ…」</p>
+                </div>
+                <div class="quote-box">
+                    <p><strong>俺：</strong>「ログを見ると、404を踏んだユーザーだけデフォルトアイコンの影絵が表示されてる。先にバケット削除スケジュールを組んで、その後ゆっくりDNS切り替えたから、移行中に消えた画像があるな」</p>
+                    <p><span class="role-label role-pm">PM</span>「ユーザーから『黒いシルエットにされた』ってクレームが…」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第10話：原因解析編 -->
+        <div class="slide" id="slide-38">
+            <div class="chapter">
+                <h1>第10話：原因解析と学び</h1>
+                <div class="divider"></div>
+                <div class="incident-box">
+                    <p><strong>⚠️ 原因：</strong>データ移行とストレージ削除の順番・タイミング設計ミス</p>
+                    <p><strong>💥 結果：</strong>一部ユーザーのアイコンが失われ、デフォルト影絵まみれに</p>
+                </div>
+                <div class="lesson-box">
+                    <h2>切り分けポイント</h2>
+                    <p>✓ 移行計画をタイムライン付きで詳細に記述</p>
+                    <p>✓ 旧システムの削除タイミングは移行完了後十分な期間を置く</p>
+                    <p>✓ バックアップの存在とリストア手順を事前確認</p>
+                    <p>✓ ロールバック手順を用意し、事前にテスト</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>教訓：</strong>「移行作業は逆順で考えよ」- 削除は最後、移行は段階的に。バックアップとロールバック手順なしに本番作業をするな。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- エピローグ：毎週壊れるけど -->
+        <div class="slide" id="slide-39">
+            <div class="chapter">
+                <h1>エピローグ：毎週壊れるけど、毎週ちょっとだけ賢くなる村</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p><strong>俺：</strong>「気付けば、ここ数週間で10回もトラブルを踏んだわけだが…」</p>
+                    <p><span class="role-label role-sre">SRE</span>「エラー率グラフは時々跳ねるけど、復旧時間（MTTR）は確実に短くなってる」</p>
+                    <p><span class="role-label role-security">セキュリティ</span>「ログの取り方も、だいぶ洗練されてきたな」</p>
+                    <p><span class="role-label role-pm">PM</span>「障害報告会が、だんだんコメディショーになってきてない？」</p>
+                </div>
+                <div class="teaching">
+                    <p><strong>俺：</strong>「いいんだよ。笑えるうちは、まだやり直せる。</p>
+                    <p>大事なのは『誰を責めるか』じゃなくて、『どう切り分けて、どう直して、どう学んだか』だ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 今回のふりかえり -->
+        <div class="slide" id="slide-40">
+            <div class="chapter">
+                <h1>今回のふりかえり</h1>
+                <div class="divider"></div>
+                <div class="teaching">
+                    <p>十の小さなトラブルは、どれも「良かれと思って」と「気づかなかった」が少しずつ積み重なって爆発した結果だった。</p>
+                    <p>ひとつひとつを「誰のミスか」ではなく「どんな前提とコミュニケーションのズレがあったか」として分解すると、同じ村の中でも、隣の村の考え方や怖がっているポイントが、だんだん見えてくる。</p>
+                </div>
+                <div class="highlight">
+                    <p>ログを一緒に眺めて、タイムラインを引いて、付箋で原因と結果をつないでいく作業は、気づけば「ダメ出し会」ではなく「物語づくり」の場になっていた。</p>
+                </div>
+                <p>十本の小さな事件簿は、十個のチェックリストであると同時に、十通りの「こう考えればよかった」が詰まった教科書だ。</p>
+            </div>
+        </div>
+
+        <!-- 学びのまとめ -->
+        <div class="slide" id="slide-41">
+            <div class="chapter">
+                <h1>学びのまとめ：フロントエンドの視点から</h1>
+                <div class="divider"></div>
+                <h2>1. 障害は複合的に発生する</h2>
+                <p>単一の原因ではなく、複数の「良かれと思って」が重なり合って障害になる</p>
+                
+                <h2>2. ログは宝の山</h2>
+                <p>フロントのエラーログ、バックエンドのアクセスログ、DBの実行ログを横断的に見る力</p>
+                
+                <h2>3. コミュニケーションは技術</h2>
+                <p>「隣の村」の変更を把握し、影響を予測する習慣</p>
+                
+                <h2>4. 切り分けの型を持つ</h2>
+                <p>「再現性」「ユーザーセグメント」「タイムライン」「環境差分」を軸に切り分ける</p>
+            </div>
+        </div>
+
+        <!-- 切り分けチェックリスト -->
+        <div class="slide" id="slide-42">
+            <div class="chapter">
+                <h1>障害切り分けチェックリスト</h1>
+                <div class="divider"></div>
+                <div class="teaching">
+                    <h2>✅ 再現性</h2>
+                    <p>・100%再現するか、特定条件下でのみ発生するか</p>
+                    <p>・再現手順は何ステップか</p>
+                    
+                    <h2>✅ 影響範囲</h2>
+                    <p>・全ユーザーか、特定ユーザーか</p>
+                    <p>・全機能か、特定機能か</p>
+                    <p>・全環境か、本番だけか</p>
+                    
+                    <h2>✅ タイムライン</h2>
+                    <p>・いつから発生したか</p>
+                    <p>・その前後に何か変更があったか</p>
+                    
+                    <h2>✅ ログと監視</h2>
+                    <p>・フロント、バックエンド、インフラの各層でエラーは出ているか</p>
+                    <p>・外部サービスのステータスは正常か</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 次章予告 -->
+        <div class="slide" id="slide-43">
+            <div class="chapter">
+                <h1>次章予告</h1>
+                <div class="divider"></div>
+                <div class="alert-box" style="animation: none; background-color: #333;">
+                    第七章「俺たちは技術的負債と戦っている」
+                </div>
+                <div class="highlight" style="margin-top: 30px;">
+                    <p>失われた仕様書、謎のTODOコメント、そしてgit blameの先にいた意外な人物…。</p>
+                    <p>技術的負債という名の亡霊が、俺たちに襲いかかる！</p>
+                </div>
+                <p style="text-align: center; margin-top: 30px; font-size: 1.2em; color: #666;">
+                    過去のコードは、未来への警告である。
+                </p>
+            </div>
+        </div>
+
+        <!-- 最終スライド -->
+        <div class="slide" id="slide-44">
+            <div class="teaching">
+                <div class="footer">
+                    <h1>第6回: フロントエンドの壊れかた</h1>
+                    <p style="margin: 20px 0;">壊れ方を笑いながら共有できるチームだけが、「また来週」を怖がるどころか、「来週はどんなバグ漫画になるかな」と少しだけ楽しみにしながら、次のリリースボタンを押せるのだ。</p>
+                    <p>© 2025 フロントエンドクラブ</p>
+                    <p>次回：「俺たちは技術的負債と戦っている（血文字で）」</p>
+                    <p style="margin-top: 20px;">本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 44</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 44;
+        
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+        
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            if (currentSlideElem) {
+                currentSlideElem.classList.add('active');
+            }
+            
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                if (prevSlideElem) {
+                    prevSlideElem.classList.add('prev');
+                }
+            }
+            
+            updateSlideCounter();
+            updateButtonState();
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+        
+        // 初期表示
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
+
