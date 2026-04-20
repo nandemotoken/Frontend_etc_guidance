@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第8回:システムを戦争から守る ―― タイムマシンに乗った俺の、大破壊への備え</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .slide.active { transform: translateX(0); }
+        .slide.prev { transform: translateX(-100%); }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #1e3a8a;
+        }
+        h2 {
+            font-size: min(3.5vh, 24px);
+            border-left: 5px solid #1e3a8a;
+            padding-left: 2vw;
+            margin-top: 3vh;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .divider {
+            border-top: 1px dashed #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #e8eefc;
+            padding: 15px;
+            border-left: 4px solid #1e3a8a;
+            margin: 15px 0;
+        }
+        .alert-box {
+            background-color: #c0392b;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .war-box {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #c0392b;
+        }
+        .war-box h2 {
+            color: #e74c3c;
+            border-left: none;
+            padding-left: 0;
+        }
+        .defense-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+        }
+        .defense-box h2 {
+            color: #27ae60;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        .tech-box {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .tech-box h2 {
+            color: #1e3a8a;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        .level-box {
+            background-color: #fdf6e3;
+            border: 2px solid #b58900;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .level-box h2 {
+            color: #b58900;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+        }
+        .lv1 { background-color: #27ae60; }
+        .lv2 { background-color: #f39c12; }
+        .lv3a { background-color: #e67e22; }
+        .lv3b { background-color: #c0392b; }
+        .lv4 { background-color: #1a1a2e; }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .teaching {
+            background-color: #e8eefc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover { background-color: #2944a3; }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #777;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #1e3a8a;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+        }
+        .title-slide h1 {
+            font-size: min(6vh, 36px);
+            margin-bottom: 2vh;
+            border-bottom: none;
+        }
+        .title-slide p {
+            font-size: min(3vh, 20px);
+            color: #666;
+        }
+        .chapter-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90%;
+        }
+        p {
+            font-size: min(2.8vh, 16px);
+            line-height: 1.6;
+        }
+        .role-label {
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .role-sre { background-color: #3498db; }
+        .role-security { background-color: #27ae60; }
+        .role-backend { background-color: #9b59b6; }
+        .role-dba { background-color: #e67e22; }
+        .role-cloud { background-color: #1abc9c; }
+        .role-qa { background-color: #f39c12; }
+        .role-pm { background-color: #e74c3c; }
+        .role-frontend { background-color: #e91e63; }
+        .role-devrel { background-color: #8e44ad; }
+        .role-me { background-color: #1e3a8a; }
+        .quote-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #1e3a8a;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .motto {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin: 20px 0;
+            padding: 15px;
+            border: 3px solid #1e3a8a;
+            border-radius: 10px;
+        }
+        .reference-item {
+            background-color: #f5f5f5;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #1e3a8a;
+        }
+        ul.compact li { margin: 6px 0; }
+        a { color: #1e3a8a; }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 1. タイトル -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第8回:システムを戦争から守る</h1>
+                <p>― タイムマシンに乗った俺の、大破壊への備え ―</p>
+                <div style="margin-top: 30px; font-size: 0.9em; color: #999;">
+                    <p>戦争の大きさを知り、インターネット・クラウド・DNS・バックアップ・DRを見直す</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 要約 -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>今日の物語</h1>
+                <div class="divider"></div>
+                <div class="highlight">
+                    <p>第七章でセキュリティの悪夢から覚めた俺は、ふと気づいてしまう。</p>
+                    <p><strong>「そもそも俺がこの世界で悪戦苦闘してるのは、第一章の核戦争のせいじゃないか？」</strong></p>
+                </div>
+                <p>BTCが盗まれ、報復の核攻撃が起き、インターネットが崩壊したあの日――事前に備えられることはなかったのか？</p>
+                <p>机の引き出しから出てきた「タイムマシン」に乗り、俺は開戦前夜の世界へと戻る。</p>
+                <div class="teaching">
+                    <p><strong>戦争の大きさを整理し、インターネット・クラウド・DNS・バックアップ・DRまで、「システムを戦争から守る」ための設計を一気に棚卸ししていく。</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. シーン0：悪夢のあとの、もうひとつの悪夢 -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>シーン0：悪夢のあとの、もうひとつの悪夢</h1>
+                <div class="divider"></div>
+                <p>第七章のラスト、壁に「セキュリティの十戒」を書き終えた俺は、椅子に深くもたれかかっていた。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「悪夢は10本見た。教訓は整理した。もう眠ってもいいよな…」</p>
+                </div>
+                <p>しかし目を閉じた瞬間、脳裏に蘇ったのは、十の事件簿よりもはるか前の記憶――</p>
+                <div class="war-box">
+                    <p>「北朝鮮ハッカー集団ラザルスが、米国のBTC準備金をまるごと盗んだ」</p>
+                    <p>「報復の核攻撃」</p>
+                    <p>「世界中のインフラが壊滅」</p>
+                    <p>「インターネット、事実上の崩壊」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺（独白）</span>「…待て。俺がこの村で毎週システムを直してるのは、そもそもあの日、世界が一度死んだからだ」</p>
+                    <p><span class="role-label role-me">俺</span>「ふと、思っちまったんだ――『事前に備えておけることがあったんじゃないか？』って」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. シーン1：第一章を技術屋の目で -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1：第一章の記憶を、技術屋の目で見返す</h1>
+                <div class="divider"></div>
+                <p>俺は古い日記（第一章のスライド資料）を引っ張り出す。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「BTC消失、核戦争、インターネット崩壊、ブラウザがIE6しか動かない地獄…。当時は『仕方ない、生き延びよう』で済ませた。でも今なら分かる。あれ、『そもそもシステム側が生き残る設計』にしとけば被害半減だったよな？」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-sre">SRE民</span>「なんだその顔。悪夢は見終わったんじゃなかったのか」</p>
+                    <p><span class="role-label role-me">俺</span>「一番根っこの悪夢を見落としてた。戦争そのものだ」</p>
+                    <p><span class="role-label role-sre">SRE民</span>「…重いな朝から」</p>
+                    <p><span class="role-label role-me">俺</span>「重いついでに、過去に戻る」</p>
+                    <p><span class="role-label role-sre">SRE民</span>「え？」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. シーン2：机の引き出しのタイムマシン -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>シーン2：机の引き出しのタイムマシン</h1>
+                <div class="divider"></div>
+                <p>俺はデスクの一番下の引き出しを、ガチャガチャと引き抜く。</p>
+                <p>そこには、タイムマシンがあった。ダイヤルと、赤ボタンと、「西暦入力」と書かれた液晶。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「なんでこんなもんが俺の机に…いや、ツッコミは無し。物語の都合だ」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-devrel">DevRel民</span>「それ本当に動くんですか？」</p>
+                    <p><span class="role-label role-me">俺</span>「動かなかったら、ただの重い文鎮だ。でも動いたら、俺は世界を救える」</p>
+                    <p><span class="role-label role-devrel">DevRel民</span>「ロマンですね」</p>
+                    <p><span class="role-label role-me">俺</span>「ロマンと、システム構成図だ」</p>
+                </div>
+                <p>俺はノートPC一台と、マーカーと、大量の付箋をリュックに詰め込み、タイムマシンに乗り込む。</p>
+                <div class="alert-box" style="animation: none;">行き先は――あの核戦争が始まる、数年前</div>
+            </div>
+        </div>
+
+        <!-- 6. シーン3：過去の世界、情報収集 -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>シーン3：過去の世界、情報収集の日々</h1>
+                <div class="divider"></div>
+                <p>過去の世界に降り立った俺は、図書館、書店、検索、専門家のブログ、AIへの問い合わせを駆使して、まず<strong>「そもそも戦争ってどれくらいデカいんだ？」</strong>を整理することにした。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「敵を知らずに防御は設計できない。障害の規模感を見積もれない設計は、ただの気休めだ」</p>
+                </div>
+                <p>壁にでかい模造紙を貼り、『戦争の大きさ 俺なりまとめ』と書き出す。</p>
+                <div class="tech-box">
+                    <h2>大前提</h2>
+                    <ul class="compact">
+                        <li>戦争の"大きさ"によって、ITインフラの被害も、備えの方針も、全部変わる</li>
+                        <li>「全部に備える」のは現実的じゃない</li>
+                        <li>どこまで守るか、一般のITエンジニアとしての落としどころを決める必要がある</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. シーン4：Lv.1 国際法順守 -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1><span class="level-badge lv1">Lv.1</span>戦時国際法に沿った戦争</h1>
+                <p style="color: #666;">― 想定の"ベースライン" ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「まずは"ルールあり"の戦争。国際人道法・ジュネーブ条約とかに沿って、戦闘員同士の戦闘に限定される世界線だな」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>主な特徴</h2>
+                    <ul class="compact">
+                        <li>攻撃目標は軍事目標に限定される（建前として）</li>
+                        <li>民間人・民間施設・医療施設への意図的な攻撃は違法</li>
+                        <li>占領下でも民間インフラの保全・通信の確保が一定程度配慮される</li>
+                    </ul>
+                </div>
+                <div class="level-box">
+                    <h2>Lv.1 対応方針</h2>
+                    <p><strong>システム被害：</strong>経済制裁・渡航制限・通信経路の一部遮断・サイバー攻撃の増加</p>
+                    <p><strong>対策ライン：</strong>BCPの基本。代替経路、代替決済、サプライヤ多角化、普段のセキュリティ強化</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. シーン5：Lv.2 国際法違反 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1><span class="level-badge lv2">Lv.2</span>戦時国際法を破った戦争</h1>
+                <p style="color: #666;">― データセンターが"標的"になる日 ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「次が嫌な話だ。国際法を無視する（あるいはグレーに運用する）戦争」</p>
+                </div>
+                <div class="war-box">
+                    <p><strong>民間施設への攻撃が発生する：</strong></p>
+                    <p>病院、学校、電力、通信、そして――<strong style="color:#e74c3c;">データセンター</strong></p>
+                </div>
+                <p>実際、この過去の時代でも、中東のデータセンターがいくつか爆破された事件があるらしい。</p>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA民（脳内）</span>「DCが物理的に消し飛ぶって、クラウドプロバイダ視点でもマジで致命的だぞ。バックアップがどこに置いてあったかで生死が決まる」</p>
+                </div>
+                <div class="level-box">
+                    <h2>Lv.2 対応方針</h2>
+                    <p><strong>システム被害：</strong>特定地域のDC物理破壊、電力網破壊、海底ケーブル切断、民間通信への直接攻撃</p>
+                    <p><strong>対策ライン：</strong></p>
+                    <ul class="compact">
+                        <li>別リージョン／別国へのバックアップ</li>
+                        <li>海底ケーブルの経路冗長（利用ISP選定のチェック）</li>
+                        <li>通信が国境超えした瞬間の遮断リスク評価</li>
+                        <li>最低限、自社の重要データは"地政学的に離れた地点"に1コピー</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. シーン6：核戦争 段階 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>シーン6：核戦争――規模感を"段階"で捉える</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「ここから先が地獄の領域だ。核戦争は"使う"って判断した瞬間にレベルが跳ね上がる」</p>
+                </div>
+                <p>ただし、一口に「核」と言っても使われ方には段階がある。ここを混同すると、対策のラインも混線する。</p>
+                <div class="tech-box">
+                    <h2>核の3段階</h2>
+                    <p><span class="level-badge lv3a">Lv.3a</span><strong>戦術核（Tactical）</strong> ― ピンポイント破壊</p>
+                    <p><span class="level-badge lv3b">Lv.3b</span><strong>戦略核（Strategic）</strong> ― 都市を焼く</p>
+                    <p><span class="level-badge lv4">Lv.4</span><strong>核報復システム</strong> ― 自動化された第二撃</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「一般のITエンジニアとしての"現実的な対策ライン"は、この3つのうちどこまでに備えるか、で決まる」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. シーン7：戦術核 -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1><span class="level-badge lv3a">Lv.3a</span>戦術核</h1>
+                <p style="color: #666;">― ピンポイント破壊と、"使われた"という事実 ―</p>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>戦術核の特徴</h2>
+                    <ul class="compact">
+                        <li>比較的小威力（サブkt〜数十kt程度のものも想定される）</li>
+                        <li>軍事目標への"局所的な"破壊を目的に威力を調整</li>
+                        <li>被害の主な範囲は周辺"数km"オーダー（威力・爆発高度による）</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「ざっくり言えば、『一つの軍事基地・艦隊・補給拠点を潰すために、威力をチューンした核兵器』だ」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-sre">SRE民（脳内）</span>「大事なのは、"局所的だから許される"では全然ないってこと。"核兵器を使った"という事実そのものが、人類史の大転換点だ」</p>
+                </div>
+                <div class="alert-box" style="animation: none;">
+                    「使っちゃった」のインパクトはデカい。次は戦略核、さらには報復システムという連鎖が始まる
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. シーン7：戦術核 対策 -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>Lv.3a 戦術核への備え</h1>
+                <div class="divider"></div>
+                <div class="level-box">
+                    <h2>物理被害</h2>
+                    <p>特定地点数kmの完全破壊／広域のEMP・電子機器障害リスク</p>
+                </div>
+                <div class="level-box">
+                    <h2>システム被害</h2>
+                    <p>特定DC群の喪失、近隣の電力網・通信網崩壊、EMPによる機器損傷</p>
+                </div>
+                <div class="defense-box">
+                    <h2>対策ライン</h2>
+                    <ul class="compact">
+                        <li>"複数DCが同時に消える"を前提にした災対構成</li>
+                        <li>クラウドの"リージョン"をまたぐ冗長化</li>
+                        <li>オフサイトバックアップ（出来れば別大陸）</li>
+                        <li>地理的に近接したAZだけに頼らない</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. シーン8：戦略核 -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1><span class="level-badge lv3b">Lv.3b</span>戦略核</h1>
+                <p style="color: #666;">― 都市を焼く兵器 ―</p>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>戦略核の特徴</h2>
+                    <ul class="compact">
+                        <li>大威力（数百kt〜Mtクラス）</li>
+                        <li>都市・工業地帯など広域を目標にする</li>
+                        <li>熱線・爆風・放射線＋放射性降下物（フォールアウト）の複合被害</li>
+                        <li>威力次第で、数十km圏にも熱線・爆風による深刻な被害（火災、窓ガラス全壊など）</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「"半径◯km"って一本で語られがちなんだが、実態は威力（kt/Mt）と炸裂高度（空中爆発／地上爆発）で被害距離が全然違う。例えば1Mtクラスの空中爆発だと、熱線による重度火傷の範囲だけで十数km、窓ガラスが壊れる範囲となれば数十km単位にも広がる」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA民（脳内）</span>「…つまり都市圏まるごと一発で終わると」</p>
+                    <p><span class="role-label role-me">俺</span>「しかも戦略核は"全面核戦争"のシナリオで"飽和攻撃"として使われる。1発じゃない、何十、何百発のレベルで同時に降ってくる可能性がある」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. シーン8：戦略核 対策 -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>Lv.3b 戦略核への備え（限界）</h1>
+                <div class="divider"></div>
+                <div class="level-box">
+                    <h2>物理被害</h2>
+                    <p>都市圏単位での壊滅、広域フォールアウト、広範囲EMP</p>
+                </div>
+                <div class="level-box">
+                    <h2>システム被害</h2>
+                    <p>特定国家の主要DC・通信網のほぼ全滅、衛星通信の損傷</p>
+                </div>
+                <div class="war-box">
+                    <h2>対策ラインの現実</h2>
+                    <ul class="compact">
+                        <li>正直、一般ITエンジニアが"自国を丸ごと守る"のは不可能</li>
+                        <li>せめて"海外DR"があるか、が生死の分かれ目</li>
+                        <li>企業としては、事業継続のためのオフショア子会社・海外支社の役割が増える</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. シーン9：核報復システム -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1><span class="level-badge lv4">Lv.4</span>核報復システム</h1>
+                <p style="color: #666;">― "人が止められない"第二撃 ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「そして一番怖いのがこれだ。核報復システム、通称デッドハンド的な仕組み」</p>
+                </div>
+                <div class="war-box">
+                    <h2>特徴</h2>
+                    <ul class="compact">
+                        <li>先制核攻撃で指導部が壊滅しても、第二撃（報復核）を確実に発射する仕組み</li>
+                        <li>旧ソ連の「Perimeter（Системa Периметр）」などが有名</li>
+                        <li>地震計・放射線計・通信途絶など複数の条件が揃うと、半自動で発射指令が走る設計と言われる</li>
+                    </ul>
+                </div>
+                <div class="alert-box">
+                    大国の中には核兵器を1000発以上持つ国も。作動すれば各都市は戦略核で順番に焼かれていく
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. コラム：誤作動 -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>コラム：核報復システムの"誤作動"リスク</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「そしてこの手のシステムで一番ヤバいのが"誤作動"なんだ」</p>
+                </div>
+                <div class="war-box">
+                    <h2>歴史的な冷や汗事件</h2>
+                    <ul class="compact">
+                        <li>冷戦期、レーダーが"月の反射"を核ミサイルと誤認した事件</li>
+                        <li>衛星が"雲"を誤認して発射警報を出した事件（ペトロフ事件）</li>
+                        <li>ソフトウェアバグによる誤警報</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「エンジニア目線で見ると、"人類滅亡が、誤検知で起きうる"ってシステムが普通に運用されてるのが、純粋に怖い」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-security">セキュリティ番（脳内）</span>「第七章でやったセキュリティの話――"誤検知を減らす""異常を確かに異常と判定する""単一障害で暴発させない"――が、スケールアップすると人類の生死を分ける話になる、というわけだ」</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>参考リンク：</strong>核報復システムの誤作動について（ダイヤモンド・オンライン）</p>
+                    <p><a href="https://diamond.jp/articles/-/349188" target="_blank">https://diamond.jp/articles/-/349188</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. Lv.4 全面核戦争 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>Lv.4 全面核戦争（報復システム作動含む）</h1>
+                <div class="divider"></div>
+                <div class="level-box">
+                    <h2>物理被害</h2>
+                    <p>文明レベルの破壊、放射性降下物による長期汚染、核の冬の可能性</p>
+                </div>
+                <div class="level-box">
+                    <h2>システム被害</h2>
+                    <p>ほぼすべての商用ITインフラ停止、電力網・通信網全域崩壊</p>
+                </div>
+                <div class="war-box">
+                    <h2>対策ラインの限界</h2>
+                    <ul class="compact">
+                        <li>ここまで来たら個社のIT対策はほぼ意味をなさない</li>
+                        <li>事業継続より先に"人類の生存"の話になる</li>
+                        <li>我々一般エンジニアができるのは「ここまで行かせない政治を作る市民」であること、くらい</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. シーン10：核シミュレーション -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1>シーン10：核シミュレーション――"使わせない"ための運用</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「大国は、核戦争のシミュレーションを常時回してるらしい。机上演習（War Game）・物理モデリング・サイバー演習、etc」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>語られるシナリオは"全部撃ち合う"だけではない</h2>
+                    <ul class="compact">
+                        <li>公海上で核兵器を爆発させ、「本気度」を見せつけて戦争終結を促す"デモンストレーション核"</li>
+                        <li>戦術核1発で敵の戦意を挫く"限定核使用"</li>
+                        <li>通信・衛星・インフラのみを狙うサイバー戦中心の"静かな戦争"</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-sre">SRE民（脳内）</span>「障害訓練（ゲームデイ）と構造は同じだな。普段から壊してるから、本物の障害で人が冷静になれる」</p>
+                    <p><span class="role-label role-me">俺</span>「全レベルで"備える"ことの価値は、起きた時のためだけじゃない。起こさないためでもあるんだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. シーン11：結論 備えるライン -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>シーン11：俺なりの結論――どこまで"備える"か</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「全面核戦争（Lv.4）まで行ったら、一般ITエンジニアができることはほぼない。個人の備蓄と祈りと、あとは政治参加くらいだ」</p>
+                    <p><span class="role-label role-me">俺</span>「逆に、俺たちが現実的に備えるべきは、Lv.1〜Lv.3a。つまり――」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>一般ITエンジニア的・戦争対策ライン</h2>
+                    <p><span class="level-badge lv1">Lv.1</span>通常の戦争：BCP／サプライチェーン／セキュリティ強化で対応可能</p>
+                    <p><span class="level-badge lv2">Lv.2</span>国際法違反の戦争：別地域・別国へのDR／バックアップが効く</p>
+                    <p><span class="level-badge lv3a">Lv.3a</span>戦術核レベル："複数DC同時喪失"を想定した広域DR</p>
+                    <p><span class="level-badge lv3b">Lv.3b</span><span class="level-badge lv4">Lv.4</span>戦略核・報復システム：ここから先は政治レベル</p>
+                </div>
+                <div class="motto">
+                    「全面核戦争が起きたらもうしょうがない。<br>
+                    でも、戦術核でいくつかのデータセンターが吹き飛ぶ程度までは、技術で粘ろう」
+                </div>
+            </div>
+        </div>
+
+        <!-- 19. シーン12：インターネットは終わるのか -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>シーン12：インターネットは終わるのか</h1>
+                <p style="color: #666;">― 回線交換とパケット交換の話 ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「よく言われる"戦争でインターネット終了"って、どれくらい本当なんだ？」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>回線交換（Circuit Switching）</h2>
+                    <ul class="compact">
+                        <li>通信の始めに"専用の回線"を確保して、終わるまで独占する方式</li>
+                        <li>代表例：従来の電話網（PSTN）</li>
+                        <li>長所：安定した帯域、遅延が予測しやすい</li>
+                        <li>短所：<strong>経路上の中継局が1つ死んだら、その通信は即死</strong></li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>パケット交換（Packet Switching）</h2>
+                    <ul class="compact">
+                        <li>データを小さなパケットに分割し、宛先を書いて"選べる複数経路"のどこかを通す方式</li>
+                        <li>代表例：インターネット（TCP/IP）</li>
+                        <li>長所：<strong>経路の冗長性、一部ノードが死んでも別経路で配送</strong></li>
+                        <li>短所：遅延の揺らぎが出る、QoS設計が必要</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. ARPANET -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>ARPANET――戦争で生き残るために生まれたネット</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「インターネットの祖先ARPANETは、米国防総省の研究機関ARPA（後のDARPA）の資金で始まった研究ネットワークだ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>歴史的背景</h2>
+                    <ul class="compact">
+                        <li>「核戦争でも通信が残るように」が有名な語られ方</li>
+                        <li>厳密には1960年代のPaul Baran（RAND）の"分散型・パケット交換通信網"研究が下敷き</li>
+                        <li>結果として、パケット交換によるインターネットは生存性の高いアーキテクチャになった</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「つまりインターネットは、そもそも"どこかが壊れても、他の経路で通信が生き残る"ことを発想の根に持ってる。戦争で生き残るために生まれた、と言ってもそんなに誇張じゃない」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-security">セキュリティ番（脳内）</span>「一部のIX（インターネットエクスチェンジ）や海底ケーブルがやられても、インターネットそのものはしぶとく生き残る。ただし――」</p>
+                </div>
+                <div class="alert-box" style="animation: none;">
+                    現代のインターネットには"インターネットっぽく見えて実はクラウド1社に依存"しているものが山ほどある
+                </div>
+            </div>
+        </div>
+
+        <!-- 21. シーン13：DNS ルート -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>シーン13：DNS――"電話帳"の冗長化</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「DNSはドメイン名をIPアドレスに変換する電話帳。これが死ぬと、インターネットは"住所は分かってるのに電話番号が分からない世界"になる」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>ルートDNS</h2>
+                    <ul class="compact">
+                        <li>全世界に <code>a.root-servers.net</code> 〜 <code>m.root-servers.net</code> の <strong>13の"論理的な"</strong>ルートサーバが存在</li>
+                        <li>「13台」ではなく「13個の名前／IPアドレス」</li>
+                        <li>実体は<strong>Anycast</strong>により世界中の何百という物理サーバに分散</li>
+                        <li>つまりルートDNSは、相当な広域災害・戦争でもそう簡単には落ちない設計</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「"13組"って聞くと少なく感じるけど、実体は多重化されまくってるから、ここはかなり堅い」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22. DNS 配下と守り -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>ルートの配下は別の話</h1>
+                <div class="divider"></div>
+                <div class="war-box">
+                    <h2>その配下は弱い</h2>
+                    <ul class="compact">
+                        <li>TLD（.com/.jpなど）の権威DNS</li>
+                        <li>個別ドメインの権威DNS</li>
+                        <li>企業内の名前解決</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「中小規模のサービスだと、権威DNSを1社のマネージドサービス（Route 53とかCloudflareとか）にベタ張りしてるケースが多い。"ルートは生きてるけど、うちのドメインだけ解決できない"という事態は全然あり得る」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA民（脳内）</span>「DNSは"2社以上のプロバイダでミラーしろ"は基本の基本だよな。でも運用コストの関係でサボりがち」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>DNS 守りのポイント</h2>
+                    <ul class="compact">
+                        <li>ルートDNSは基本堅い（Anycast＋多重化）</li>
+                        <li>自ドメインの権威DNSは"2社以上"に分散（Secondary DNS運用）</li>
+                        <li>TTLは極端に長くも短くもしない（フェイルオーバと伝播のバランス）</li>
+                        <li>DNS over HTTPS/TLSで改ざん耐性も考える</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 23. シーン14：クラウドの弱点 マルチAZ -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>シーン14：クラウドの弱点</h1>
+                <p style="color: #666;">― マルチAZの"地理的近さ"の罠 ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「ここが、多くの現代サービスの本当の単一障害点だ」</p>
+                    <p><span class="role-label role-cloud">クラウド民（脳内）</span>「"マルチAZだから安心"って書いてるやつ、だいたいアウトな」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>AZ（Availability Zone）の基本</h2>
+                    <ul class="compact">
+                        <li>同一リージョン内で、電力・ネットワーク・冷却が独立した"物理的に別のデータセンター群"</li>
+                        <li>ただし、地理的には<strong>"同じメトロエリア"内に収まっていることが多い</strong>（数km〜数十km圏）</li>
+                        <li>広域災害（大地震、広域停電、戦争）には、<strong>リージョン単位で巻き込まれる</strong></li>
+                    </ul>
+                </div>
+                <div class="alert-box">
+                    "東京リージョン"の3AZを全部使ってても、関東大地震や首都圏を標的にした攻撃が起きたら同時に全滅する可能性
+                </div>
+            </div>
+        </div>
+
+        <!-- 24. コントロールプレーン -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>もっと怖い話：コントロールプレーン</h1>
+                <div class="divider"></div>
+                <div class="war-box">
+                    <h2>"グローバルっぽい"サービスの罠</h2>
+                    <ul class="compact">
+                        <li>クラウドのコントロールプレーン（認証／API／IAM／リージョン間メタデータ）の一部は、特定のリージョンに集約されていることがある</li>
+                        <li>例：AWSでは <strong>us-east-1</strong> がIAM/STS/Route53などの"グローバルっぽいサービス"のホーム</li>
+                        <li>過去の大規模障害（2017年、2021年等）で、us-east-1の問題が"他リージョンのAPIログインにも影響"した事例あり</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「リージョンをまたいでも、"クラウドの管理画面に入れない"って事態があり得る。サーバは生きてるのに、操作できない」</p>
+                    <p><span class="role-label role-security">セキュリティ番（脳内）</span>「クラウドは便利だが、"クラウド1社の運命と心中する設計"になってないかは常に疑え」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>クラウド 守りのポイント</h2>
+                    <ul class="compact">
+                        <li>マルチAZ ＜＜ マルチリージョン ＜＜ マルチクラウド（コスト順に重くなる）</li>
+                        <li>コントロールプレーンの所在を把握（ログイン／API／IAMが特定リージョン依存ではないか）</li>
+                        <li>非常時のアクセス経路（ブレークグラスアカウント、オフラインのクレデンシャル）を用意</li>
+                        <li>"クラウドに入れない時のRunbook"を紙でも持つ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 25. シーン15：マルチクラウド 方式 -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>シーン15：マルチクラウドという贅沢</h1>
+                <p style="color: #666;">― 現実解とコスト ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「予算が山のようにある組織なら、マルチクラウドという贅沢な選択肢がある」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>マルチクラウドの主な方式</h2>
+                    <p><strong>1. アクティブ／アクティブ型</strong></p>
+                    <ul class="compact">
+                        <li>複数クラウドで同時にサービス稼働。トラフィックを分散</li>
+                        <li>難易度：<strong>激高</strong>。設計・運用・デバッグ全てが倍以上のコスト</li>
+                    </ul>
+                    <p><strong>2. アクティブ／スタンバイ型</strong></p>
+                    <ul class="compact">
+                        <li>メインはクラウドA、BはDR用にコールドスタンバイ</li>
+                        <li>発動時だけクラウドBに切り替え</li>
+                        <li>難易度：中〜高。それでも相当の運用負荷</li>
+                    </ul>
+                    <p><strong>3. データのみマルチクラウド（現実的解）</strong></p>
+                    <ul class="compact">
+                        <li>本番はクラウドAで動かすが、バックアップだけクラウドB/別リージョンに置く</li>
+                        <li>難易度：<strong>低〜中。費用対効果良好</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 26. マルチクラウド 代表技術 -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>代表的な抽象化技術</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>マルチクラウドを支える技術</h2>
+                    <ul class="compact">
+                        <li><strong>Kubernetes + マルチクラスタ</strong>（Anthos, EKS/GKE/AKS連携など）</li>
+                        <li><strong>Terraform</strong> によるインフラ抽象化（ただしクラウド固有サービスは抽象化しきれない）</li>
+                        <li><strong>S3互換API</strong> を持つオブジェクトストレージでの"中立的なバックアップ保管"（MinIO, Wasabi, Backblaze B2等）</li>
+                        <li><strong>CDNとDNSを別ベンダでマルチソーシング</strong>（Cloudflare + Fastly / Route 53 + NS1 等）</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「完璧なマルチクラウドを目指すと、どのクラウド固有機能も使えなくなる。結果、"一番弱いクラウドに全体が引きずられる"。だから、現実解は『ここだけはマルチ』と割り切ることだ」</p>
+                </div>
+                <div class="motto">
+                    "諦めるべきものを決める" のが設計だ。<br>
+                    これはシステムでも戦略でも一緒だな。
+                </div>
+            </div>
+        </div>
+
+        <!-- 27. シーン16：バックアップ 3-2-1 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>シーン16：バックアップ――"命綱"をどこに結ぶか</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「ここまで話してきたこと、全部吹っ飛んだとしても、最後に残るのがバックアップだ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>3-2-1ルール（定番）</h2>
+                    <ul class="compact">
+                        <li><strong>3</strong>つのコピーを持つ（本番＋バックアップ2）</li>
+                        <li><strong>2</strong>種類の異なるメディアに保存</li>
+                        <li><strong>1</strong>つはオフサイト（別拠点）に置く</li>
+                    </ul>
+                </div>
+                <div class="defense-box">
+                    <h2>3-2-1-1-0ルール（戦争対応拡張）</h2>
+                    <ul class="compact">
+                        <li>さらに<strong>1</strong>つはオフライン（＝ネットから切り離されていて、攻撃の手が届かない）</li>
+                        <li>リストアの検証エラー<strong>0</strong>件（"取れてるつもり"のバックアップほど怖いものはない）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 28. バックアップ 具体例 -->
+        <div class="slide" id="slide-28">
+            <div class="chapter">
+                <h1>バックアップ具体例と守りのポイント</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「戦争対応として一番効くのは、"地理的に離れた地域/別の国/別のクラウドに1コピー置く"ってやつだ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>具体例</h2>
+                    <ul class="compact">
+                        <li>国内クラウドAに本番、海外リージョンに週次バックアップ</li>
+                        <li>クラウドAで動いてるなら、バックアップだけクラウドBのオブジェクトストレージへ</li>
+                        <li>重要な構成情報（IaCコード、秘匿情報の暗号化キー）は、紙や金庫のUSBにも</li>
+                        <li>"データの主権"の観点から、置く国も注意（データ主権法、GDPR、CLOUD Actなど）</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA民（脳内）</span>「バックアップは"取る"より"戻せる"が本命。定期的にリストア訓練をやれ」</p>
+                    <p><span class="role-label role-sre">SRE民（脳内）</span>「ゲームデイでリストアを差し込め。本番と同じ規模で」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>バックアップ 守りのポイント</h2>
+                    <ul class="compact">
+                        <li>3-2-1（＋1オフライン＋0検証エラー）</li>
+                        <li>別国／別大陸／別ベンダへの冗長</li>
+                        <li>リストア訓練は"定期業務"に組み込む</li>
+                        <li>暗号化キーは本体データとは別経路・別保管</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 29. シーン17：DR 基本 -->
+        <div class="slide" id="slide-29">
+            <div class="chapter">
+                <h1>シーン17：ディザスタリカバリ</h1>
+                <p style="color: #666;">― 日本という"災害が多い国"で ―</p>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「ここまで戦争の話をしてきたけど、正直、日本に住むエンジニアとしては、戦争より地震のほうがずっと"来る確率"は高い」</p>
+                </div>
+                <div class="war-box">
+                    <p>地震、津波、水害、火山、停電、通信障害――</p>
+                    <p>日本のデータセンターが使えなくなる理由は山ほどある</p>
+                </div>
+                <div class="tech-box">
+                    <h2>DRの基本概念</h2>
+                    <ul class="compact">
+                        <li><strong>RTO</strong>（Recovery Time Objective）：どれだけの時間で復旧させるか</li>
+                        <li><strong>RPO</strong>（Recovery Point Objective）：どれだけのデータ損失を許容するか</li>
+                        <li><strong>RLO</strong>（Recovery Level Objective）：どのレベルの機能まで戻すか</li>
+                    </ul>
+                </div>
+                <div class="alert-box" style="animation: none;">
+                    RTO/RPOの数字を決めないDR計画は"お気持ち表明"だ
+                </div>
+            </div>
+        </div>
+
+        <!-- 30. DR 構成パターン -->
+        <div class="slide" id="slide-30">
+            <div class="chapter">
+                <h1>DR構成パターンと守りのポイント</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>DR構成パターン</h2>
+                    <ul class="compact">
+                        <li><strong>Backup &amp; Restore</strong>：コスト最小／RTO長い（数日〜）</li>
+                        <li><strong>Pilot Light</strong>：最小限だけ常時稼働／RTOは数時間</li>
+                        <li><strong>Warm Standby</strong>：縮小構成で常時稼働／RTOは数十分〜数時間</li>
+                        <li><strong>Hot Standby（Active/Active）</strong>：両系常時稼働／RTOほぼゼロ／コスト最大</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-pm">PM民（脳内）</span>「結局、経営判断なんですよね…」</p>
+                    <p><span class="role-label role-me">俺</span>「そう。エンジニアは選択肢と、その意味（コストと残存リスク）を言語化するところまでが仕事だ」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>DR 守りのポイント</h2>
+                    <ul class="compact">
+                        <li>RTO/RPOを数字で決める（"いい感じに"は禁句）</li>
+                        <li>DRサイトは本番から"地震断層が違う""電力系統が違う""通信経路が違う"場所に</li>
+                        <li>年1回は実際に切り替え訓練をやる（机上だけにしない）</li>
+                        <li>戦争リスクと災害リスクは、DRの視点では<strong>"広域同時障害"として同じ棚に並ぶ</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 31. シーン18：現代へ戻る -->
+        <div class="slide" id="slide-31">
+            <div class="chapter">
+                <h1>シーン18：現代へ戻る</h1>
+                <p style="color: #666;">― 俺たちの"明日のシステム"のために ―</p>
+                <div class="divider"></div>
+                <p>過去の世界で、俺は模造紙を全て書き終えた。<br>
+                戦争の段階、通信の仕組み、DNS、クラウド、マルチクラウド、バックアップ、DR。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「これを持って現代に戻ろう。第一章の世界滅亡を"ちょっとだけマシ"にできるかもしれない」</p>
+                </div>
+                <div class="war-box">
+                    <p><span class="role-label role-me">俺</span>「戦争は、起きてほしくない。でも、起きた時に"自分たちのシステムだけでも粘れる"ってことが、誰かの生活を守ることになる。銀行のデータが残ってるだけで、救える生活がある。医療の記録が生きてるだけで、救える命がある」</p>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「戦争まで行かなくても、日本には地震がある。水害がある。停電がある。人為ミスがある。結局、"広域で複数システムが同時に死ぬ"に備えることは、戦争のためだけじゃなく、明日のためだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 32. オフィスに戻る -->
+        <div class="slide" id="slide-32">
+            <div class="chapter">
+                <h1>The・World村のオフィスに戻った俺</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「おかえり。…で、どこ行ってたんだ？」</p>
+                    <p><span class="role-label role-me">俺</span>「少しだけ、過去に。戦争からシステムを守る方法を、棚卸ししてきた」</p>
+                    <p><span class="role-label role-pm">PM民</span>「え、戦争の話？重すぎない？」</p>
+                    <p><span class="role-label role-me">俺</span>「重いけど、避けて通れない。地震の話と同じだ」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>戦争に備える＝日常に備える</h2>
+                    <ul class="compact">
+                        <li>"広域で同時にDCが死ぬ"を一度でも想像しておく</li>
+                        <li>バックアップは、別地域・別ベンダ・オフラインの3段構え</li>
+                        <li>コントロールプレーンの所在を把握する</li>
+                        <li>DRのRTO/RPOは"数字"で決める</li>
+                        <li>そしてシステム構成図を、時々眺める</li>
+                        <li><strong>「バックアップはどうだったかな…」と考えること、それが明日のシステムを守る足掛かりになる</strong></li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺（独白）</span>「戦争からシステムを守るって、実は派手な話じゃないんだ。毎日のバックアップ、毎日のDR訓練、毎日の構成確認。そのひとつひとつが、いつか来るかもしれない『その日』への備えになる。俺たちは、そうやって毎日少しずつ、システムの壁を高くしていく」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 33. 参考：戦争の段階 -->
+        <div class="slide" id="slide-33">
+            <div class="chapter">
+                <h1>参考：戦争の段階サマリ</h1>
+                <div class="divider"></div>
+                <div class="reference-item">
+                    <p><span class="level-badge lv1">Lv.1</span><strong>国際法順守の戦争</strong></p>
+                    <p>経済・サイバー中心。BCPで概ね耐えられる</p>
+                </div>
+                <div class="reference-item">
+                    <p><span class="level-badge lv2">Lv.2</span><strong>国際法違反を含む戦争</strong></p>
+                    <p>民間インフラが標的に。別国DRが効く</p>
+                </div>
+                <div class="reference-item">
+                    <p><span class="level-badge lv3a">Lv.3a</span><strong>戦術核</strong></p>
+                    <p>局所的物理破壊＋EMP。広域DRが生死を分ける</p>
+                </div>
+                <div class="reference-item">
+                    <p><span class="level-badge lv3b">Lv.3b</span><strong>戦略核</strong></p>
+                    <p>都市単位の破壊。個社対策の限界</p>
+                </div>
+                <div class="reference-item">
+                    <p><span class="level-badge lv4">Lv.4</span><strong>全面核戦争（報復システム作動）</strong></p>
+                    <p>文明レベル。政治の話</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 34. 参考：通信・クラウド -->
+        <div class="slide" id="slide-34">
+            <div class="chapter">
+                <h1>参考：通信の冗長化／クラウドの単一障害点</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>通信の冗長化</h2>
+                    <ul class="compact">
+                        <li>パケット交換によるインターネットの本質的な経路冗長性</li>
+                        <li>ARPANET／Paul Baranの分散通信研究</li>
+                        <li>DNSルートのAnycastによる実体分散（13は"論理的な識別子の数"）</li>
+                        <li>自ドメイン権威DNSのマルチプロバイダ化（Secondary DNS）</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>クラウドの単一障害点</h2>
+                    <ul class="compact">
+                        <li>マルチAZ ≠ 広域災害耐性（AZは同一リージョン内）</li>
+                        <li>コントロールプレーンの所在（us-east-1等）への依存</li>
+                        <li>ブレークグラスアカウントとオフラインクレデンシャル</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 35. 参考：マルチクラウド／バックアップ／DR -->
+        <div class="slide" id="slide-35">
+            <div class="chapter">
+                <h1>参考：マルチクラウド／バックアップ／DR</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>マルチクラウド</h2>
+                    <ul class="compact">
+                        <li>Active/Active、Active/Standby、データのみの3パターン</li>
+                        <li>すべてを抽象化すると各クラウドの強みが死ぬ現実</li>
+                        <li>"ここだけはマルチ"の割り切り設計</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>バックアップ</h2>
+                    <ul class="compact">
+                        <li>3-2-1ルール＋オフライン＋検証</li>
+                        <li>別国／別大陸／別ベンダへの分散</li>
+                        <li>リストア訓練を"定期業務化"</li>
+                        <li>暗号化キーの分離保管</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>DR</h2>
+                    <ul class="compact">
+                        <li>RTO／RPO／RLOの数値化</li>
+                        <li>Backup &amp; Restore / Pilot Light / Warm Standby / Hot Standby</li>
+                        <li>戦争リスクと災害リスクを"広域同時障害"として同じ棚で扱う</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 36. 技術的補足メモ -->
+        <div class="slide" id="slide-36">
+            <div class="chapter">
+                <h1>技術的補足メモ</h1>
+                <div class="divider"></div>
+                <div class="reference-item">
+                    <p><strong>ARPANETの"核戦争生存説"：</strong>ARPA自身の公式目的ではなく、背景にあったPaul Baran（RAND）の分散通信網研究の思想から派生した解釈。ただし結果として、パケット交換によるインターネットは生存性の高いアーキテクチャになった、というのは事実。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>DNSルートサーバの「13」：</strong>UDPメッセージの従来サイズ制限（512バイト）に収めるために、ルートサーバのリストを13個に抑えた歴史的経緯がある。現在はEDNS0で拡張可能だが、13の論理識別子という建付けは残っている。各識別子の背後にはAnycastで世界中に数百の物理サーバが存在。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>戦略核の被害範囲：</strong>「威力（kt／Mt）」「炸裂高度（空中爆発／地上爆発）」「地形・気象」で大きく変わる。本章では"威力次第で数十km圏にも熱線・爆風・窓破損の影響"と表現。より正確な評価はNUKEMAP等で条件別に確認するのが望ましい。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>核報復システム（Dead Hand / Perimeter）：</strong>現存するか否か・現在も運用中か否かを含め、公開情報と非公開情報が入り交じる領域。本章では「そのような仕組みが存在する／したとされる」という書き方に留める。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>AWSコントロールプレーン集中問題：</strong>2017年のS3障害、2021年のus-east-1障害など、複数の大規模事例で可視化されてきた。IAM/STS/Route53/CloudFrontの一部機能は"グローバル"と呼ばれつつ実態はus-east-1依存の時期があり、災害対策設計ではこの"隠れた単一障害点"を念頭に置く必要がある。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>戦争対策＝真面目なDRの延長線：</strong>広域同時障害（multi-DC / multi-region simultaneous failure）を想定した設計は、戦争・大規模地震・広域停電・サイバー攻撃いずれにも効く。つまり、戦争対策は特殊なものではなく、真面目なDRの延長線上にある。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 37. 次章予告 -->
+        <div class="slide" id="slide-37">
+            <div class="chapter">
+                <h1>次章予告</h1>
+                <div class="divider"></div>
+                <div class="alert-box" style="animation: none; background-color: #333;">
+                    第九章「俺たちは技術的負債と戦っている」
+                </div>
+                <div class="highlight" style="margin-top: 30px;">
+                    <p>失われた仕様書、謎のTODOコメント、そしてgit blameの先にいた意外な人物…。</p>
+                    <p>戦争からシステムを守った俺たちの前に、次なる敵が立ちはだかる。</p>
+                    <p>技術的負債という名の亡霊が、俺たちに襲いかかる！</p>
+                </div>
+                <p style="text-align: center; margin-top: 30px; font-size: 1.2em; color: #666;">
+                    広域障害を乗り越えても、コードの中の"負債"は残り続ける。
+                </p>
+            </div>
+        </div>
+
+        <!-- 38. 最終スライド -->
+        <div class="slide" id="slide-38">
+            <div class="chapter">
+                <div class="footer">
+                    <h1>第8回: システムを戦争から守る</h1>
+                    <div class="motto" style="margin: 30px 0;">
+                        「バックアップはどうだったかな…」と考えること、<br>
+                        それが明日のシステムを守る足掛かりになる。
+                    </div>
+                    <p>© 2026 フロントエンドクラブ</p>
+                    <p>次回：「俺たちは技術的負債と戦っている（血文字で）」</p>
+                    <p style="margin-top: 20px;">本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 38</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 38;
+
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+
+            const currentSlideElem = document.getElementById(`slide-${slideNumber}`);
+            if (currentSlideElem) {
+                currentSlideElem.classList.add('active');
+            }
+
+            if (slideNumber > 1) {
+                const prevSlideElem = document.getElementById(`slide-${slideNumber - 1}`);
+                if (prevSlideElem) {
+                    prevSlideElem.classList.add('prev');
+                }
+            }
+
+            updateSlideCounter();
+            updateButtonState();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'f') {
+                toggleFullScreen();
+            }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
