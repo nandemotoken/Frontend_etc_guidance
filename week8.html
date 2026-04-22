@@ -755,10 +755,153 @@
             </div>
         </div>
 
-        <!-- 21. シーン13：DNS ルート -->
+        <!-- 21. シーン13：海底ケーブル切断 -->
         <div class="slide" id="slide-21">
             <div class="chapter">
-                <h1>シーン13：DNS――"電話帳"の冗長化</h1>
+                <h1>シーン13：海底ケーブルを切ると、インターネットは止まるのか</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「"インターネットを物理的に止める"って、やっぱり思いつくのが海底ケーブル切断だよな」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>海底ケーブルの現実</h2>
+                    <ul class="compact">
+                        <li>国際通信の大部分は海底光ファイバー経由</li>
+                        <li>世界に<strong>500本以上</strong>、年間<strong>100本規模</strong>で自然要因（地震・漁船の錨・サメ等）で切れている</li>
+                        <li>それでもインターネットが止まらないのは、<strong>パケット交換＋経路多重化</strong>のおかげ</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>切断の影響レベル（ざっくり）</h2>
+                    <ul class="compact">
+                        <li><strong>1本</strong>：ほぼ影響なし（経路切替で吸収）</li>
+                        <li><strong>主要3〜5本</strong>：遅延悪化・一部サービス不安定</li>
+                        <li><strong>同一地域の主要10本以上</strong>：その地域の国際通信はほぼ孤立</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-sre">SRE民（脳内）</span>「全断させるには"同時に""複数本""短期間に"切る必要がある。事故じゃなくて意図的な攻撃じゃないと起きにくい」</p>
+                    <p><span class="role-label role-me">俺</span>「パケット交換のインターネットは、ちょっとやそっとでは全断しない。でも"執拗に切れば"、地域単位で孤立させられる」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22. シーン14：イラン -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>シーン14：イラン――海路依存の国を想像する</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「試しに地政学シミュレーションをしてみよう。国名は出すけど、具体的な上陸地点は伏せる。あくまでインターネットの仕組みを学ぶ話だ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>海路依存が高い国の特徴</h2>
+                    <ul class="compact">
+                        <li>陸上国境の通信経路に制約が多く、国際通信の相当部分を海底ケーブルに依存</li>
+                        <li>接続方向が限られる（西側と東側に数本ずつ、程度）</li>
+                        <li>同時に主要数本が切られると、<strong>国際通信はほぼ停止まで追い込める</strong></li>
+                        <li>国内通信（ISP間の国内ループ）は生きるので、"国内だけのインターネット"になる</li>
+                        <li>衛星での迂回は可能だが、帯域は通常比で激減</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「海路依存が高い国ほど、"少数の主要ケーブルが致命傷"になる。自国のケーブルが何本あるかを知らずに戦争対策は語れない」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 23. シーン15：アメリカ -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>シーン15：アメリカ――"インターネットの重心"を切るのは現実的か</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「次は逆方向。切りにくい側の代表、アメリカ的な国を想像する」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>ハブ国家の特徴</h2>
+                    <ul class="compact">
+                        <li>両岸（大西洋側・太平洋側）に大量の海底ケーブル</li>
+                        <li>国内に世界屈指のIX／データセンターが密集、国際トラフィックの多くが<strong>自国内で完結</strong></li>
+                        <li>主要ケーブルの数本や十数本を切っても、ほぼ誤差</li>
+                        <li>事実上、全断させるには核攻撃レベルの手数が要る</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-dba">DBA民（脳内）</span>「むしろこっち側は"切る側"のレバレッジが強いんだよな。相手国を孤立させる選択肢を持ってる」</p>
+                    <p><span class="role-label role-me">俺</span>「これがインターネットの非対称性だ。ハブ国家は切られにくく、切れる。逆は逆」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 24. シーン16：日本 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>シーン16：日本――島国の"海底ケーブル依存"を点検する</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「そして俺たちの日本。島国だから、国際通信は全部海底ケーブル経由だ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>多方向接続の島国の特徴</h2>
+                    <ul class="compact">
+                        <li>太平洋方面（北米向け）とアジア方面（東アジア経由）で複数方向に接続</li>
+                        <li>太平洋側は太いルートが多く、全断は相当困難</li>
+                        <li>ただし近隣地域の紛争や地震で<strong>"巻き添えで複数本断"</strong>のリスクはある</li>
+                        <li>国内DCだけで完結するサービスは、戦時・災害時に意外と強い</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-me">俺</span>「国際SaaS（海外クラウド）にガッツリ依存してるサービスほど、海底ケーブルの健康状態に命を預けてる。国内DCのバックアップは、戦争以前に"普通に良い設計"だ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 25. シーン17：スターリンク -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>シーン17：スターリンクと、"無線なら安心"という誤解</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「海底ケーブルが切れたら、衛星に逃がせばいい――と思うじゃん？　半分正解、半分ワナだ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>LEO衛星コンステレーション（スターリンク等）</h2>
+                    <ul class="compact">
+                        <li>低軌道の多数の衛星による面的カバレッジ</li>
+                        <li>エンドユーザーが衛星に直接つなぎ、地上局（ゲートウェイ）経由で地上インターネットへ</li>
+                        <li>自国の海底ケーブルが切れていても、<strong>別地域の地上局経由で迂回できる可能性</strong></li>
+                        <li>戦時下の通信維持で、その戦略的価値が実証されてきている</li>
+                    </ul>
+                </div>
+                <div class="war-box">
+                    <h2>よくある誤解</h2>
+                    <ul class="compact">
+                        <li>"携帯電話は無線だから戦争でも大丈夫" ← これは誤り</li>
+                        <li>スマホ → 基地局 → 光ファイバー → IX → 海底ケーブル、という経路</li>
+                        <li>電波はあくまで"最後の1kmだけ無線"であり、その先はがっつり有線インフラ</li>
+                    </ul>
+                </div>
+                <div class="highlight">
+                    <p><span class="role-label role-security">セキュリティ番（脳内）</span>「衛星インターネットも"運営主体の企業1社"にアクセス許可を握られている可能性がある。特定企業の判断で接続を切られたら、それは新しい単一障害点だ」</p>
+                    <p><span class="role-label role-me">俺</span>「物理的な冗長性と、政治的・契約的な冗長性は別物。衛星回線を"最後の命綱"として設計に入れるなら、そこも意識しないといけない」</p>
+                </div>
+                <div class="defense-box">
+                    <h2>海底ケーブル／衛星 守りのポイント</h2>
+                    <ul class="compact">
+                        <li>自サービスの経路が"どの海底ケーブル群に依存しているか"を把握</li>
+                        <li>特定方向のケーブル集中に寄りかからない（多方向に散らす）</li>
+                        <li>衛星回線は"有効な迂回路"だが、"運営主体リスク"も見込む</li>
+                        <li>"無線＝独立"の思い込みを捨てる（無線の先は有線インフラ）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 26. シーン18：DNS ルート -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>シーン18：DNS――"電話帳"の冗長化</h1>
                 <div class="divider"></div>
                 <div class="quote-box">
                     <p><span class="role-label role-me">俺</span>「DNSはドメイン名をIPアドレスに変換する電話帳。これが死ぬと、インターネットは"住所は分かってるのに電話番号が分からない世界"になる」</p>
@@ -779,7 +922,7 @@
         </div>
 
         <!-- 22. DNS 配下と守り -->
-        <div class="slide" id="slide-22">
+        <div class="slide" id="slide-27">
             <div class="chapter">
                 <h1>ルートの配下は別の話</h1>
                 <div class="divider"></div>
@@ -810,9 +953,9 @@
         </div>
 
         <!-- 23. シーン14：クラウドの弱点 マルチAZ -->
-        <div class="slide" id="slide-23">
+        <div class="slide" id="slide-28">
             <div class="chapter">
-                <h1>シーン14：クラウドの弱点</h1>
+                <h1>シーン19：クラウドの弱点</h1>
                 <p style="color: #666;">― マルチAZの"地理的近さ"の罠 ―</p>
                 <div class="divider"></div>
                 <div class="quote-box">
@@ -834,7 +977,7 @@
         </div>
 
         <!-- 24. コントロールプレーン -->
-        <div class="slide" id="slide-24">
+        <div class="slide" id="slide-29">
             <div class="chapter">
                 <h1>もっと怖い話：コントロールプレーン</h1>
                 <div class="divider"></div>
@@ -863,9 +1006,9 @@
         </div>
 
         <!-- 25. シーン15：マルチクラウド 方式 -->
-        <div class="slide" id="slide-25">
+        <div class="slide" id="slide-30">
             <div class="chapter">
-                <h1>シーン15：マルチクラウドという贅沢</h1>
+                <h1>シーン20：マルチクラウドという贅沢</h1>
                 <p style="color: #666;">― 現実解とコスト ―</p>
                 <div class="divider"></div>
                 <div class="quote-box">
@@ -894,7 +1037,7 @@
         </div>
 
         <!-- 26. マルチクラウド 代表技術 -->
-        <div class="slide" id="slide-26">
+        <div class="slide" id="slide-31">
             <div class="chapter">
                 <h1>代表的な抽象化技術</h1>
                 <div class="divider"></div>
@@ -918,9 +1061,9 @@
         </div>
 
         <!-- 27. シーン16：バックアップ 3-2-1 -->
-        <div class="slide" id="slide-27">
+        <div class="slide" id="slide-32">
             <div class="chapter">
-                <h1>シーン16：バックアップ――"命綱"をどこに結ぶか</h1>
+                <h1>シーン21：バックアップ――"命綱"をどこに結ぶか</h1>
                 <div class="divider"></div>
                 <div class="quote-box">
                     <p><span class="role-label role-me">俺</span>「ここまで話してきたこと、全部吹っ飛んだとしても、最後に残るのがバックアップだ」</p>
@@ -944,7 +1087,7 @@
         </div>
 
         <!-- 28. バックアップ 具体例 -->
-        <div class="slide" id="slide-28">
+        <div class="slide" id="slide-33">
             <div class="chapter">
                 <h1>バックアップ具体例と守りのポイント</h1>
                 <div class="divider"></div>
@@ -977,9 +1120,9 @@
         </div>
 
         <!-- 29. シーン17：DR 基本 -->
-        <div class="slide" id="slide-29">
+        <div class="slide" id="slide-34">
             <div class="chapter">
-                <h1>シーン17：ディザスタリカバリ</h1>
+                <h1>シーン22：ディザスタリカバリ</h1>
                 <p style="color: #666;">― 日本という"災害が多い国"で ―</p>
                 <div class="divider"></div>
                 <div class="quote-box">
@@ -1004,7 +1147,7 @@
         </div>
 
         <!-- 30. DR 構成パターン -->
-        <div class="slide" id="slide-30">
+        <div class="slide" id="slide-35">
             <div class="chapter">
                 <h1>DR構成パターンと守りのポイント</h1>
                 <div class="divider"></div>
@@ -1034,9 +1177,9 @@
         </div>
 
         <!-- 31. シーン18：現代へ戻る -->
-        <div class="slide" id="slide-31">
+        <div class="slide" id="slide-36">
             <div class="chapter">
-                <h1>シーン18：現代へ戻る</h1>
+                <h1>シーン23：現代へ戻る</h1>
                 <p style="color: #666;">― 俺たちの"明日のシステム"のために ―</p>
                 <div class="divider"></div>
                 <p>過去の世界で、俺は模造紙を全て書き終えた。<br>
@@ -1054,7 +1197,7 @@
         </div>
 
         <!-- 32. オフィスに戻る -->
-        <div class="slide" id="slide-32">
+        <div class="slide" id="slide-37">
             <div class="chapter">
                 <h1>The・World村のオフィスに戻った俺</h1>
                 <div class="divider"></div>
@@ -1082,7 +1225,7 @@
         </div>
 
         <!-- 33. 参考：戦争の段階 -->
-        <div class="slide" id="slide-33">
+        <div class="slide" id="slide-38">
             <div class="chapter">
                 <h1>参考：戦争の段階サマリ</h1>
                 <div class="divider"></div>
@@ -1110,7 +1253,7 @@
         </div>
 
         <!-- 34. 参考：通信・クラウド -->
-        <div class="slide" id="slide-34">
+        <div class="slide" id="slide-39">
             <div class="chapter">
                 <h1>参考：通信の冗長化／クラウドの単一障害点</h1>
                 <div class="divider"></div>
@@ -1121,6 +1264,10 @@
                         <li>ARPANET／Paul Baranの分散通信研究</li>
                         <li>DNSルートのAnycastによる実体分散（13は"論理的な識別子の数"）</li>
                         <li>自ドメイン権威DNSのマルチプロバイダ化（Secondary DNS）</li>
+                        <li>海底ケーブルは1本切れてもほぼ影響なし。全断には"同時・複数本・短期間"が必要</li>
+                        <li>島国／ハブ国家／海路依存国で切断耐性は大きく異なる</li>
+                        <li>LEO衛星（スターリンク等）は物理冗長の候補だが、運営主体リスクも伴う</li>
+                        <li>無線通信も最終的には有線（光ファイバー／海底ケーブル）に合流する</li>
                     </ul>
                 </div>
                 <div class="tech-box">
@@ -1135,7 +1282,7 @@
         </div>
 
         <!-- 35. 参考：マルチクラウド／バックアップ／DR -->
-        <div class="slide" id="slide-35">
+        <div class="slide" id="slide-40">
             <div class="chapter">
                 <h1>参考：マルチクラウド／バックアップ／DR</h1>
                 <div class="divider"></div>
@@ -1168,7 +1315,7 @@
         </div>
 
         <!-- 36. 技術的補足メモ -->
-        <div class="slide" id="slide-36">
+        <div class="slide" id="slide-41">
             <div class="chapter">
                 <h1>技術的補足メモ</h1>
                 <div class="divider"></div>
@@ -1194,7 +1341,7 @@
         </div>
 
         <!-- 37. 次章予告 -->
-        <div class="slide" id="slide-37">
+        <div class="slide" id="slide-42">
             <div class="chapter">
                 <h1>次章予告</h1>
                 <div class="divider"></div>
@@ -1213,7 +1360,7 @@
         </div>
 
         <!-- 38. 最終スライド -->
-        <div class="slide" id="slide-38">
+        <div class="slide" id="slide-43">
             <div class="chapter">
                 <div class="footer">
                     <h1>第8回: システムを戦争から守る</h1>
@@ -1230,7 +1377,7 @@
     </div>
 
     <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
-    <div class="slide-number" id="slide-counter">1 / 38</div>
+    <div class="slide-number" id="slide-counter">1 / 43</div>
     <div class="nav-buttons">
         <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
         <button id="next-btn" onclick="nextSlide()">次へ</button>
@@ -1238,7 +1385,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 38;
+        const totalSlides = 43;
 
         function updateSlideCounter() {
             document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
