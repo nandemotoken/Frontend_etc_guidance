@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第9回：俺たちは砂のワーム(Shai-Hulud)と戦っている</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2d1a00;
+            margin: 0;
+            padding: 0;
+            background-color: #f5ede0;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: #fffdf9;
+        }
+        .slide.active { transform: translateX(0); }
+        .slide.prev { transform: translateX(-100%); }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 3px solid #d4501e;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #7a3a00;
+        }
+        h2 {
+            font-size: min(3.5vh, 22px);
+            border-left: 5px solid #d4501e;
+            padding-left: 2vw;
+            margin-top: 3vh;
+            color: #5a2d00;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(100,50,0,0.15);
+        }
+        .divider {
+            border-top: 1px dashed #c4a265;
+            margin: 20px 0;
+        }
+        /* スパイス：重要な技術情報 */
+        .spice-box {
+            background-color: #fef3e2;
+            padding: 15px;
+            border-left: 4px solid #d4501e;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        /* 砂虫警告ボックス */
+        .worm-alert {
+            background-color: #8b1a00;
+            color: #ffe0b2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+            animation: worm-pulse 2s infinite;
+        }
+        @keyframes worm-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px #d4501e; }
+            50% { opacity: 0.8; box-shadow: 0 0 20px #ff6b35; }
+        }
+        /* 砂漠の闇：攻撃情報ボックス */
+        .worm-box {
+            background-color: #1a0a00;
+            color: #e0c090;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #d4501e;
+        }
+        .worm-box h2 {
+            color: #ff8c42;
+            border-left: none;
+            padding-left: 0;
+        }
+        /* フレーメン：防御ボックス */
+        .fremen-box {
+            background-color: #0d2030;
+            color: #a8d8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2d8a9a;
+        }
+        .fremen-box h2 {
+            color: #7ecbd4;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        /* 技術詳細ボックス */
+        .tech-box {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .tech-box h2 {
+            color: #1e3a8a;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        /* デューン引用ボックス */
+        .dune-quote {
+            background-color: #f5eedd;
+            border-left: 4px solid #8b6914;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 5px 5px 0;
+        }
+        .dune-quote p { font-style: normal; }
+        /* キャラクター発言 */
+        .quote-box {
+            background-color: #fdf5e8;
+            border-left: 4px solid #c4a265;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        /* Waveバッジ */
+        .wave-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+            font-size: 0.85em;
+        }
+        .wave1 { background-color: #27ae60; }
+        .wave2 { background-color: #f39c12; }
+        .wave3 { background-color: #e67e22; }
+        .wave4 { background-color: #c0392b; }
+        .wave5 { background-color: #7b0000; }
+        .wavesandworm { background-color: #6a0572; }
+        /* ロールラベル */
+        .role-label {
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 4px 6px 4px 0;
+            font-weight: bold;
+            font-size: 0.88em;
+        }
+        .role-sre { background-color: #2980b9; }
+        .role-security { background-color: #27ae60; }
+        .role-dba { background-color: #d35400; }
+        .role-cloud { background-color: #16a085; }
+        .role-pm { background-color: #c0392b; }
+        .role-devrel { background-color: #8e44ad; }
+        .role-me { background-color: #7a3a00; }
+        /* 格言ボックス */
+        .motto {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #7a3a00;
+            margin: 20px 0;
+            padding: 18px;
+            border: 3px solid #d4501e;
+            border-radius: 10px;
+            background-color: #fff8f0;
+        }
+        /* リファレンスアイテム */
+        .reference-item {
+            background-color: #f5ede0;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #d4501e;
+        }
+        /* コードブロック */
+        .code-block {
+            background-color: #1a0d00;
+            color: #f8d9a0;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-left: 3px solid #d4501e;
+        }
+        /* ナビゲーション */
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #d4501e;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 8px rgba(180,60,0,0.4);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover { background-color: #b03c10; }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #8b6914;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #d4501e;
+            cursor: pointer;
+            z-index: 100;
+        }
+        /* タイトルスライド */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+            background: linear-gradient(180deg, #1a0a00 0%, #3d1a00 60%, #6b3500 100%);
+        }
+        .title-slide h1 {
+            font-size: min(5.5vh, 34px);
+            margin-bottom: 2vh;
+            border-bottom: 2px solid #d4501e;
+            color: #f5d078;
+            text-shadow: 0 0 20px rgba(212,80,30,0.8);
+        }
+        .title-slide .subtitle {
+            font-size: min(2.8vh, 18px);
+            color: #c4a265;
+            margin-top: 1vh;
+        }
+        .title-slide .tag {
+            font-size: min(2.2vh, 14px);
+            color: #8b6914;
+            margin-top: 3vh;
+        }
+        /* テーブル */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: min(2.3vh, 14px);
+        }
+        th {
+            background-color: #d4501e;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        td {
+            padding: 7px 12px;
+            border-bottom: 1px solid #e0c090;
+        }
+        tr:nth-child(even) { background-color: #fef3e2; }
+        p { font-size: min(2.8vh, 16px); line-height: 1.6; }
+        ul.compact li { margin: 6px 0; }
+        a { color: #d4501e; }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #8b6914;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+
+        <!-- 1. タイトル -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第9回：俺たちは砂のワーム(Shai-Hulud)と戦っている</h1>
+                <p class="subtitle">― npmエコシステムに目覚めた自己増殖型ワームと、フレーメンの反撃 ―</p>
+                <div style="margin-top: 30px;">
+                    <p class="tag">2025年9月〜2026年5月 ／ Wave 1→5 ／ TeamPCP ／ TanStack ／ AntV</p>
+                    <p class="tag" style="margin-top: 10px; color: #d4501e; font-style: italic;">"砂虫は倒すものではない、乗りこなすものだ"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 要約 -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>今日の物語</h1>
+                <div class="divider"></div>
+                <div class="spice-box">
+                    <p>タイムマシンから戻り、戦争からシステムを守る設計を棚卸しした俺は、次の週もまた騒ぎに巻き込まれていた。今度の悪夢は核爆弾ではなく、<strong>npm install の一行から始まる自己増殖型ワームだ。</strong></p>
+                </div>
+                <div class="dune-quote">
+                    <p style="font-style: italic; color: #5a3000;">その名はShai-Hulud（シャイ＝フルード）――フランク・ハーバートの小説『デューン』に登場する巨大砂虫の名を、攻撃者自身が自らのマルウェアに冠した。</p>
+                </div>
+                <div class="tech-box">
+                    <h2>今日の旅程</h2>
+                    <ul class="compact">
+                        <li>npm ＝ アラキスの砂漠。スパイス（パッケージ）は誰でも採れるが、砂虫がいる</li>
+                        <li>Wave 1〜5 の技術進化を追う（2025年9月〜2026年5月）</li>
+                        <li>TeamPCPという脅威グループの正体と攻撃チェーン</li>
+                        <li>TanStack攻撃 ── 認証情報不要でSLSA provenanceも突破</li>
+                        <li>フレーメンの知恵 ── pnpm v11・CI hardening・七か条</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. シーン0：Slackアラート -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>シーン0：「あの映画、観たか？」</h1>
+                <div class="divider"></div>
+                <p>タイムマシンを引き出しに戻し、戦争対策の模造紙がまだ乾かない壁の前で、俺はコーヒーを淹れていた。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「おかえり。核戦争のDR設計、よくまとまってたな」</p>
+                    <p><span class="role-label role-me">俺</span>「ありがとう。でも現実が休んでくれなかった」</p>
+                </div>
+                <div class="worm-box">
+                    <p style="font-family: monospace; font-size: 0.95em;">📢 @here <strong>axios 1.8.2 にマルウェアが混入しています。</strong><br>至急 npm ci で lockfile 確認を。</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「……axios？」</p>
+                    <p><span class="role-label role-me">俺</span>「ああ。あの、どんなJSプロジェクトにも入ってるやつ」</p>
+                    <p><span class="role-label role-dba">DBA民</span>「またサプライチェーン攻撃か……」</p>
+                    <p><span class="role-label role-me">俺</span>「しかも今回は、ただのサプライチェーン攻撃じゃない。『砂虫』だ」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「……デューン観たか、お前ら」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. シーン1：アラキス=npm -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1：「スパイスが全てを動かす」</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p style="font-style: italic;">「宇宙で最も貴重な物質――スパイス、メランジェ。<br>
+                    それは砂漠の惑星アラキスにしか存在しない。<br>
+                    スパイスなしに、銀河間航行は不可能だ。<br>
+                    帝国全土が、アラキスの砂の上に成り立っている」</p>
+                    <p style="color: #8b6914; font-size: 0.9em; text-align: right;">― Dune 冒頭ナレーション</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「これをそのまま npm に読み替えると、こうなる」</p>
+                </div>
+                <div class="spice-box">
+                    <p style="font-style: italic;">「モダンJS開発で最も重要な資産――npm パッケージ。<br>
+                    それはインターネット上のレジストリにしか存在しない。<br>
+                    パッケージなしに、フロントエンド開発は不可能だ。<br>
+                    現代のIT企業の大半が、npm レジストリの上に成り立っている」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. アラキス=npm 詳細 -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>npmというアラキス</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>npm エコシステムの構造的特性</h2>
+                    <ul class="compact">
+                        <li>世界最大のパッケージレジストリ。登録パッケージ数は<strong>300万超</strong></li>
+                        <li><code>npm install</code> 一行でコードが<strong>"実行される"</strong>設計（lifecycle scripts）</li>
+                        <li>誰でも publish できる、誰でも install できる</li>
+                        <li>依存関係ツリーはすぐ数百・数千パッケージに膨れ上がる</li>
+                        <li>axios: 週間 <strong>6,000万</strong> DL ／ lodash: 週間 <strong>5,000万</strong> DL</li>
+                    </ul>
+                </div>
+                <div class="worm-alert" style="animation: none;">
+                    「使いたいのに使わないとサービスが作れない」という構造的な依存<br>
+                    ── これが Shai-Hulud の"砂漠"だ
+                </div>
+                <table>
+                    <tr><th>Dune</th><th>npm エコシステム</th></tr>
+                    <tr><td>アラキスの砂漠</td><td>npm レジストリ</td></tr>
+                    <tr><td>スパイス（メランジェ）</td><td>npm パッケージ</td></tr>
+                    <tr><td>砂の振動</td><td><code>npm install</code> の実行</td></tr>
+                    <tr><td>Shai-Hulud（砂虫）</td><td>ワーム型マルウェア</td></tr>
+                    <tr><td>フレーメン</td><td>防御側エンジニア・セキュリティコミュニティ</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. シーン2：Shai-Huludとは -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>シーン2：「砂の中で目覚めるもの」</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>映画でパウルが初めてアラキスに降り立つシーン。砂がゆっくり盛り上がって、地平線ほどの大きさの何かが全部を飲み込む。誰にも止められない。フレーメンはあれを「ザ・メイカー」、「砂漠の老人」、<strong>神の具現</strong>として崇拝している。</p>
+                </div>
+                <div class="spice-box">
+                    <p><strong>名前をつけたのは攻撃者自身だ。</strong></p>
+                    <p>2025年9月、Unit 42（Palo Alto Networks）がnpmで自己増殖するワームを初確認。被害者のGitHubに自動作成されたリポジトリの名前が <code>Shai-Hulud</code> だった。</p>
+                </div>
+                <div class="worm-box">
+                    <h2>攻撃者のブランディング</h2>
+                    <ul class="compact">
+                        <li>Wave 2 リポジトリ説明文：<em>「Sha1-Hulud: The Second Coming」</em></li>
+                        <li>Wave 3 リポジトリ説明文：<em>「Shai-Hulud: The Third Coming」</em></li>
+                        <li>ステージングリポジトリ名：<code>sardaukar-fremen-XXX</code>、<code>atreides-sandworm-XXX</code></li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-security">セキュリティ番</span>「明らかなDuneファンだ……」</p>
+                    <p><span class="role-label role-me">俺</span>「敵もDuneが好きなんだ。だから俺たちもDuneで理解する。これは正しいアプローチだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. シーン3：Wave 1 メカニズム -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1><span class="wave-badge wave1">Wave 1</span>パウル・アトレイデスの到着（2025年9月）</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>「彼らは新しい惑星の管理者として来た。危険は知っていた。でも、砂の下に何がいるかは、まだ実感できていなかった」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>初代 Shai-Hulud のコアメカニズム</h2>
+                    <ol class="compact">
+                        <li>開発者が汚染されたパッケージを <code>npm install</code></li>
+                        <li><code>postinstall</code> スクリプトが自動実行</li>
+                        <li><code>~/.npmrc</code> の npmトークン、GitHubトークン、APIキーを収集</li>
+                        <li>盗んだ npmトークンで <code>npm whoami</code> → 到達可能な全パッケージを列挙</li>
+                        <li>各パッケージに同じ postinstall コードを注入して <code>npm publish</code></li>
+                        <li>被害者のGitHubに <code>Shai-Hulud</code> という<strong>公開リポジトリを作成し、秘密情報をcommit</strong></li>
+                    </ol>
+                </div>
+                <div class="worm-alert" style="animation: none;">
+                    "盗んだ"だけでなく、世界中に公開してしまう ── 秘密は即座に陳腐化が始まる
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Wave 1 自己増殖の連鎖 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1><span class="wave-badge wave1">Wave 1</span>砂虫はなぜ"ワーム"か</h1>
+                <div class="divider"></div>
+                <table>
+                    <tr><th>マルウェア種別</th><th>特徴</th><th>自己増殖</th></tr>
+                    <tr><td>ウイルス</td><td>宿主ファイルに寄生</td><td>宿主が必要</td></tr>
+                    <tr><td>トロイの木馬</td><td>正規ソフトに偽装</td><td>しない</td></tr>
+                    <tr><td><strong>ワーム</strong></td><td>ネットワーク経由で自律拡散</td><td><strong>する</strong></td></tr>
+                </table>
+                <div class="spice-box">
+                    <p><strong>Shai-Hulud の自己増殖ループ：</strong></p>
+                    <p>開発者A が感染 → Aのトークンで全パッケージ汚染 → 開発者Bがインストール → Bのトークンも盗まれる → Bのパッケージも汚染……</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「従来のtyposquatting（偽名パッケージ）は攻撃者が手動で1つ1つ仕掛けるトロイの木馬型だった。Shai-Huludはそれを自動化・自己増殖化した。<strong>質的に別物になった</strong>」</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-security">セキュリティ番</span>「Unit 42はコメントや絵文字の使い方から、LLMで生成された可能性を中程度の確信度で評価している」</p>
+                    <p><span class="role-label role-me">俺</span>「砂虫をLLMで育てた、か。SF感がすごい」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. シーン4：スティルスーツ（基本防御） -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>シーン4：「スティルスーツを着ろ」── 基本防御</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>フレーメンが砂漠を生き延びるための第一の道具、スティルスーツ。身体の水分を一滴も外に逃がさないために全身を覆う特殊スーツだ。砂漠に出る前に、まず着る。</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>npm スティルスーツ：基本4点セット</h2>
+                    <p>① <strong>npm ci を使う</strong> ── lockfileに完全に従い書き換えない。CI/CDでは絶対に <code>npm ci</code></p>
+                    <p>② <strong>--ignore-scripts</strong> ── preinstall/postinstallを無効化。Wave 1〜2の主要実行経路を遮断</p>
+                    <p>③ <strong>lockfileをPRでレビュー</strong> ── <code>package-lock.json</code> の差分を目視確認する文化を作る</p>
+                    <p>④ <strong>min-release-age の設定</strong> ── 新バージョン公開直後の"攻撃ウィンドウ"を数日分ずらす</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「--ignore-scripts にしたらビルドが壊れません？」</p>
+                    <p><span class="role-label role-me">俺</span>「壊れるパッケージもある。だから最初の1歩は lockfile + npm ci の徹底だ。<strong>スティルスーツなしで砂漠に入るな</strong>」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Wave 2 概要 -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1><span class="wave-badge wave2">Wave 2</span>砂が盛り上がる（2025年11月〜12月）</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>Duneのクライマックスで、砂が地平線まで盛り上がって巨大な砂虫が姿を現すシーン。あれが2025年11月だ。</p>
+                </div>
+                <div class="worm-box">
+                    <h2>Wave 2：3つの技術進化</h2>
+                    <p>① <strong>postinstall → preinstall へ移行</strong><br>
+                    <code>npm install</code> を叩いた瞬間に実行。テストもlintもセキュリティスキャンも走る前に砂虫は来る。</p>
+                    <p>② <strong>Bun ランタイムへの偽装</strong><br>
+                    ペイロードファイル名：<code>setup_bun.js</code>、<code>bun_environment.js</code><br>
+                    急成長中のランタイムBunのインストーラーに偽装。違和感を覚えにくい。</p>
+                    <p>③ <strong>破壊的デッドスイッチ</strong><br>
+                    外部送信に失敗した場合、ホームディレクトリを破壊しようとするフォールバック機構。<br>
+                    「情報を盗む」から「<strong>盗めなければ壊す</strong>」への進化。</p>
+                </div>
+                <div class="worm-alert" style="animation: none;">
+                    規模：約350ユーザーにまたがる 25,000以上 の悪意あるGitHubリポジトリが作成
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. SANDWORM_MODE -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1><span class="wave-badge wavesandworm">SANDWORM_MODE</span>AIツールへの侵入（2026年2月）</h1>
+                <div class="divider"></div>
+                <div class="spice-box">
+                    <p><strong>--ignore-scripts では防げない。</strong> モジュールが import されて評価された時点で実行されるため。</p>
+                </div>
+                <div class="worm-box">
+                    <h2>ペイロードの5モジュール構成</h2>
+                    <p>• <strong>Propagate</strong>（伝播）：npmトークンを盗んで次の感染に</p>
+                    <p>• <strong>Exfil</strong>（外部送信）：認証情報を攻撃者サーバへ</p>
+                    <p>• <strong>DeadSwitch</strong>（破壊）：失敗時のホームディレクトリ破壊</p>
+                    <p>• <strong>McpInject</strong>（AI汚染）：開発者のAIツールに悪意あるMCPサーバを注入 ← NEW</p>
+                    <p>• <strong>GitHooks</strong>（永続化）：gitフックで感染を維持</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「AIコーディングアシスタントが信頼されたプロセスとして動くから、通常の監視に引っかかりにくい。砂の下を伝わってくる」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. McpInject詳細 -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>McpInject ── AIアシスタントが武器になる</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>McpInject の動作フロー</h2>
+                    <ol class="compact">
+                        <li>ランダムに生成された"それっぽい名前"（例：<code>dev-utils</code>、<code>node-analyzer</code>）の隠しディレクトリを作成</li>
+                        <li>悪意あるMCPサーバを書き込む</li>
+                        <li>Claude Code、Cursor、VS Code Continue、Windsurf などへ<strong>自動登録</strong></li>
+                        <li>登録ツール名：<code>index_project</code>、<code>lint_check</code>、<code>scan_dependencies</code></li>
+                        <li>各ツールの<strong>説明文にプロンプトインジェクション</strong>が埋め込まれている</li>
+                        <li>AIが「lint_checkを実行」したつもりで <code>.aws/credentials</code>・<code>.ssh/id_rsa</code>・<code>.npmrc</code> を外部送信</li>
+                    </ol>
+                </div>
+                <div class="fremen-box">
+                    <h2>McpInject への対策</h2>
+                    <p>• <code>~/.claude/</code> 配下の設定ファイルを定期確認</p>
+                    <p>• <code>~/.cursor/</code> 配下のMCP設定を確認</p>
+                    <p>• <code>~/.continue/</code> の設定を確認</p>
+                    <p>• 予期しない <code>mcpServers</code> エントリがないか定期チェック</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. TeamPCP登場 -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>シーン7：「ハルコンネンの本性」── TeamPCPの登場</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>Dune Part 1の転換点。アトレイデス家がアラキスに着任して、スパイス採掘を始めた矢先に――ハルコンネン男爵が、皇帝軍サルドーカルと組んで夜襲をかける。</p>
+                </div>
+                <div class="worm-box">
+                    <h2>TeamPCP とは</h2>
+                    <p>• 2026年2〜3月にランサムウェア・クリプトマイニングから<strong>「集中的なサプライチェーン侵害モデル」へ移行</strong>した脅威グループ</p>
+                    <p>• ステージングリポジトリにデューン用語（sardaukar、fremen、atreides）を使う</p>
+                    <p>• <strong>ロシア語環境チェックあり</strong> → 東欧を拠点とする犯罪グループと推定</p>
+                    <p>• ランサムウェアグループ <strong>Vect</strong> との連携を開始（認証情報窃取 → 恐喝の分業体制）</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-dba">DBA民</span>「デューン用語を使ってるって、どういうこと」</p>
+                    <p><span class="role-label role-me">俺</span>「彼らこそ Sardaukar（皇帝の精鋭兵）だ。俺たちフレーメンが戦う相手は彼らだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. TeamPCP攻撃チェーン -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>TeamPCP 確認済み攻撃チェーン</h1>
+                <div class="divider"></div>
+                <table>
+                    <tr><th>日付</th><th>ターゲット</th><th>手法</th></tr>
+                    <tr><td>3月19日</td><td>Trivy (Aqua Security)</td><td>リリースバイナリ・GitHub Actions・Docker Hub を同時汚染</td></tr>
+                    <tr><td>3月23日</td><td>KICS (Checkmarx)</td><td>複数タグへの強制push。VS Code/OpenVSXプラグインも汚染</td></tr>
+                    <tr><td>3月24日</td><td>LiteLLM (PyPI)</td><td>proxy_server.py に12行挿入。<code>tpcp.tar.gz</code> がTeamPCPを示す</td></tr>
+                    <tr><td>3月末</td><td><strong>axios (npm)</strong></td><td>盗んだ認証情報で直接侵害。AIエージェント経由のRAT展開</td></tr>
+                    <tr><td>4月22日</td><td>KICS再＋Bitwarden CLI</td><td>マルチチャネルポイズニング</td></tr>
+                    <tr><td>4月29日</td><td>SAPパッケージ群</td><td>Mini Shai-Hulud Wave 3</td></tr>
+                    <tr><td>5月11日</td><td><strong>TanStack</strong> ほか</td><td>CIキャッシュポイズニング＋OIDC窃取</td></tr>
+                    <tr><td>5月19日</td><td><strong>AntV</strong> ほか</td><td>22分で323パッケージ</td></tr>
+                </table>
+                <div class="spice-box">
+                    <p>各攻撃で得た認証情報が次のターゲットを解錠している。5つのエコシステム（GitHub Actions、Docker Hub、npm、OpenVSX、PyPI）にまたがる連鎖。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. Trivy侵害 -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>シーン8：「ドクター・ユエの裏切り」── Trivy侵害</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>Duneで最も衝撃的な裏切り。信頼された医師ウェリントン・ユエが、ハルコンネンに心を操られてアトレイデス公爵の命を奪う。<strong>護る側が武器になる瞬間だ。</strong></p>
+                </div>
+                <div class="tech-box">
+                    <h2>Trivy とは</h2>
+                    <p>クラウドネイティブエコシステムで最も広く採用されているOSS脆弱性スキャナー。数千のCI/CDパイプラインに組み込まれている。設計上、<strong>パイプラインのシークレットにアクセスできる。</strong></p>
+                </div>
+                <div class="worm-box">
+                    <h2>TeamPCPがTrivyを選んだ理由</h2>
+                    <p>Trivyを侵害すれば、コードだけでなく<strong>クラウド認証情報・SSHキー・Kubernetesトークン</strong>など、パイプラインが触れるすべてが手に入る。</p>
+                    <p>GitHub Actions、リリースバイナリ、Docker Hubイメージを同時汚染することで、インストール経路を問わず感染させた。</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「Trivyが動いてること自体は正常なんだから、発見が遅れる理由がよくわかる」</p>
+                    <p><span class="role-label role-me">俺</span>「<strong>セキュリティスキャナーが攻撃ベクトルになる</strong>。ドクター・ユエが毎日診察に来るのを誰も疑わないのと同じだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. axiosインシデント対応 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>シーン9：「砂漠を逃げ延びる」── axiosインシデント対応</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>パウルとジェシカが砂漠に逃げ出して、スティルスーツだけを頼りに生き延びようとする。焦りは死を招く。</p>
+                </div>
+                <div class="worm-alert" style="animation: none;">
+                    ⚠️ GitHubトークンを先にrevokeすると、デッドスイッチが発動して rm -rf ~/ が走る場合がある
+                </div>
+                <div class="fremen-box">
+                    <h2>インシデント発生時の砂漠サバイバル手順</h2>
+                    <p>① <code>npm ci --ignore-scripts</code> で lockfile の差分を確認</p>
+                    <p>② <strong><code>gh-token-monitor</code> という永続化デーモンが存在しないか確認（先に殺す）</strong></p>
+                    <div class="code-block">
+# macOS
+launchctl list | grep gh-token
+# Linux
+systemctl list-units | grep oidc</div>
+                    <p>③ MCP設定ファイルに見慣れないエントリがないか確認</p>
+                    <p>④ グローバルgitフック（<code>~/.gitconfig</code>）に異常がないか確認</p>
+                    <p>⑤ <strong>デーモンを殺してから</strong>、GitHubトークンをローテーション</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. Wave 4 TanStack 概要 -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1><span class="wave-badge wave4">Wave 4</span>「砂虫の背中に乗る技術」── TanStack攻撃（2026年5月11日）</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>Dune Part 1の最後のシーン。パウルがついに砂虫の背に乗る。フレーメンが何世代もかけて磨いてきた技術。砂虫を<strong>"理解"することで初めて制御できる。</strong></p>
+                </div>
+                <div class="spice-box">
+                    <p><strong>今までの全Waveは"盗んだ認証情報"から始まっていた。</strong><br>
+                    Wave 4 は違う。<strong>認証情報を一切盗まずに、正規のpublishフローを乗っ取った。</strong></p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-dba">DBA民</span>「何が違うんだ？」</p>
+                    <p><span class="role-label role-me">俺</span>「CIの設定ミスだけで侵入できる。npm史上初めて、有効な<strong>SLSA provenance（来歴証明）つきの悪意あるパッケージ</strong>が生成された」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「……つまりprovenance検証をしていても防げないと」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. Wave 4 pull_request_target -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>Wave 4 攻撃チェーン ① pull_request_target の罠</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>pull_request vs pull_request_target</h2>
+                    <table>
+                        <tr><th>トリガー</th><th>フォークコードの実行環境</th><th>シークレット・キャッシュへのアクセス</th></tr>
+                        <tr><td><code>pull_request</code></td><td>サンドボックス</td><td>❌ なし</td></tr>
+                        <tr><td><code>pull_request_target</code></td><td>ベースリポジトリのコンテキスト</td><td>✅ <strong>あり</strong></td></tr>
+                    </table>
+                </div>
+                <div class="worm-box">
+                    <h2>Step 1：フォークとキャッシュポイズニング</h2>
+                    <p>攻撃者は TanStack/router をフォーク後、リポジトリ名を <code>zblgg/configuration</code> にリネームしてフォーク一覧から見えにくくした。</p>
+                    <p>その後 <code>pull_request_target</code> をトリガーする PR を提出。TanStack の CI がフォークコードをチェックアウトして実行し、pnpm store のキャッシュを<strong>悪意あるバイナリで汚染。</strong></p>
+                </div>
+                <div class="spice-box">
+                    <p><strong>Step 2：8時間の待機</strong> ── 攻撃者は何もしない。正規メンテナーがPRをマージするのを待つ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 19. Wave 4 OIDCトークン窃取 -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>Wave 4 攻撃チェーン ② OIDCトークン窃取</h1>
+                <div class="divider"></div>
+                <div class="worm-box">
+                    <h2>Step 3：プロセスメモリからOIDCトークンを抽出</h2>
+                    <p>正規メンテナーのマージでリリースワークフローが起動。汚染されたキャッシュが復元され、攻撃者制御のバイナリが GitHub Actionsランナーのプロセスメモリ（<code>/proc/&lt;pid&gt;/mem</code>）から<strong>OIDCトークンを直接抽出。</strong></p>
+                </div>
+                <div class="tech-box">
+                    <h2>OIDCトークン（Trusted Publishing）とは</h2>
+                    <p>「npmパスワードを保存しない代わりに、ワークフロー実行時にGitHubが発行する短期トークン」。<strong>"パスワードを保存しないから安全"</strong>という設計が、プロセスメモリから直接読まれて突破された。</p>
+                </div>
+                <div class="worm-box">
+                    <h2>Step 4〜5：SLSA provenance 生成と自己増殖</h2>
+                    <p>盗んだ OIDCトークンで Sigstoreスタック（Fulcio、Rekor）を通し、<strong>SLSA v1 Build Level 3 のprovenance付きで npm publish。</strong></p>
+                    <p>認証情報は3重の冗長チャネルで外部送信：typosquatドメイン・Sessionメッセンジャー・GitHubデッドドロップ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. Wave 4 SLSAの限界 -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>Wave 4 が証明した SLSA provenance の限界</h1>
+                <div class="divider"></div>
+                <div class="worm-alert">
+                    SLSAのprovenanceは「どのパイプラインがビルドしたか」を証明する<br>
+                    「そのパイプラインが意図通りに動いていたか」は証明しない
+                </div>
+                <div class="tech-box">
+                    <h2>なぜ provenance が「正規」として発行されたか</h2>
+                    <p>侵害されたのはビルドステップそのもの。正規メンテナーのGitHub OIDCトークンが使われたため、Sigstoreから見て「正規の TanStack リポジトリの正規ワークフローが生成したパッケージ」として attestation が発行された。</p>
+                </div>
+                <div class="dune-quote">
+                    <p style="color: #5a3000; font-style: italic;">「砂虫の背中に乗っていても、その砂虫が自分のものかどうかは別の話だ」</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>正しい理解</h2>
+                    <p>provenance 検証は<strong>必要条件だが十分条件ではない。</strong></p>
+                    <p>CIパイプライン自体の hardening（次スライド）と組み合わせて初めて意味を持つ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 21. Wave 4 デッドスイッチ・規模 -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>Wave 4 デッドスイッチと規模</h1>
+                <div class="divider"></div>
+                <div class="worm-box">
+                    <h2>gh-token-monitor デーモン</h2>
+                    <p>• 開発者マシンに永続デーモンとして潜伏（macOS: LaunchAgent / Linux: systemd）</p>
+                    <p>• 60秒ごとに GitHub にポーリング。<strong>40x エラー（トークン失効）を検知すると <code>rm -rf ~/</code> を試みる</strong></p>
+                    <p>• デーモンは24時間後に自動消滅（証拠隠滅）</p>
+                    <p>→ 「GitHubトークンをrevokeしたらホームが吹き飛ぶ」トラップ。対応時は必ずデーモンを先に殺す。</p>
+                </div>
+                <div class="tech-box">
+                    <h2>攻撃の規模と速度</h2>
+                    <ul class="compact">
+                        <li>42の @tanstack/* パッケージにわたる84の悪意あるバージョン</li>
+                        <li><strong>19:20〜19:26 UTC の6分間</strong>で公開。完全自動化。</li>
+                        <li>npm 史上初の npm + PyPI 同時攻撃（170 npmパッケージ＋2 PyPIパッケージ）</li>
+                        <li>マルウェアにロシア語チェックあり → ロシア語環境ではペイロードが走らない</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22. Wave 5 AntV -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1><span class="wave-badge wave5">Wave 5</span>「22分間の砂嵐」── AntV全壊（2026年5月19日）</h1>
+                <div class="divider"></div>
+                <div class="worm-alert">
+                    22分間の自動化バーストで 323パッケージ ／ 300以上の悪意あるバージョンを公開<br>
+                    週間ダウンロード合計：約 1,600万
+                </div>
+                <div class="worm-box">
+                    <h2>侵害された主なパッケージ</h2>
+                    <p>• Alibaba（アリババ）の <strong>AntVデータ可視化エコシステム全体</strong></p>
+                    <p>• <strong>echarts-for-react</strong></p>
+                    <p>• <strong>timeago.js</strong>（週間150万 DL）</p>
+                </div>
+                <div class="spice-box">
+                    <p><strong>Wave 3 では Claude Code の SessionStart フックを悪用した永続化が初めて登場。</strong><br>
+                    AI開発ツール自体が攻撃インフラとして組み込まれ始めている。</p>
+                </div>
+                <div class="tech-box">
+                    <h2>5月12日：ソースコード公開</h2>
+                    <p>ワームのソースコードが GitHub に公開された。誰でもこの手法が使える状態になった。模倣犯が動き始めており、今後の帰属分析が困難になっている。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 23. フレーメンの知恵 3アプローチ -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>シーン12：「フレーメンの知恵」── 3つのアプローチ</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p>Dune Part 1の最後、パウルはフレーメンと出会う。砂虫を恐れるのではなく、理解し、共に生きる人々だ。</p>
+                    <p style="font-style: italic; color: #8b6914;">「砂虫は倒すものではない。乗りこなすものだ」</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>① サンパー（Thumper）で誘導する ＝ 依存関係の監視</h2>
+                    <p>砂にリズムを送り砂虫の注意を向ける装置 → Dependabot、Socket、Snyk による継続監視</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>② メイカーフック（Maker Hook）で乗りこなす ＝ CI/CD設計の理解</h2>
+                    <p>砂虫の鱗片をこじ開け、傷口に砂を入れて留める。フックで方向を制御する → <code>pull_request_target</code> の危険性を理解し、最小権限でパイプラインを設計する</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>③ 水で封じ込める ＝ 環境的な防御</h2>
+                    <p>水は砂虫にとって毒。水路で小さな砂虫を封じ込める → <code>--ignore-scripts</code> と pnpm v11 のデフォルト設定が"水路"の役割を果たす</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 24. pnpm v11 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>pnpm v11 ── スティルスーツの最終形</h1>
+                <div class="divider"></div>
+                <div class="spice-box">
+                    <p>現時点で最も包括的なコンシューマー側セキュリティ態勢を持つパッケージマネージャー。</p>
+                </div>
+                <div class="fremen-box">
+                    <h2>pnpm v11 のセキュリティデフォルト</h2>
+                    <p>• <strong>lifecycle scripts がデフォルト無効</strong> ── 明示的に許可しなければ走らない</p>
+                    <p>• <strong>リリースクールダウン</strong> がデフォルト有効</p>
+                    <p>• <strong>blockExoticSubdeps</strong> ── トランジティブ依存での git リポジトリや tarball URL をブロック</p>
+                    <p>• <strong>verifyDepsBeforeRun</strong> ── スクリプト実行前に依存関係が検証済みかつ最新であることを確認。古いまたは改竄された <code>node_modules</code> がサイレントに使われることを防ぐ</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「npmからpnpmへの移行は現時点で有効な防御策だ。ただし既存ワークフローへの影響を見積もってから。新規プロジェクトから順次移行するアプローチが現実的だ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 25. GitHub Actions CI Hardening -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <h1>GitHub Actions CI Hardening</h1>
+                <div class="divider"></div>
+                <div class="fremen-box">
+                    <h2>TanStack型攻撃への直接的な防御</h2>
+                    <p>① <strong><code>pull_request_target</code> でフォークコードを実行しない</strong> ← 根本原因はここ</p>
+                    <p>② <strong>サードパーティActionsは完全なSHAハッシュで固定</strong></p>
+                    <div class="code-block"># タグは上書き可能 → NG
+- uses: actions/checkout@v4
+# SHAは不変 → OK
+- uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683</div>
+                    <p>③ <strong>ビルドとpublishを最小権限の別ワークフローに分離</strong></p>
+                    <p>④ <strong>フォークPRとメインブランチのキャッシュを共有しない</strong></p>
+                    <p>⑤ <strong>npm provenance attestation を有効化</strong>（必要条件として）</p>
+                </div>
+                <div class="spice-box">
+                    <p>全リポジトリの GitHub Actions 設定に <code>pull_request_target</code> でフォークコードを実行しているケースがないか確認する価値がある。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 26. 恐怖の連祷・結論 -->
+        <div class="slide" id="slide-26">
+            <div class="chapter">
+                <h1>シーン13：「恐怖は心を殺す者」</h1>
+                <div class="divider"></div>
+                <div class="dune-quote">
+                    <p style="font-style: italic; font-size: 1.05em; line-height: 1.9;">
+                    「恐怖は心を殺す者。恐怖は小さな死。完全な消滅をもたらす者。<br>
+                    私は恐怖と向き合い、恐怖を通り抜けさせよう。<br>
+                    恐怖が過ぎ去ったとき、心の目でその通り道を見届けよう。<br>
+                    恐怖が消えたとき、何も残っていない。私だけが残る」
+                    </p>
+                    <p style="color: #8b6914; text-align: right; font-size: 0.9em;">― ベネ・ゲセリットの「恐怖の連祷」、Dune</p>
+                </div>
+                <div class="spice-box">
+                    <p><strong>"npmが怖い"という感情に飲み込まれると、思考が止まる。</strong>でも恐さの中身を一つずつ見ていくと、対処できる問題に分解できる。</p>
+                </div>
+                <div class="motto">
+                    npmは終わっていない。<br>
+                    ただし「npm に依存を追加する」という行為の<br>リスクプロファイルが根本的に変わった。
+                </div>
+            </div>
+        </div>
+
+        <!-- 27. フレーメン・エンジニアの七か条 -->
+        <div class="slide" id="slide-27">
+            <div class="chapter">
+                <h1>フレーメン・エンジニアの七か条</h1>
+                <div class="divider"></div>
+                <div class="fremen-box">
+                    <h2>砂漠を生き延びるための掟</h2>
+                    <p>① <code>npm ci</code> を使え。<code>npm install</code> は lockfile を書き換える</p>
+                    <p>② <code>--ignore-scripts</code> は砂漠のスティルスーツだ。着てから外に出ろ</p>
+                    <p>③ lockfile を PR でレビューする文化を作れ</p>
+                    <p>④ 新バージョンにはクールダウンを設ける（min-release-age）</p>
+                    <p>⑤ <code>pull_request_target</code> でフォークコードを実行するな</p>
+                    <p>⑥ サードパーティActions は SHA ハッシュで固定しろ</p>
+                    <p>⑦ MCP設定を定期的に監査せよ。砂の下は見えない</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「砂虫に名前をつけた攻撃者と戦うのに、Duneを武器にするのは正しい気がします」</p>
+                    <p><span class="role-label role-me">俺</span>「敵が Shai-Hulud なら、俺たちがフレーメンだ。<strong>アラキスは俺たちの家だ</strong>」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 28. 参考：npmサプライチェーン攻撃分類 -->
+        <div class="slide" id="slide-28">
+            <div class="chapter">
+                <h1>参考：npmサプライチェーン攻撃の全体像</h1>
+                <div class="divider"></div>
+                <div class="reference-item">
+                    <p><strong>① Typosquatting</strong>　名前を似せた偽パッケージ。最も古典的。受動的に引っかかりを待つ。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>② Dependency Confusion</strong>　内部パッケージ名と同じ名前を公開レジストリに登録。npmが公開版を優先解決する脆弱性を突く。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>③ アカウント乗っ取り（メンテナー侵害）</strong>　正規パッケージを直接侵害。eventstream（2018）、ua-parser-js（2021）、axios（2026）。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>④ CI/CDパイプライン侵害</strong>　<code>pull_request_target</code> ミスコンフィグなど。認証情報を盗まずに正規パブリッシュフローを乗っ取る。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>⑤ プロテストウェア</strong>　メンテナー自身による破壊的コード。colors.js（2022）、node-ipc（2022）。防御が最も難しい。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>⑥ ワーム型自己増殖（Shai-Hulud）</strong>　③④を自動化して連鎖拡散。今日のメインテーマ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 29. 参考：Shai-Hulud年表 -->
+        <div class="slide" id="slide-29">
+            <div class="chapter">
+                <h1>参考：Shai-Hulud 年表</h1>
+                <div class="divider"></div>
+                <table>
+                    <tr><th>時期</th><th>Wave</th><th>主な技術的変化</th></tr>
+                    <tr><td>2025年9月</td><td><span class="wave-badge wave1">Wave 1</span></td><td>postinstall フック。盗んだトークンで自動再publish。GitHub に秘密を公開</td></tr>
+                    <tr><td>2025年11〜12月</td><td><span class="wave-badge wave2">Wave 2</span></td><td>preinstall へ移行。Bun に偽装。破壊的デッドスイッチ。25,000リポジトリ</td></tr>
+                    <tr><td>2026年2月</td><td><span class="wave-badge wavesandworm">SANDWORM</span></td><td>import時実行（--ignore-scripts回避）。McpInject。5モジュール構成</td></tr>
+                    <tr><td>2026年3月〜</td><td>TeamPCP登場</td><td>Trivy→KICS→LiteLLM→axios→Bitwarden の連鎖攻撃</td></tr>
+                    <tr><td>2026年4月末</td><td><span class="wave-badge wave3">Wave 3</span></td><td>SAP開発パッケージ群。Claude Code SessionStart フック悪用</td></tr>
+                    <tr><td>2026年5月11日</td><td><span class="wave-badge wave4">Wave 4</span></td><td>TanStack。認証情報不要。CIキャッシュポイズニング＋OIDC窃取。SLSA provenance 偽造。6分で84バージョン</td></tr>
+                    <tr><td>2026年5月19日</td><td><span class="wave-badge wave5">Wave 5</span></td><td>AntV。22分で323パッケージ。週間1,600万 DL 規模</td></tr>
+                    <tr><td>2026年5月12日</td><td>ソースコード公開</td><td>誰でも使える状態に。模倣犯が活動開始</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 30. 参考：Duneメタファー対応表 -->
+        <div class="slide" id="slide-30">
+            <div class="chapter">
+                <h1>参考：Dune メタファー対応表</h1>
+                <div class="divider"></div>
+                <table>
+                    <tr><th>Dune</th><th>npm / セキュリティ</th></tr>
+                    <tr><td>アラキスの砂漠</td><td>npm エコシステム</td></tr>
+                    <tr><td>スパイス（メランジェ）</td><td>npm パッケージ</td></tr>
+                    <tr><td>Shai-Hulud（砂虫）</td><td>ワーム型マルウェア</td></tr>
+                    <tr><td>砂の振動</td><td><code>npm install</code> の実行</td></tr>
+                    <tr><td>スティルスーツ</td><td>lockfile ＋ npm ci ＋ --ignore-scripts</td></tr>
+                    <tr><td>フレーメン</td><td>防御側エンジニア・セキュリティコミュニティ</td></tr>
+                    <tr><td>TeamPCP</td><td>ハルコンネン家 ／ サルドーカル</td></tr>
+                    <tr><td>Trivy侵害</td><td>ドクター・ユエの裏切り</td></tr>
+                    <tr><td>Thumper（サンパー）</td><td>Dependabot ／ Snyk ／ Socket による監視</td></tr>
+                    <tr><td>メイカーフック</td><td>CI/CD の設計理解と最小権限設計</td></tr>
+                    <tr><td>水による封じ込め</td><td>pnpm v11 のスクリプトブロッキング</td></tr>
+                    <tr><td>恐怖の連祷</td><td>「怖さを分解して対処できる問題に変換する」思考法</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 31. 技術的補足メモ -->
+        <div class="slide" id="slide-31">
+            <div class="chapter">
+                <h1>技術的補足メモ</h1>
+                <div class="divider"></div>
+                <div class="reference-item">
+                    <p><strong>Shai-Hulud 命名：</strong>Unit 42（Palo Alto Networks）が Wave 1 の GitHubリポジトリ名 "Shai-Hulud" から命名。攻撃者自身が "The Second Coming"・"The Third Coming" と書き続けたことから、一貫したブランディング意図があると評価されている。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>LLM生成の可能性：</strong>Unit 42 はコメントや絵文字の使い方から、マルウェアコードが LLM で生成された可能性を中程度の確信度で評価。攻撃コードの機械生成という新潮流を示す。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>SANDWORM_MODE の --ignore-scripts 回避：</strong>lifecycle scripts ではなく、モジュールの import 評価時に実行される設計。これは <code>--ignore-scripts</code> フラグの保護範囲外であり、pnpm v11 の <code>verifyDepsBeforeRun</code> が有効な追加防御となる。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>pull_request_target の危険性：</strong>GitHub 公式ドキュメント "Keeping your GitHub Actions and workflows secure Part 1: Preventing pwn requests"（GitHub Blog）が詳しい。この設定ミスは多くのOSSリポジトリで継続的に発見されており、定期的な監査が必要。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>gh-token-monitor の24時間消滅：</strong>デーモンは24時間後に自動消滅するため、インシデント対応が長引くと証拠も消える。発覚したら即座にプロセス確認を手順に含めること。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>TeamPCP × Vect の分業：</strong>サプライチェーン攻撃が「初期アクセスブローカー」として機能し始めていることを意味する。npm 侵害を入口とした企業への直接ランサムウェア攻撃が今後増加する可能性がある。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 32. 次章予告 -->
+        <div class="slide" id="slide-32">
+            <div class="chapter">
+                <h1>次章予告</h1>
+                <div class="divider"></div>
+                <div class="worm-alert" style="animation: none; background-color: #2d1a00;">
+                    第10回「俺たちは技術的負債と戦っている（血文字で）」
+                </div>
+                <div class="spice-box" style="margin-top: 30px;">
+                    <p>戦争も、砂虫も乗り越えた俺たちの前に、最後にして最凶の敵が立ちはだかる。</p>
+                    <p>失われた仕様書、謎のTODOコメント、そして<strong>git blame の先にいた意外な人物</strong>……。</p>
+                    <p>技術的負債という名の亡霊が、The・World 村のシステムを蝕んでいる！</p>
+                </div>
+                <div class="dune-quote" style="margin-top: 20px;">
+                    <p>砂虫に乗れるようになっても、コードの中の"負債"は残り続ける。フレーメンでも、レガシーコードからは逃げられない。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 33. エンドスライド -->
+        <div class="slide" id="slide-33">
+            <div class="chapter">
+                <div class="footer" style="padding-top: 8vh;">
+                    <h1 style="text-align: center; border: none; font-size: min(4.5vh, 30px);">第9回：俺たちは砂のワーム(Shai-Hulud)と戦っている</h1>
+                    <div class="motto" style="margin: 30px auto; max-width: 80%;">
+                        「砂虫は倒すものではない、乗りこなすものだ」<br>
+                        <span style="font-size: 0.85em; color: #8b6914;">── フレーメン・エンジニアの七か条を胸に、今日も npm と向き合う</span>
+                    </div>
+                    <p>© 2026 フロントエンドクラブ</p>
+                    <p>次回：「俺たちは技術的負債と戦っている（血文字で）」</p>
+                    <p style="margin-top: 20px;">本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.slide-container -->
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 33</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 33;
+
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            const cur = document.getElementById(`slide-${slideNumber}`);
+            if (cur) cur.classList.add('active');
+            if (slideNumber > 1) {
+                const prev = document.getElementById(`slide-${slideNumber - 1}`);
+                if (prev) prev.classList.add('prev');
+            }
+            updateSlideCounter();
+            updateButtonState();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Fullscreen error: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'f') { toggleFullScreen(); }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
