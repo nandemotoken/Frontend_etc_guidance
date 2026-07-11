@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10回：トラストレスな決済などない</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a2332;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f6;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 2vh 4vw;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+            background-color: #fafcfe;
+        }
+        .slide.active { transform: translateX(0); }
+        .slide.prev { transform: translateX(-100%); }
+        h1 {
+            font-size: min(4vh, 28px);
+            border-bottom: 3px solid #1e5f74;
+            padding-bottom: 1vh;
+            margin-top: 2vh;
+            color: #0f3a4a;
+        }
+        h2 {
+            font-size: min(3.5vh, 22px);
+            border-left: 5px solid #1e5f74;
+            padding-left: 2vw;
+            margin-top: 3vh;
+            color: #0f3a4a;
+        }
+        .chapter {
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 2vh 2vw;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(15,58,74,0.12);
+        }
+        .divider {
+            border-top: 1px dashed #8aabb8;
+            margin: 20px 0;
+        }
+        /* 重要ポイント */
+        .trust-box {
+            background-color: #e8f4f7;
+            padding: 15px;
+            border-left: 4px solid #1e5f74;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        /* 破綻・警告 */
+        .collapse-alert {
+            background-color: #8b1a1a;
+            color: #ffe8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        /* 破綻詳細（暗） */
+        .collapse-box {
+            background-color: #1a0a0a;
+            color: #e8c8c8;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #c0392b;
+        }
+        .collapse-box h2 {
+            color: #e74c3c;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        /* 保全・防御 */
+        .safe-box {
+            background-color: #e6f4ea;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2e7d4f;
+        }
+        .safe-box h2 {
+            color: #1b5e3a;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        /* 技術詳細 */
+        .tech-box {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .tech-box h2 {
+            color: #1e3a8a;
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+        }
+        /* テーゼ・引用 */
+        .thesis-box {
+            background-color: #f4f0e8;
+            border-left: 4px solid #b8860b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        /* キャラクター発言 */
+        .quote-box {
+            background-color: #f5f8fa;
+            border-left: 4px solid #8aabb8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        /* ロールラベル */
+        .role-label {
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 4px 6px 4px 0;
+            font-weight: bold;
+            font-size: 0.88em;
+        }
+        .role-sre { background-color: #2980b9; }
+        .role-security { background-color: #27ae60; }
+        .role-dba { background-color: #d35400; }
+        .role-pm { background-color: #c0392b; }
+        .role-devrel { background-color: #8e44ad; }
+        .role-me { background-color: #0f3a4a; }
+        /* 格言 */
+        .motto {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #0f3a4a;
+            margin: 20px 0;
+            padding: 18px;
+            border: 3px solid #1e5f74;
+            border-radius: 10px;
+            background-color: #e8f4f7;
+        }
+        .reference-item {
+            background-color: #eef2f6;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #1e5f74;
+        }
+        .flow-box {
+            background-color: #0f3a4a;
+            color: #d4eef4;
+            padding: 18px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: min(2.6vh, 16px);
+            letter-spacing: 0.02em;
+            line-height: 1.8;
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            z-index: 100;
+        }
+        .nav-buttons button {
+            background-color: #1e5f74;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1vw;
+            font-size: min(2.5vh, 16px);
+            box-shadow: 0 2px 8px rgba(15,58,74,0.35);
+            transition: background-color 0.3s;
+        }
+        .nav-buttons button:hover { background-color: #0f3a4a; }
+        .nav-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .slide-number {
+            position: fixed;
+            bottom: 2vh;
+            left: 2vw;
+            font-size: min(2.5vh, 14px);
+            color: #5a7a88;
+            z-index: 100;
+        }
+        .fullscreen-icon {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            font-size: min(4vh, 24px);
+            color: #1e5f74;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0 4vw;
+            background: linear-gradient(180deg, #0a1f28 0%, #0f3a4a 55%, #1e5f74 100%);
+        }
+        .title-slide h1 {
+            font-size: min(5.5vh, 34px);
+            margin-bottom: 2vh;
+            border-bottom: 2px solid #c9a227;
+            color: #f0e6c8;
+            text-shadow: 0 0 18px rgba(201,162,39,0.45);
+        }
+        .title-slide .subtitle {
+            font-size: min(2.8vh, 18px);
+            color: #a8c8d4;
+            margin-top: 1vh;
+        }
+        .title-slide .tag {
+            font-size: min(2.2vh, 14px);
+            color: #7a9aa8;
+            margin-top: 3vh;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: min(2.3vh, 14px);
+        }
+        th {
+            background-color: #1e5f74;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        td {
+            padding: 7px 12px;
+            border-bottom: 1px solid #c5d8e0;
+        }
+        tr:nth-child(even) { background-color: #e8f4f7; }
+        p { font-size: min(2.8vh, 16px); line-height: 1.6; }
+        ul.compact li { margin: 6px 0; }
+        a { color: #1e5f74; }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #5a7a88;
+        }
+        .lens-num {
+            display: inline-block;
+            width: 1.6em;
+            height: 1.6em;
+            line-height: 1.6em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #1e5f74;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 6px;
+        }
+        .attack-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+            font-size: 0.8em;
+            margin-right: 6px;
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+
+        <!-- 1. タイトル -->
+        <div class="slide active" id="slide-1">
+            <div class="title-slide">
+                <h1>第10回：トラストレスな決済などない</h1>
+                <p class="subtitle">― 全東信破綻が暴いた、信頼の引っ越し先 ―</p>
+                <div style="margin-top: 30px;">
+                    <p class="tag">トラストポイント ／ 全東信 ／ クレカ・前払式・暗号資産</p>
+                    <p class="tag" style="margin-top: 10px; color: #c9a227; font-style: italic;">「あるのは、トラストポイントの移動だけである」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 要約 -->
+        <div class="slide" id="slide-2">
+            <div class="chapter">
+                <h1>今日の物語</h1>
+                <div class="divider"></div>
+                <div class="trust-box">
+                    <p>砂虫と戦った翌週、俺のSlackに飛び込んできたのはnpmのアラートではなく、<strong>「カード決済代行が破産。加盟店の売上金が消えた」</strong>というニュースだった。</p>
+                </div>
+                <div class="collapse-alert">
+                    全東信 ― 負債約1,259億円 ／ 2026年最大規模の倒産<br>
+                    消費者の画面はいつも通り。壊れたのは、店が信じていた先だ
+                </div>
+                <div class="tech-box">
+                    <h2>今日のポイント</h2>
+                    <ul class="compact">
+                        <li>決済は信頼</li>
+                        <li>決済の「トラストポイント」について考える</li>
+                        <li>全東信破綻から「誰を信じていたか」を抜き出す</li>
+                        <li>物々交換〜現金〜ツケ〜銀行〜クレカ〜前払式〜チェーンを辿る</li>
+                        <li>「誰が先に金を出すか＝誰がリスクを負うか」で一枚にまとめる</li>
+                        <li>トラストポイントへの攻撃についても考える</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. シーン0 -->
+        <div class="slide" id="slide-3">
+            <div class="chapter">
+                <h1>シーン0：「決済が止まった」</h1>
+                <div class="divider"></div>
+                <p>タイムマシンも、砂虫の話も一段落した朝。俺はコーヒーを淹れていた。</p>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「今週こそ静かに過ごせるだろ」</p>
+                    <p><span class="role-label role-me">俺</span>「……無理そうだ」</p>
+                </div>
+                <div class="collapse-box">
+                    <p style="font-family: monospace; font-size: 0.95em;">📢 @here <strong>決済代行の全東信が破産。負債約1,259億円。</strong><br>
+                    うちの加盟店まわり、誰か状況掴んでる？</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「全東信……？　あの、早期入金やってるところ？」</p>
+                    <p><span class="role-label role-me">俺</span>「ああ。カード会社からの入金を立て替えて、店に先に払うやつだ」</p>
+                    <p><span class="role-label role-dba">DBA民</span>「で、破産したらどうなる」</p>
+                    <p><span class="role-label role-me">俺</span>「すでにカード決済済みで、まだ店に入ってない売上金が――破産債権になる」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「消費者の画面は、いつも通り"決済完了"だぞ」</p>
+                    <p><span class="role-label role-me">俺</span>「そう。壊れたのは、店が信じていた先だ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. シーン1：テーゼ -->
+        <div class="slide" id="slide-4">
+            <div class="chapter">
+                <h1>シーン1：「信頼は空気化する」</h1>
+                <div class="divider"></div>
+                <div class="motto">
+                    トラストポイント<br>
+                    <span style="font-size: 0.75em; font-weight: normal; color: #5a7a88;">決済フローの中で「誰かが約束を守ること」を無条件に前提にしている点</span>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「単一障害点と同じ構図だな」</p>
+                    <p><span class="role-label role-me">俺</span>「その通り。平時は空気みたいに見えない。壊れた瞬間にだけ、可視化される」</p>
+                </div>
+                <div class="thesis-box">
+                    <p style="font-size: 1.15em; font-weight: bold; color: #0f3a4a; margin: 0;">本日のテーゼ</p>
+                    <p style="margin: 10px 0 0 0;">トラストレスな決済は存在しない。<br>
+                    あるのは、<strong>トラストポイントの移動</strong>だけである。</p>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「キャッシュレス化も、Web3化も、信頼を消してるわけじゃない、と」</p>
+                    <p><span class="role-label role-me">俺</span>「消してない。引っ越しさせてる。引っ越し先の耐震性を見るのが、今日の仕事だ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. シーン2：全東信 -->
+        <div class="slide" id="slide-5">
+            <div class="chapter">
+                <h1>シーン2：全東信 ― 何が崩れたのか</h1>
+                <div class="divider"></div>
+                <div class="collapse-box">
+                    <h2>全東信破綻（2026年7月）</h2>
+                    <ul class="compact">
+                        <li>クレジットカード早期決済代行。大阪地裁に破産申請</li>
+                        <li>負債：約<strong>1,259億円</strong>（2026年最大規模の倒産）</li>
+                        <li>モデル：カード会社→加盟店の入金を<strong>立て替えて先払い</strong></li>
+                        <li>帰結：端末即日停止。未入金の売上は<strong>破産債権化</strong></li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「店は何を信じていた？」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「決済代行の財務健全性、だろ」</p>
+                    <p><span class="role-label role-me">俺</span>「そう。消費者はカード会社を信じ、店は代行業者を信じている。全東信は、<strong>後者</strong>のトラストポイントが崩れた事件だ」</p>
+                    <p><span class="role-label role-dba">DBA民</span>「なんで早期入金できるんだ？」</p>
+                    <p><span class="role-label role-me">俺</span>「立替の原資は、だいたい借入だ。『早く現金化できる』の裏側は、『仲介者の信用リスクを追加購入している』ことだった」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. 全東信3点 -->
+        <div class="slide" id="slide-6">
+            <div class="chapter">
+                <h1>全東信から抜ける3点</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>壁に書く</h2>
+                    <ol>
+                        <li style="margin: 12px 0;"><strong>加盟店は、無自覚に代行業者の財務を信じていた</strong></li>
+                        <li style="margin: 12px 0;"><strong>「入金が早い」は便利だが、信用リスクの追加でもある</strong></li>
+                        <li style="margin: 12px 0;"><strong>トラストポイントは平時に見えず、破綻時にだけ見える</strong></li>
+                    </ol>
+                </div>
+                <div class="trust-box">
+                    <p>決済方式の違いは、機能の違いじゃない。<strong>「誰を信じているか」</strong>の違いだ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. シーン3：4レンズ -->
+        <div class="slide" id="slide-7">
+            <div class="chapter">
+                <h1>シーン3：見るためのレンズは4つだけでいい</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「方式を並べる前に、レンズを4つだけ渡す。これ以外は今日は深掘りしない」</p>
+                </div>
+                <table>
+                    <tr><th style="width: 12%;">#</th><th>レンズ</th><th>問い</th></tr>
+                    <tr><td><span class="lens-num">1</span></td><td>誰を信じているか</td><td>個人／店／企業／国家／コード／自分</td></tr>
+                    <tr><td><span class="lens-num">2</span></td><td>誰が先に金を出すか</td><td>先に出す側がリスクを負う</td></tr>
+                    <tr><td><span class="lens-num">3</span></td><td>崩れたとき誰が損するか</td><td>消費者か・店か・仲介者か</td></tr>
+                    <tr><td><span class="lens-num">4</span></td><td>攻撃者はどこを狙うか</td><td>本体か、周辺（認証・人間）か</td></tr>
+                </table>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「シンプルでいいな」</p>
+                    <p><span class="role-label role-me">俺</span>「詳細は後で一枚にまとめる。まずは直感で追う」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. シーン4：物々交換 -->
+        <div class="slide" id="slide-8">
+            <div class="chapter">
+                <h1>シーン4：物々交換 ― 「信頼ゼロ」の原型</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>物々交換</h2>
+                    <ul class="compact">
+                        <li>財と財の同時交換。渡した瞬間に完結</li>
+                        <li>信じなくていいのは「相手の将来の行動」</li>
+                        <li>信じるのは「目の前のモノの真正性」だけ</li>
+                        <li>代償：欲求の二重一致（欲しいものが今まさに揃わないと成立しない）</li>
+                    </ul>
+                </div>
+                <div class="thesis-box">
+                    <p style="margin: 0;">決済の歴史は、<strong>「同時性を諦めてトラストポイントを入れ、その代わり流動性を得る」</strong>歴史だ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. シーン4：現金 -->
+        <div class="slide" id="slide-9">
+            <div class="chapter">
+                <h1>現金 ― 「trustless」という誤解</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>現金即時払い</h2>
+                    <ul class="compact">
+                        <li>法定通貨の物理的な引き渡し。渡した瞬間に完了（取消不能）</li>
+                        <li>信じる相手：<strong>国家</strong>（偽造しにくさ＋通貨価値の維持）</li>
+                        <li>相手個人は信じなくてよい</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「現金って、trustlessなイメージがあります」</p>
+                    <p><span class="role-label role-me">俺</span>「違う。トラストポイントが国家に一元化されて、<strong>空気化</strong>してるだけだ」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「だからハイパーインフレ国ではドルや暗号資産に逃げる。国家というトラストポイントの乗り換えだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. シーン5：ツケ -->
+        <div class="slide" id="slide-10">
+            <div class="chapter">
+                <h1>シーン5：ツケと出世払い ― 個人を信じる決済</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>ツケ払い</h2>
+                    <ul class="compact">
+                        <li>店が客の顔と台帳で信用供与。後日精算</li>
+                        <li>信じるもの：客の支払い意思・能力＋コミュニティの評判</li>
+                        <li>崩れたとき損をするのは<strong>店</strong></li>
+                    </ul>
+                </div>
+                <div class="trust-box">
+                    <p>現代の後払い（ペイディ等）は、ツケの「村の評判」を<strong>行動データとスコア</strong>に置き換えたもの。信頼の行き先が、アルゴリズムに引っ越した。</p>
+                </div>
+                <div class="tech-box">
+                    <h2>出世払い</h2>
+                    <ul class="compact">
+                        <li>返済期限も能力も、将来に委ねる</li>
+                        <li>信じるもの：相手の将来の成功と義理</li>
+                        <li>金融的にはいちばん筋が悪い ＝ 信頼の純度がいちばん高い</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「オーストラリアなどにある所得連動返還奨学金みたいな制度は、個人の義理を国家の徴収インフラに移した例だな。」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. シーン6：銀行 -->
+        <div class="slide" id="slide-11">
+            <div class="chapter">
+                <h1>シーン6：銀行振込 ― いちばん手厚い耐震補強</h1>
+                <div class="divider"></div>
+                <div class="safe-box">
+                    <h2>銀行振込・口座振替</h2>
+                    <ul class="compact">
+                        <li>銀行預金という「銀行への債権」の付け替え</li>
+                        <li>信じるもの：銀行＋預金保険（ペイオフ1,000万円）＋中央銀行</li>
+                        <li>公的保全が厚く、耐震補強がいちばん効いている方式の一つ</li>
+                    </ul>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「『銀行預金は現金と同じ』という感覚自体が、制度が空気化させたトラストポイントだ」</p>
+                    <p><span class="role-label role-dba">DBA民</span>「全東信との対比がキツいな。あっちは保全が薄かった」</p>
+                    <p><span class="role-label role-me">俺</span>「そう。同じ『誰かが預かってる／立て替えてる』でも、法的な補強の有無で全然違う」</p>
+                </div>
+                <div class="collapse-alert" style="background-color: #5a3a1a; font-size: 1em;">
+                    振込は原則キャンセルできない。振り込め詐欺は、そのファイナリティを人間経由で悪用する攻撃だ
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. シーン7：クレカフロー -->
+        <div class="slide" id="slide-12">
+            <div class="chapter">
+                <h1>シーン7：クレジットカード ― 全東信がいた場所</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「今回の事件の中心だな。トラストポイント破綻の実例だ」</p>
+                </div>
+                <div class="flow-box">
+                    消費者 → イシュア（発行） → 国際ブランド → アクワイアラ／代行業者 → 加盟店
+                </div>
+                <div class="tech-box">
+                    <h2>クレカのトラストポイント（ざっくり3段）</h2>
+                    <ol>
+                        <li style="margin: 8px 0;">イシュアが、消費者の返済能力を信じる（与信）</li>
+                        <li style="margin: 8px 0;">加盟店が、アクワイアラ／代行業者の精算能力を信じる　← <strong style="color:#c0392b;">全東信はここ</strong></li>
+                        <li style="margin: 8px 0;">全員が、ブランドのルールとネットワーク稼働を信じる</li>
+                    </ol>
+                </div>
+                <div class="trust-box">
+                    <p>消費者は<strong>後払い</strong>。店は（立替で）<strong>先に受け取る</strong>。その時間差を、仲介者の信用が埋めている。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. シーン7：早期入金と穴 -->
+        <div class="slide" id="slide-13">
+            <div class="chapter">
+                <h1>早期入金の値段と、保全の穴</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「早期入金は、その時間差をもっと潰すサービス、と」</p>
+                    <p><span class="role-label role-me">俺</span>「潰した分だけ、仲介者の信用リスクが増える。便利の値段だ」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「攻撃はカード番号盗用だけじゃない。不正加盟店、チャージバック詐欺、そして代行業者倒産。技術攻撃ゼロでも店の金は消える」</p>
+                </div>
+                <div class="collapse-box">
+                    <h2>規制の空白（一点だけ）</h2>
+                    <p>前払式は未使用残高の供託、資金移動業は原則全額保全――のような耐震補強がある。<br>
+                    でも<strong>代行業者が加盟店向け精算資金を滞留させる部分</strong>には、同レベルの包括的保全がない。ここが穴だ。</p>
+                </div>
+                <div class="safe-box">
+                    <h2>クレカ＋代行業者で覚えること</h2>
+                    <ul class="compact">
+                        <li>便利な時間差の裏に、仲介者信用がある</li>
+                        <li>全東信型は「店側のトラストポイント崩壊」</li>
+                        <li>保全の厚みは方式ごとにバラバラ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. シーン8：前払式 -->
+        <div class="slide" id="slide-14">
+            <div class="chapter">
+                <h1>シーン8：前払式 ― 消費者が先に出す側</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>Suica・PayPay残高・プリペイド</h2>
+                    <ul class="compact">
+                        <li>ユーザーが先に発行体へ入金し、残高を減らして払う</li>
+                        <li>信じるもの：発行体の存続＋残高台帳の正しさ</li>
+                        <li>構図：消費者が発行体に、<strong>無利息でお金を預けている</strong></li>
+                    </ul>
+                </div>
+                <table>
+                    <tr><th></th><th>全東信型</th><th>前払式</th></tr>
+                    <tr><td>誰が信じるか</td><td>店 → 仲介（代行業者）</td><td>消費者 → 発行体</td></tr>
+                    <tr><td>保全</td><td>薄い（精算資金）</td><td>あり（供託など）</td></tr>
+                    <tr><td>破綻時の被害者</td><td>加盟店</td><td>消費者</td></tr>
+                </table>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「ペイメントサービスのハッキング事件はここですね」</p>
+                    <p><span class="role-label role-me">俺</span>「ああ。認証設計の欠陥で、アカウントというトラストポイントの実装が壊れた。サービスごと沈んだ教科書事例だ」</p>
+                </div>
+                <div class="trust-box">
+                    <p>供託は未使用残高の<strong>1/2</strong>が目安。発行体が潰れたら、全額は返らない可能性がある。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. シーン9：ブロックチェーン -->
+        <div class="slide" id="slide-15">
+            <div class="chapter">
+                <h1>シーン9：ブロックチェーン ― 「自分」がトラストポイントになる</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「最後に、よく『trustless』と言われるやつ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>セルフカストディの暗号資産 ― 信頼の引っ越し先</h2>
+                    <ol>
+                        <li style="margin: 6px 0;"><strong>自分の鍵管理</strong></li>
+                        <li style="margin: 6px 0;">暗号アルゴリズム</li>
+                        <li style="margin: 6px 0;">コンセンサスの経済的安全性</li>
+                        <li style="margin: 6px 0;">ウォレット／コントラクト／ノードのコード</li>
+                        <li style="margin: 6px 0;">実務上は RPC、ブリッジ、フロント配信なども</li>
+                    </ol>
+                </div>
+                <div class="thesis-box">
+                    <p style="margin: 0;">人類史上初めて、<strong>「自分」</strong>が本格的なトラストポイントになった方式だ。リカバリ不能という代償つきで。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. カストディ回帰 -->
+        <div class="slide" id="slide-16">
+            <div class="chapter">
+                <h1>カストディ回帰と、ステーブルコイン</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-dba">DBA民</span>「だからみんな取引所に預ける」</p>
+                    <p><span class="role-label role-me">俺</span>「そう。鍵管理が難しすぎて、大衆はまた中央に預ける。Mt.GoxもFTXも、『分散台帳の上に中央集権のトラストポイントを再建して崩落した』話だ」</p>
+                </div>
+                <div class="motto">
+                    ブロックチェーンは信頼を消したのではない。<br>
+                    銀行への信頼を、自分の記憶力と、<br>
+                    依存ライブラリの健全さへの信頼に交換したのだ
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-security">セキュリティ番</span>「npmの砂虫の話と地続きだな」</p>
+                    <p><span class="role-label role-me">俺</span>「地続きだ。技術がトラストレスでも、運用がトラストポイントを再生産する」</p>
+                </div>
+                <div class="trust-box">
+                    <p>ステーブルコインは、発行体の裏付け資産（オフチェーン）×プロトコル（オンチェーン）の<strong>積</strong>。どっちかが壊れても痛い。USDCのデペッグやTerraがその実例。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. シーン10：マップ -->
+        <div class="slide" id="slide-17">
+            <div class="chapter">
+                <h1>シーン10：一枚で見る ― 信頼の引っ越しマップ</h1>
+                <div class="divider"></div>
+                <div class="flow-box" style="text-align: left; padding: 20px 24px;">
+                    <div style="color: #c9a227; margin-bottom: 10px;">信頼の行き先 →</div>
+                    <div style="font-size: 0.95em; line-height: 2;">
+                        個人 ── コミュニティ ── 企業 ── 国家 ── 数学／コード<br>
+                        <span style="color:#a8c8d4;">ツケ・出世払い　ハワラ等　　代行業者　　・前払式　　現金・銀行　　ブロックチェーン</span><br>
+                        <span style="color:#e74c3c;">　　　　　　　　　　　　　↑全東信はここ</span>
+                        <span style="color:#a8c8d4;">　　　　　　　　（運用で左に戻りがち）</span>
+                    </div>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「方式を選ぶとは、この軸のどこに立つかを選ぶことだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. 誰が先に出すか -->
+        <div class="slide" id="slide-18">
+            <div class="chapter">
+                <h1>誰が先に出すか／誰が損するか</h1>
+                <div class="divider"></div>
+                <table>
+                    <tr><th>方式</th><th>金が先に動く側</th><th>破綻時の被害者（ざっくり）</th></tr>
+                    <tr><td>物々交換・現金</td><td>ほぼ同時</td><td>相手個人は信じない</td></tr>
+                    <tr><td>ツケ・BNPL</td><td>店</td><td>店が損する</td></tr>
+                    <tr><td>クレカ＋代行業者</td><td>仲介が立て替え</td><td>店が損しやすい（全東信型）</td></tr>
+                    <tr><td>前払式</td><td>消費者</td><td>消費者（保全あり）</td></tr>
+                    <tr><td>銀行預金</td><td>消費者預け</td><td>預金保険あり</td></tr>
+                    <tr><td>暗号資産（自己管理）</td><td>自分＋コード</td><td>損するのも自分</td></tr>
+                </table>
+                <div class="quote-box">
+                    <p><span class="role-label role-sre">SRE民</span>「『誰が先に金を出すか＝誰がリスクを負うか』が一番わかりやすい」</p>
+                    <p><span class="role-label role-me">俺</span>「それが直感の入口だ。細部の規制は、その上に乗る耐震補強だと思えばいい」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 19. シーン11：攻撃5型 -->
+        <div class="slide" id="slide-19">
+            <div class="chapter">
+                <h1>シーン11：攻撃も、型で見る</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「セキュリティ番、締めてくれ」</p>
+                    <p><span class="role-label role-security">セキュリティ番</span>「トラストポイントの型で、攻撃もだいたい5つに落ちる」</p>
+                </div>
+                <table>
+                    <tr><th style="width:18%;">型</th><th>何をするか</th><th>例</th></tr>
+                    <tr><td><span class="attack-badge">1</span>なりすまし</td><td>本人だと思い込ませる</td><td>フィッシング、偽造、シード窃取</td></tr>
+                    <tr><td><span class="attack-badge">2</span>信用偽装</td><td>審査や信用評価を騙す</td><td>不正加盟店、融通手形</td></tr>
+                    <tr><td><span class="attack-badge">3</span>仲介者毀損</td><td>トラストポイント自体が死ぬ</td><td>代行業者倒産、取引所破綻、インフレ</td></tr>
+                    <tr><td><span class="attack-badge">4</span>ファイナリティ</td><td>取消不能／取消可能を武器に</td><td>振り込め詐欺、チャージバック詐欺</td></tr>
+                    <tr><td><span class="attack-badge">5</span>実装攻撃</td><td>実装バグを突く</td><td>認証バグ、スマコン、サプライチェーン</td></tr>
+                </table>
+                <div class="thesis-box">
+                    <p style="margin: 0;">方式を選ぶことは、このどれに晒されるかを選ぶことだ。<strong>全部ゼロにはできない。</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. シーン12：エスクロー -->
+        <div class="slide" id="slide-20">
+            <div class="chapter">
+                <h1>シーン12：エスクロー ― 審判への引っ越し</h1>
+                <div class="divider"></div>
+                <div class="quote-box">
+                    <p><span class="role-label role-devrel">DevRel民</span>「フリマのエスクローはどこに入ります？」</p>
+                    <p><span class="role-label role-me">俺</span>「相手への信頼を、審判への信頼に移す方式だ」</p>
+                </div>
+                <div class="tech-box">
+                    <h2>エスクロー</h2>
+                    <ul class="compact">
+                        <li>中立第三者が資金を一時保管し、条件成就で解放</li>
+                        <li>信じるもの：審判の中立性と財務</li>
+                        <li>偽エスクローサイトは詐欺の定番</li>
+                        <li>スマートコントラクトにすると、今度は<strong>オラクル</strong>（現実の事実の注入点）が新トラストポイントになる</li>
+                    </ul>
+                </div>
+                <div class="motto" style="font-size: 1.05em;">
+                    ここでもやはり第三者を「トラスト」することになる
+                </div>
+            </div>
+        </div>
+
+        <!-- 21. シーン13：チェックリスト -->
+        <div class="slide" id="slide-21">
+            <div class="chapter">
+                <h1>シーン13：俺たちの落としどころ</h1>
+                <div class="divider"></div>
+                <div class="safe-box">
+                    <h2>決済を見るときのチェックリスト</h2>
+                    <ol>
+                        <li style="margin: 10px 0;">いま信じている相手は誰か（空気化してないか）</li>
+                        <li style="margin: 10px 0;">金を先に出しているのは誰か</li>
+                        <li style="margin: 10px 0;">相手が潰れた／騙されたとき、損をするのは誰か</li>
+                        <li style="margin: 10px 0;">そのトラストポイントに、保全や制裁はあるか</li>
+                        <li style="margin: 10px 0;">攻撃者なら、どこを一番安く突くか</li>
+                    </ol>
+                </div>
+                <div class="quote-box">
+                    <p><span class="role-label role-me">俺</span>「エンジニアが決済SDKを組み込むときも、同じだ。『動く』の前に『誰の約束の上に乗っているか』を見ろ」</p>
+                    <p><span class="role-label role-pm">PM民</span>「経営にも通じますね。早期入金の便利さだけ見て、信用リスクを見ない、みたいな」</p>
+                    <p><span class="role-label role-me">俺</span>「全東信は、その見落としが大規模に可視化された日だ」</p>
+                    <p><span class="role-label role-devrel">DevRel民</span>「結局、信頼をなくす技術はない」</p>
+                    <p><span class="role-label role-me">俺</span>「ない。あるのは、<strong>信頼の配置設計</strong>だけだ」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22. 参考：概念まとめ -->
+        <div class="slide" id="slide-22">
+            <div class="chapter">
+                <h1>参考：本章で扱った主な概念</h1>
+                <div class="divider"></div>
+                <div class="tech-box">
+                    <h2>まとめ</h2>
+                    <ul class="compact">
+                        <li>トラストレスな決済は存在しない。あるのはトラストポイントの移動だけ</li>
+                        <li>平時は不可視、破綻時に可視化される</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h2>方式の位置づけ</h2>
+                    <ul class="compact">
+                        <li>物々交換 ― 同時交換。流動性が低い</li>
+                        <li>現金 ― トラストポイントは国家。空気化しやすい</li>
+                        <li>ツケ／BNPL ― 個人〜アルゴリズム。損するのは与信側</li>
+                        <li>銀行振込 ― 銀行＋預金保険＋中央銀行。保全が厚い</li>
+                        <li>クレカ＋代行業者 ― 多段の仲介信用。全東信は加盟店側精算の崩壊</li>
+                        <li>前払式 ― 消費者が発行体を信用。供託あり（全額保証ではない）</li>
+                        <li>暗号資産 ― 「自分」＋コード。運用で中央に回帰しがち</li>
+                        <li>エスクロー ― 相手から審判へ。コード化するとオラクルが新拠点</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 23. 技術的補足 -->
+        <div class="slide" id="slide-23">
+            <div class="chapter">
+                <h1>技術的補足メモ</h1>
+                <div class="divider"></div>
+                <div class="reference-item">
+                    <p><strong>網羅しない：</strong>本章は全方式カタログではない。「引っ越しの感覚」を掴む章。手形・でんさい・ハワラ・CBDCは補遺でよい。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>規制の数字：</strong>供託1/2、預金保険1,000万円、資金移動業の全額保全などは「耐震補強の有無を比べる目印」。精確な要件は講義時点の法令で確認。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>クレカ：</strong>4者モデルに日本では代行業者／包括加盟店が挟まる点だけ押さえれば、全東信の位置は説明できる。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>ブロックチェーン：</strong>trustlessの解体が目的。PoW/PoSの詳細より「自分・暗号・合意・コード・周辺」への分散と、カストディ回帰の皮肉を優先。</p>
+                </div>
+                <div class="reference-item">
+                    <p><strong>攻撃の5型：</strong>方式論とセキュリティ論をつなぐ橋。決済選定・SDK・加盟店審査・鍵管理を同じ型で会話できるようにするのがゴール。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 24. 次章予告 -->
+        <div class="slide" id="slide-24">
+            <div class="chapter">
+                <h1>次章予告</h1>
+                <div class="divider"></div>
+                <div class="collapse-alert" style="background-color: #0f3a4a;">
+                    第11回「俺たちは技術的負債と戦っている（血文字で）」
+                </div>
+                <div class="trust-box" style="margin-top: 30px;">
+                    <p>戦争も、砂虫も、決済の信頼崩壊も乗り越えた俺たちの前に、最後にして最凶の敵が立ちはだかる。</p>
+                    <p>失われた仕様書、謎のTODOコメント、そして<strong>git blame の先にいた意外な人物</strong>……。</p>
+                    <p>技術的負債という名の亡霊が、The・World 村のシステムを蝕んでいる！</p>
+                </div>
+                <div class="thesis-box" style="margin-top: 20px;">
+                    <p style="margin: 0;">信頼の配置を見ても、コードの中の負債は残り続ける。トラストポイントを見抜いても、レガシーからは逃げられない。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 25. エンド -->
+        <div class="slide" id="slide-25">
+            <div class="chapter">
+                <div class="footer" style="padding-top: 8vh;">
+                    <h1 style="text-align: center; border: none; font-size: min(4.5vh, 30px);">第10回：トラストレスな決済などない</h1>
+                    <div class="motto" style="margin: 30px auto; max-width: 80%;">
+                        「あるのは、トラストポイントの移動だけである」<br>
+                        <span style="font-size: 0.85em; color: #5a7a88;">── 誰を信じ、誰が先に出し、誰が損をするか</span>
+                    </div>
+                    <p>© 2026 フロントエンドクラブ</p>
+                    <p>次回：「俺たちは技術的負債と戦っている（血文字で）」</p>
+                    <p style="margin-top: 20px;">本日はありがとうございました</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.slide-container -->
+
+    <div class="fullscreen-icon" onclick="toggleFullScreen()">⛶</div>
+    <div class="slide-number" id="slide-counter">1 / 25</div>
+    <div class="nav-buttons">
+        <button id="prev-btn" onclick="prevSlide()" disabled>前へ</button>
+        <button id="next-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 25;
+
+        function updateSlideCounter() {
+            document.getElementById('slide-counter').textContent = `${currentSlide} / ${totalSlides}`;
+        }
+
+        function updateButtonState() {
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function showSlide(slideNumber) {
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+                slide.classList.remove('prev');
+            });
+            const cur = document.getElementById(`slide-${slideNumber}`);
+            if (cur) cur.classList.add('active');
+            if (slideNumber > 1) {
+                const prev = document.getElementById(`slide-${slideNumber - 1}`);
+                if (prev) prev.classList.add('prev');
+            }
+            updateSlideCounter();
+            updateButtonState();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Fullscreen error: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'f') { toggleFullScreen(); }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
